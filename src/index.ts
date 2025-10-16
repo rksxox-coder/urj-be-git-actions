@@ -122,8 +122,8 @@ function generateHtmlReport(results: AnalysisResult[]): string {
         }).join('');
         tableRows += `
             <tr>
-                <td>${sourceIcon} <a href="${result.originalURL}" target="_blank">${result.originalURL}</a></td>
-                <td>${targetIcon} <a href="${result.finalURL}" target="_blank">${result.finalURL}</a></td>
+                <td><div class="url-cell">${sourceIcon} <a href="${result.originalURL}" target="_blank">${result.originalURL}</a></div></td>
+                <td><div class="url-cell">${targetIcon} <a href="${result.finalURL}" target="_blank">${result.finalURL}</a></div></td>
                 <td>${finalStatusBadge}</td>
                 <td class="chain-cell" title="${chainTooltip}">${chainBadges || 'N/A'}</td>
                 <td><button class="details-btn" data-index="${index}"><i data-feather="eye"></i></button></td>
@@ -150,25 +150,34 @@ function generateHtmlReport(results: AnalysisResult[]): string {
             --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e0e0e0; --border-color: #444;
             --header-bg: #333; --shadow-color: rgba(0,0,0,0.5); --link-color: #4dabf7;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
         .container { max-width: 1600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px var(--shadow-color); }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .header-controls { display: flex; align-items: center; gap: 20px; }
-        .header-icons button, .header-icons a { color: var(--text-color); background: none; border: none; font-size: 20px; cursor: pointer; transition: transform 0.3s ease; }
-        .header-icons button:hover, .header-icons a:hover { transform: scale(1.1); }
-        #theme-toggle .feather { transition: transform 0.5s ease-in-out; }
-        #theme-toggle.toggled .feather { transform: rotate(180deg); }
+        .header-icons { display: flex; align-items: center; gap: 15px; }
         #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-        table { width: 100% !important; border-collapse: collapse; } /* DataTables override */
+        table { width: 100% !important; border-collapse: collapse; }
         th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
-        th { background-color: var(--header-bg); }
-        td a { color: var(--link-color); text-decoration: none; font-size: 0.95em; } /* Link font size reduced */
-        td i.feather { vertical-align: middle; margin-right: 10px; min-width: 24px; } /* Icon spacing */
-        .dataTables_wrapper { color: var(--text-color) !important; } /* DataTables text color */
-        .dataTables_length select, .dataTables_filter input { background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); }
-        .paginate_button { background: var(--card-bg) !important; color: var(--text-color) !important; }
-        .details-btn { background-color: var(--link-color); color: white; padding: 6px 10px; border: none; border-radius: 5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;}
-        .swal2-popup { background-color: var(--card-bg) !important; color: var(--text-color) !important; } /* Dark mode modal fix */
+        .url-cell { display: flex; align-items: center; } /* FIX: Proper icon alignment */
+        .url-cell i.feather { margin-right: 10px; flex-shrink: 0; }
+        td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
+        
+        /* ENHANCEMENT: Theme toggle button styling and animation */
+        #theme-toggle { position: relative; width: 24px; height: 24px; cursor: pointer; background: none; border: none; color: var(--text-color); }
+        #theme-toggle .feather { position: absolute; top: 0; left: 0; transition: transform 0.5s ease-out, opacity 0.4s ease; }
+        #theme-toggle .feather-sun { opacity: 0; transform: translateY(20px) rotate(90deg); }
+        body.dark-mode #theme-toggle .feather-moon { opacity: 0; transform: translateY(-20px) rotate(-90deg); }
+        body.dark-mode #theme-toggle .feather-sun { opacity: 1; transform: translateY(0) rotate(0); }
+
+        /* FIX: Restored status badge styling */
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 13px; margin: 2px; }
+        .status-badge.success { background-color: #28a745; }
+        .status-badge.redirect { background-color: #ffc107; color: #333; }
+        .status-badge.error { background-color: #dc3545; }
+        .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
+        
+        .dataTables_wrapper .dataTables_length select, .dataTables_wrapper .dataTables_filter input { background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); }
+        .swal2-popup { background-color: var(--card-bg) !important; color: var(--text-color) !important; }
         .swal2-title { color: var(--text-color) !important; }
     </style>
 </head>
@@ -178,10 +187,12 @@ function generateHtmlReport(results: AnalysisResult[]): string {
             <h1>URL Journey Analysis Report</h1>
             <div class="header-controls">
                 <button id="export-btn"><i data-feather="file-text"></i> Export</button>
-                <span class="header-icons">
-                    <button id="theme-toggle" title="Toggle dark mode"><i data-feather="moon"></i></button>
+                <div class="header-icons">
+                    <button id="theme-toggle" title="Toggle dark mode">
+                        <i data-feather="moon"></i><i data-feather="sun"></i>
+                    </button>
                     <a href="https://github.com/BindRakesh/" target="_blank" title="My GitHub"><i data-feather="github"></i></a>
-                </span>
+                </div>
             </div>
         </div>
         <table id="analysisTable">
@@ -193,28 +204,19 @@ function generateHtmlReport(results: AnalysisResult[]): string {
         document.addEventListener('DOMContentLoaded', () => {
             const resultsData = ${JSON.stringify(results)};
             
-            // 1. Initialize DataTables
-            const table = new DataTable('#analysisTable', {
+            new DataTable('#analysisTable', {
                 layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' },
-                "drawCallback": function( settings ) {
-                    feather.replace(); // Re-render icons on table redraw (e.g., pagination)
-                }
+                "drawCallback": () => feather.replace()
             });
 
-            // 2. Setup Theme Toggle with Animation
             const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            if (localStorage.getItem('theme') === 'dark') body.classList.add('dark-mode');
             themeToggle.addEventListener('click', () => {
-                document.body.classList.toggle('dark-mode');
-                themeToggle.classList.toggle('toggled'); // Trigger animation
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-                // Optional: reset animation class after it finishes
-                setTimeout(() => themeToggle.classList.remove('toggled'), 500);
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
             });
-            // Apply theme on load
-            if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
 
-            // 3. Setup Modal Logic using Event Delegation (more robust for DataTables)
             document.querySelector('#analysisTable tbody').addEventListener('click', (event) => {
                 const button = event.target.closest('.details-btn');
                 if (button) {
@@ -223,17 +225,39 @@ function generateHtmlReport(results: AnalysisResult[]): string {
                     let modalContent = \`
                         <p style="text-align:left;word-break:break-all;"><strong>Original:</strong> \${result.originalURL}<br><strong>Final:</strong> \${result.finalURL}</p>
                         <table class="modal-table">
-                            <thead><tr><th>#</th><th>URL</th><th>Status</th><th>Server</th></tr></thead>
-                            <tbody>\${result.redirectChain.map((hop, i) => \`<tr><td>\${i+1}</td><td>\${hop.url}</td><td>\${hop.status}</td><td>\${hop.server}</td></tr>\`).join('')}</tbody>
+                           <thead><tr><th>#</th><th>URL</th><th>Status</th><th>Server</th></tr></thead>
+                           <tbody>\${result.redirectChain.map((hop, i) => \`<tr><td>\${i+1}</td><td>\${hop.url}</td><td>\${hop.status}</td><td>\${hop.server}</td></tr>\`).join('')}</tbody>
                         </table>\`;
                     Swal.fire({ title: 'Redirect Details', html: modalContent, width: '800px' });
                 }
             });
             
-            // 4. Setup Excel Export
-            document.getElementById('export-btn').addEventListener('click', () => { /* ... Excel logic ... */ });
+            // FIX: Restored the complete and correct Excel export logic
+            document.getElementById('export-btn').addEventListener('click', () => {
+                const summaryData = resultsData.map(r => ({
+                    'Source URL': r.originalURL, 'Source Server': r.sourceServer, 'Target URL': r.finalURL,
+                    'Target Server': r.targetServer, 'Final Status': r.finalStatus, 'Redirects': r.redirectChain.length - 1,
+                    'Total Time (s)': r.totalTime.toFixed(2), 'Error': r.error || 'None'
+                }));
+                const summarySheet = XLSX.utils.json_to_sheet(summaryData);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, summarySheet, 'Summary');
 
-            // Final render of all icons on initial load
+                resultsData.forEach((r, i) => {
+                    if (r.redirectChain.length > 0) {
+                        const detailData = r.redirectChain.map((hop, j) => ({
+                            'Hop': j + 1, 'URL': hop.url, 'Status': hop.status,
+                            'Server': hop.server, 'Timestamp (s)': hop.timestamp.toFixed(2)
+                        }));
+                        let sheetName = r.originalURL.replace(/https?:\\/\\//, '').substring(0, 25);
+                        sheetName = \`Detail \${i+1} - \${sheetName}\`;
+                        const detailSheet = XLSX.utils.json_to_sheet(detailData);
+                        XLSX.utils.book_append_sheet(wb, detailSheet, sheetName);
+                    }
+                });
+                XLSX.writeFile(wb, 'URL_Journey_Analysis_Report.xlsx');
+            });
+
             feather.replace();
         });
     </script>
