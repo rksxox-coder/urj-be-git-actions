@@ -14,18 +14,21 @@ interface AnalysisResult {
     finalStatus: number | null; redirectChain: Hop[]; totalTime: number; error?: string;
 }
 
-// --- Server Identification & Icon Mapping (IMPROVED) ---
+// --- Server Identification & Icon Mapping (Feather Icons) ---
 const AKAMAI_IP_RANGES = ["23.192.0.0/11", "104.64.0.0/10", "184.24.0.0/13"];
 const ipCache = new Map<string, string>();
 
 const ServerType = {
-    AKAMAI: 'Akamai', AEM: 'AEM', UNKNOWN: 'Unknown'
+    AKAMAI: 'Akamai',
+    AEM: 'Apache (AEM)', // Kept the name consistent with your Python script
+    UNKNOWN: 'Unknown'
 };
 
+// ENHANCEMENT: Using Feather Icons as requested
 const serverIconMap: Record<string, string> = {
-    [ServerType.AKAMAI]: '<i class="fa-solid fa-cloud" style="color: #007BFF;" title="Akamai"></i>',
-    [ServerType.AEM]: '<i class="fa-solid fa-cubes" style="color: #e60000;" title="Adobe Experience Manager (AEM)"></i>',
-    [ServerType.UNKNOWN]: '<i class="fa-solid fa-server" style="color: #6c757d;" title="Unknown Server"></i>'
+    [ServerType.AKAMAI]: '<i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i>',
+    [ServerType.AEM]: '<i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i>',
+    [ServerType.UNKNOWN]: '<i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i>'
 };
 
 // --- Helper Functions (RESTORED & CORRECTED) ---
@@ -44,29 +47,53 @@ function isAkamaiIp(ip: string | null): boolean {
     return AKAMAI_IP_RANGES.some(cidr => ipRangeCheck(ip, cidr));
 }
 
-// FIX: Restored the original, more intelligent server detection logic from your Python script
+// FIX: A direct, line-by-line translation of your original Python logic
 async function getServerName(headers: Record<string, string>, url: string): Promise<string> {
     const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
-    const hasAemHeaders = "x-dispatcher" in lowerHeaders || "x-aem-instance" in lowerHeaders;
-    if (hasAemHeaders) return ServerType.AEM;
+    const hostname = new URL(url).hostname;
 
+    // First Check (BMW/MINI specific)
+    if (hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"))) {
+        if ("cache-control" in lowerHeaders) {
+            return ServerType.AEM;
+        }
+    }
+
+    // Second Check (Server Header)
     const serverValue = lowerHeaders["server"]?.toLowerCase() || "";
-    const ip = await resolveIp(url);
-    const isAkamai = isAkamaiIp(ip);
+    if (serverValue) {
+        if (serverValue.includes("akamai") || serverValue.includes("ghost")) return ServerType.AKAMAI;
+        if (serverValue.includes("apache")) return ServerType.AEM;
+        // Not returning capitalized server_value as we only care about these two
+    }
+
+    // Third Check (Deeper Heuristics)
     const serverTiming = lowerHeaders["server-timing"] || "";
     const hasAkamaiCache = serverTiming.includes("cdn-cache; desc=HIT") || serverTiming.includes("cdn-cache; desc=MISS");
+    const hasAkamaiRequestId = "x-akamai-request-id" in lowerHeaders;
+    const ip = await resolveIp(url);
+    const isAkamai = isAkamaiIp(ip);
+    const hasDispatcher = "x-dispatcher" in lowerHeaders || "x-aem-instance" in lowerHeaders;
     
-    // If we see Akamai indicators AND AEM is likely behind it, we classify as AEM
-    const hostname = new URL(url).hostname;
-    const isBmwDomain = hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"));
+    // Check for AEM paths in specific headers
+    const hasAemPaths = Object.entries(lowerHeaders).some(([key, value]) => 
+        (key === "link" || key === "baqend-tags") && value.includes("/etc.clientlibs")
+    );
 
-    if ((hasAkamaiCache || isAkamai || serverValue.includes("akamai")) && isBmwDomain) {
-         return ServerType.AEM; // It's Akamai in front of AEM
-    }
-    if (hasAkamaiCache || isAkamai || serverValue.includes("akamai")) {
+    // Decision Logic
+    if (hasAkamaiCache || hasAkamaiRequestId || (serverTiming && isAkamai)) {
+        if (hasAemPaths || hasDispatcher) {
+            return ServerType.AEM; // AEM behind Akamai
+        }
         return ServerType.AKAMAI;
     }
-    
+    if (hasDispatcher || hasAemPaths) {
+        return ServerType.AEM;
+    }
+    if (isAkamai) {
+        return ServerType.AKAMAI;
+    }
+
     return ServerType.UNKNOWN;
 }
 
@@ -110,12 +137,12 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
     }
 }
 
-// --- HTML Report Generation (COMPLETE OVERHAUL) ---
+// --- HTML Report Generation ---
 function generateHtmlReport(results: AnalysisResult[]): string {
     let tableRows = '';
     results.forEach((result, index) => {
         const sourceIcon = serverIconMap[result.sourceServer || ServerType.UNKNOWN];
-        const targetIcon = result.error ? '<i class="fa-solid fa-triangle-exclamation" style="color: #dc3545;" title="Error"></i>' : serverIconMap[result.targetServer || ServerType.UNKNOWN];
+        const targetIcon = result.error ? '<i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i>' : serverIconMap[result.targetServer || ServerType.UNKNOWN];
         const finalStatusBadge = result.error ? `<span class="status-badge error">${result.finalStatus || 'ERR'}</span>` : `<span class="status-badge success">${result.finalStatus || 'OK'}</span>`;
         const chainTooltip = result.redirectChain.map((h, i) => `Hop ${i + 1} (${h.server}): ${h.status}`).join('\n');
         const chainBadges = result.redirectChain.map(h => {
@@ -132,13 +159,12 @@ function generateHtmlReport(results: AnalysisResult[]): string {
             </tr>`;
     });
 
-    // FIX: Using a single, clean template literal to prevent rendering bugs.
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>URL Journey Analysis Report</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -146,15 +172,16 @@ function generateHtmlReport(results: AnalysisResult[]): string {
         body.dark-mode { --bg-color: #1a1a1a; --card-bg: #2c2c2c; --text-color: #f1f1f1; --border-color: #444; --header-bg: #383838; --shadow-color: rgba(0,0,0,0.4); }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
         .container { max-width: 1400px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px var(--shadow-color); transition: background-color 0.3s; }
-        h1 { color: var(--text-color); }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-icons a, .header-icons button { color: var(--text-color); background: none; border: none; font-size: 20px; margin-left: 15px; cursor: pointer; }
+        .header-controls { display: flex; align-items: center; gap: 15px; }
+        .header-icons a, .header-icons button { color: var(--text-color); background: none; border: none; font-size: 20px; cursor: pointer; }
         #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         th { background-color: var(--header-bg); font-weight: 600; }
         tr:hover { background-color: var(--header-bg); }
         td:first-child, td:nth-child(2) { word-break: break-all; }
+        td i { vertical-align: middle; margin-right: 8px; }
         th:nth-child(1), th:nth-child(2) { width: 35%; } th:nth-child(3) { width: 10%; } th:nth-child(4) { width: 15%; } th:nth-child(5) { width: 5%; text-align: center; }
         td:nth-child(5) { text-align: center; }
         a { color: #007bff; text-decoration: none; } a:hover { text-decoration: underline; }
@@ -173,10 +200,10 @@ function generateHtmlReport(results: AnalysisResult[]): string {
         <div class="header">
             <h1>URL Journey Analysis Report</h1>
             <div class="header-controls">
-                <button id="export-btn"><i class="fa-solid fa-file-excel"></i> Export to Excel</button>
+                <button id="export-btn"><i data-feather="file-text"></i> Export to Excel</button>
                 <span class="header-icons">
-                    <button id="theme-toggle" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
-                    <a href="https://github.com/BindRakesh/" target="_blank" title="View on GitHub"><i class="fa-brands fa-github"></i></a>
+                    <button id="theme-toggle" title="Toggle dark mode"><i data-feather="moon"></i></button>
+                    <a href="https://github.com/BindRakesh/" target="_blank" title="View on GitHub"><i data-feather="github"></i></a>
                 </span>
             </div>
         </div>
@@ -187,26 +214,20 @@ function generateHtmlReport(results: AnalysisResult[]): string {
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            feather.replace(); // IMPORTANT: This line activates Feather Icons
             const resultsData = ${JSON.stringify(results)};
 
-            // Theme Toggle Logic
             const themeToggle = document.getElementById('theme-toggle');
             const body = document.body;
-            const themeIcon = themeToggle.querySelector('i');
             const currentTheme = localStorage.getItem('theme');
             if (currentTheme === 'dark') {
                 body.classList.add('dark-mode');
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
             themeToggle.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
-                const isDarkMode = body.classList.contains('dark-mode');
-                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-                themeIcon.classList.toggle('fa-moon', !isDarkMode);
-                themeIcon.classList.toggle('fa-sun', isDarkMode);
+                localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
             });
 
-            // Details Modal Logic
             document.querySelectorAll('.details-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const index = event.currentTarget.getAttribute('data-index');
@@ -229,7 +250,6 @@ function generateHtmlReport(results: AnalysisResult[]): string {
                 });
             });
 
-            // Excel Export Logic
             document.getElementById('export-btn').addEventListener('click', () => {
                 const summarySheet = XLSX.utils.json_to_sheet(resultsData.map(r => ({
                     'Source URL': r.originalURL, 'Source Server': r.sourceServer, 'Target URL': r.finalURL,
