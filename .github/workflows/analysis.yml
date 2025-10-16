@@ -12,11 +12,6 @@ jobs:
   analyze-urls:
     runs-on: ubuntu-latest
 
-    # This block sets the default for all 'run' steps in this job
-    defaults:
-      run:
-        working-directory: ./
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
