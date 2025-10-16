@@ -4,9 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       urls:
-        description: 'URLs to analyze (space-separated)'
+        # NEW: The description now prompts for a list, and the UI will render a textarea
+        description: 'Paste a list of URLs (one URL per line)'
         required: true
-        default: 'https://google.com https://github.com'
+        default: 'https://www.google.com\nhttps://github.com\nhttp://httpstat.us/301'
 
 jobs:
   analyze-urls:
@@ -21,10 +22,6 @@ jobs:
         with:
           node-version: '20'
 
-      # --- NEW DEBUGGING STEP ---
-      - name: List files for debugging
-        run: ls -la
-
       - name: Install dependencies
         run: npm install
 
@@ -32,11 +29,11 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build TypeScript
-        # We'll use the explicit project flag which is good practice
         run: npm run build
 
       - name: Run analysis script
-        run: npm start -- ${{ github.event.inputs.urls }}
+        # NEW: We pass the entire multi-line string as a single argument
+        run: npm start -- "${{ github.event.inputs.urls }}"
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
