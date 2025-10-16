@@ -303,19 +303,30 @@ function generateHtmlReport(results: AnalysisResult[]): string {
 async function main() {
     console.log("Starting URL analysis...");
     const allArgs = process.argv.slice(2);
-    const urls = allArgs.join(' ').split(/\\s+/).map(url => url.trim()).filter(url => url && validator.isURL(url));
+
+    // FIX: Correctly split by any whitespace (spaces, newlines, etc.)
+    const urls = allArgs
+        .join(' ')
+        .split(/\s+/) // This was the line with the typo
+        .map(url => url.trim())
+        .filter(url => url && validator.isURL(url));
+
     if (urls.length === 0) {
         console.error("Error: No valid URLs provided. Please paste a list of URLs (one per line).");
         process.exit(1);
     }
+    
     console.log(`Found ${urls.length} valid URLs to analyze.`);
+
     const browser = await chromium.launch({ headless: true });
     const analysisPromises = urls.map(url => fetchUrlWithPlaywright(browser, url));
     const results = await Promise.all(analysisPromises);
+    
     console.log("Analysis complete. Generating enhanced HTML report...");
     const htmlContent = generateHtmlReport(results);
     await writeFile('report.html', htmlContent);
     console.log("✅ Report successfully generated as report.html");
+    
     await browser.close();
 }
 
