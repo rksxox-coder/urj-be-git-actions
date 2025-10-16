@@ -7,43 +7,28 @@ import { writeFile } from 'fs/promises';
 
 // --- Type Definitions (No changes) ---
 interface Hop {
-    url: string;
-    status: number;
-    server: string;
-    timestamp: number;
+    url: string; status: number; server: string; timestamp: number;
 }
 interface AnalysisResult {
-    originalURL: string;
-    finalURL: string | null;
-    sourceServer: string | null;
-    targetServer: string | null;
-    finalStatus: number | null;
-    redirectChain: Hop[];
-    totalTime: number;
-    error?: string;
+    originalURL: string; finalURL: string | null; sourceServer: string | null; targetServer: string | null;
+    finalStatus: number | null; redirectChain: Hop[]; totalTime: number; error?: string;
 }
 
 // --- Server Identification & Icon Mapping (IMPROVED) ---
 const AKAMAI_IP_RANGES = ["23.192.0.0/11", "104.64.0.0/10", "184.24.0.0/13"];
 const ipCache = new Map<string, string>();
 
-// FIX: More granular server types for better icon selection
 const ServerType = {
-    AKAMAI: 'Akamai',
-    APACHE: 'Apache',
-    AEM: 'AEM', // Adobe Experience Manager
-    UNKNOWN: 'Unknown'
+    AKAMAI: 'Akamai', AEM: 'AEM', UNKNOWN: 'Unknown'
 };
 
-// FIX: Better, more specific icons for each server type
 const serverIconMap: Record<string, string> = {
     [ServerType.AKAMAI]: '<i class="fa-solid fa-cloud" style="color: #007BFF;" title="Akamai"></i>',
     [ServerType.AEM]: '<i class="fa-solid fa-cubes" style="color: #e60000;" title="Adobe Experience Manager (AEM)"></i>',
-    [ServerType.APACHE]: '<i class="fa-solid fa-feather-pointed" style="color: #c22121;" title="Apache"></i>',
     [ServerType.UNKNOWN]: '<i class="fa-solid fa-server" style="color: #6c757d;" title="Unknown Server"></i>'
 };
 
-// --- Helper Functions (RESTORED LOGIC) ---
+// --- Helper Functions (RESTORED & CORRECTED) ---
 async function resolveIp(url: string): Promise<string | null> {
     try {
         const hostname = new URL(url).hostname;
@@ -52,45 +37,36 @@ async function resolveIp(url: string): Promise<string | null> {
         const { address } = await dns.lookup(hostname);
         ipCache.set(hostname, address);
         return address;
-    } catch {
-        return null;
-    }
+    } catch { return null; }
 }
 function isAkamaiIp(ip: string | null): boolean {
     if (!ip) return false;
     return AKAMAI_IP_RANGES.some(cidr => ipRangeCheck(ip, cidr));
 }
 
-// FIX: Restored the original, more intelligent server detection logic
+// FIX: Restored the original, more intelligent server detection logic from your Python script
 async function getServerName(headers: Record<string, string>, url: string): Promise<string> {
     const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
-    const hostname = new URL(url).hostname;
-
-    // AEM is the most specific, check for its headers first
     const hasAemHeaders = "x-dispatcher" in lowerHeaders || "x-aem-instance" in lowerHeaders;
     if (hasAemHeaders) return ServerType.AEM;
 
-    // Check server header content
     const serverValue = lowerHeaders["server"]?.toLowerCase() || "";
-    if (serverValue) {
-        if (serverValue.includes("akamai") || serverValue.includes("ghost")) return ServerType.AKAMAI;
-        if (serverValue.includes("apache")) return ServerType.APACHE;
-    }
-    
-    // Deeper inspection for Akamai
     const ip = await resolveIp(url);
     const isAkamai = isAkamaiIp(ip);
     const serverTiming = lowerHeaders["server-timing"] || "";
     const hasAkamaiCache = serverTiming.includes("cdn-cache; desc=HIT") || serverTiming.includes("cdn-cache; desc=MISS");
-    if (hasAkamaiCache || isAkamai) return ServerType.AKAMAI;
+    
+    // If we see Akamai indicators AND AEM is likely behind it, we classify as AEM
+    const hostname = new URL(url).hostname;
+    const isBmwDomain = hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"));
 
-    // Fallback for Apache based on hostname conventions (from original script)
-    if (hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"))) {
-        if ("cache-control" in lowerHeaders) {
-            return ServerType.APACHE;
-        }
+    if ((hasAkamaiCache || isAkamai || serverValue.includes("akamai")) && isBmwDomain) {
+         return ServerType.AEM; // It's Akamai in front of AEM
     }
-
+    if (hasAkamaiCache || isAkamai || serverValue.includes("akamai")) {
+        return ServerType.AKAMAI;
+    }
+    
     return ServerType.UNKNOWN;
 }
 
@@ -106,23 +82,17 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
             if (response.request().isNavigationRequest()) {
                 const headers = await response.allHeaders();
                 redirectChain.push({
-                    url: response.url(),
-                    status: response.status(),
-                    server: await getServerName(headers, response.url()),
-                    timestamp: (Date.now() - startTime) / 1000
+                    url: response.url(), status: response.status(),
+                    server: await getServerName(headers, response.url()), timestamp: (Date.now() - startTime) / 1000
                 });
             }
         });
         await page.goto(url, { timeout: 30000, waitUntil: "domcontentloaded" });
         const finalHop = redirectChain[redirectChain.length - 1];
         return {
-            originalURL: url,
-            finalURL: page.url(),
-            sourceServer: redirectChain[0]?.server || null,
-            targetServer: finalHop?.server || null,
-            finalStatus: finalHop?.status || null,
-            redirectChain: redirectChain,
-            totalTime: (Date.now() - startTime) / 1000,
+            originalURL: url, finalURL: page.url(), sourceServer: redirectChain[0]?.server || null,
+            targetServer: finalHop?.server || null, finalStatus: finalHop?.status || null,
+            redirectChain: redirectChain, totalTime: (Date.now() - startTime) / 1000,
         };
     } catch (e) {
         let errorMessage = "A critical server error occurred.";
@@ -131,21 +101,16 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
         else if (e instanceof Error) errorMessage = e.message;
         const finalHop = redirectChain.length > 0 ? redirectChain[redirectChain.length - 1] : null;
         return {
-            originalURL: url,
-            finalURL: finalHop?.url || "N/A",
-            sourceServer: redirectChain[0]?.server || null,
-            targetServer: finalHop?.server || null,
-            finalStatus: finalHop?.status || null,
-            redirectChain: redirectChain,
-            totalTime: (Date.now() - startTime) / 1000,
-            error: errorMessage,
+            originalURL: url, finalURL: finalHop?.url || "N/A", sourceServer: redirectChain[0]?.server || null,
+            targetServer: finalHop?.server || null, finalStatus: finalHop?.status || null,
+            redirectChain: redirectChain, totalTime: (Date.now() - startTime) / 1000, error: errorMessage,
         };
     } finally {
         if (context) await context.close();
     }
 }
 
-// --- HTML Report Generation (UI ENHANCEMENTS) ---
+// --- HTML Report Generation (COMPLETE OVERHAUL) ---
 function generateHtmlReport(results: AnalysisResult[]): string {
     let tableRows = '';
     results.forEach((result, index) => {
@@ -157,7 +122,6 @@ function generateHtmlReport(results: AnalysisResult[]): string {
             const statusClass = h.status >= 400 ? 'error' : (h.status >= 300 ? 'redirect' : 'success');
             return `<span class="status-badge small ${statusClass}">${h.status}</span>`;
         }).join('');
-
         tableRows += `
             <tr>
                 <td>${sourceIcon} <a href="${result.originalURL}" target="_blank">${result.originalURL}</a></td>
@@ -165,66 +129,84 @@ function generateHtmlReport(results: AnalysisResult[]): string {
                 <td>${finalStatusBadge}</td>
                 <td class="chain-cell" title="${chainTooltip}">${chainBadges || 'N/A'}</td>
                 <td><button class="details-btn" data-index="${index}">Details</button></td>
-            </tr>
-        `;
+            </tr>`;
     });
 
-    return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>URL Journey Analysis Report</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-        <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background-color: #f4f6f9; color: #333; }
-            .container { max-width: 1400px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-            h1 { color: #2c3e50; }
-            .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-            #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; transition: background-color 0.2s; }
-            #export-btn:hover { background-color: #218838; }
-            table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-            th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; vertical-align: middle; }
-            th { background-color: #f8f9fa; font-weight: 600; }
-            tr:hover { background-color: #f1f1f1; }
-            td:first-child, td:nth-child(2) { word-break: break-all; }
-            th:nth-child(1), th:nth-child(2) { width: 35%; }
-            th:nth-child(3) { width: 10%; }
-            th:nth-child(4) { width: 15%; }
-            th:nth-child(5) { width: 5%; text-align: center; }
-            td:nth-child(5) { text-align: center; }
-            a { color: #007bff; text-decoration: none; }
-            a:hover { text-decoration: underline; }
-            .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 13px; margin: 2px; }
-            .status-badge.success { background-color: #28a745; }
-            .status-badge.redirect { background-color: #ffc107; color: #333; }
-            .status-badge.error { background-color: #dc3545; }
-            .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
-            .chain-cell { cursor: help; line-height: 1.8; }
-            .details-btn { background-color: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; }
-            .details-btn:hover { background-color: #0056b3; }
-            
-            /* FIX: CSS for the modal popup table */
-            .swal2-html-container .modal-table { width: 100%; text-align: left; margin-top: 15px; border-collapse: collapse; table-layout: fixed; } 
-            .swal2-html-container .modal-table th, .swal2-html-container .modal-table td { padding: 8px; border-bottom: 1px solid #eee; }
-            .swal2-html-container .modal-table th:nth-child(1) { width: 8%; }  /* # column */
-            .swal2-html-container .modal-table th:nth-child(2) { width: 60%; } /* URL column */
-        </style>
-    </head>
-    <body>
-        <div class="container"></div>
-        <script></script>
-    </body>
-    </html>`.replace('', `
-            <div class="header"><h1>URL Journey Analysis Report</h1><button id="export-btn"><i class="fa-solid fa-file-excel"></i> Export to Excel</button></div>
-            <table><thead><tr><th>Source URL</th><th>Target URL</th><th>Final Status</th><th>Redirect Chain</th><th>Actions</th></tr></thead>
-            <tbody>${tableRows}</tbody></table>
-    `).replace('', `
+    // FIX: Using a single, clean template literal to prevent rendering bugs.
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Journey Analysis Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #ddd; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); }
+        body.dark-mode { --bg-color: #1a1a1a; --card-bg: #2c2c2c; --text-color: #f1f1f1; --border-color: #444; --header-bg: #383838; --shadow-color: rgba(0,0,0,0.4); }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+        .container { max-width: 1400px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px var(--shadow-color); transition: background-color 0.3s; }
+        h1 { color: var(--text-color); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-icons a, .header-icons button { color: var(--text-color); background: none; border: none; font-size: 20px; margin-left: 15px; cursor: pointer; }
+        #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th { background-color: var(--header-bg); font-weight: 600; }
+        tr:hover { background-color: var(--header-bg); }
+        td:first-child, td:nth-child(2) { word-break: break-all; }
+        th:nth-child(1), th:nth-child(2) { width: 35%; } th:nth-child(3) { width: 10%; } th:nth-child(4) { width: 15%; } th:nth-child(5) { width: 5%; text-align: center; }
+        td:nth-child(5) { text-align: center; }
+        a { color: #007bff; text-decoration: none; } a:hover { text-decoration: underline; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 13px; margin: 2px; }
+        .status-badge.success { background-color: #28a745; } .status-badge.redirect { background-color: #ffc107; color: #333; } .status-badge.error { background-color: #dc3545; }
+        .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
+        .chain-cell { cursor: help; line-height: 1.8; }
+        .details-btn { background-color: #007bff; color: white; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; }
+        .swal2-html-container .modal-table { width: 100%; text-align: left; margin-top: 15px; border-collapse: collapse; table-layout: fixed; }
+        .swal2-html-container .modal-table th, .swal2-html-container .modal-table td { padding: 8px; border-bottom: 1px solid var(--border-color); }
+        .swal2-html-container .modal-table th:nth-child(1) { width: 8%; } .swal2-html-container .modal-table th:nth-child(2) { width: 60%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>URL Journey Analysis Report</h1>
+            <div class="header-controls">
+                <button id="export-btn"><i class="fa-solid fa-file-excel"></i> Export to Excel</button>
+                <span class="header-icons">
+                    <button id="theme-toggle" title="Toggle dark mode"><i class="fa-solid fa-moon"></i></button>
+                    <a href="https://github.com/BindRakesh/" target="_blank" title="View on GitHub"><i class="fa-brands fa-github"></i></a>
+                </span>
+            </div>
+        </div>
+        <table>
+            <thead><tr><th>Source URL</th><th>Target URL</th><th>Final Status</th><th>Redirect Chain</th><th>Actions</th></tr></thead>
+            <tbody>${tableRows}</tbody>
+        </table>
+    </div>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const resultsData = ${JSON.stringify(results)};
+
+            // Theme Toggle Logic
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            const themeIcon = themeToggle.querySelector('i');
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'dark') {
+                body.classList.add('dark-mode');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDarkMode = body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                themeIcon.classList.toggle('fa-moon', !isDarkMode);
+                themeIcon.classList.toggle('fa-sun', isDarkMode);
+            });
+
+            // Details Modal Logic
             document.querySelectorAll('.details-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const index = event.currentTarget.getAttribute('data-index');
@@ -235,48 +217,33 @@ function generateHtmlReport(results: AnalysisResult[]): string {
                             <strong>Original URL:</strong> \${result.originalURL}<br>
                             <strong>Final URL:</strong> \${result.finalURL}<br>
                             <strong>Total Time:</strong> \${result.totalTime.toFixed(2)}s<br>
-                            \${result.error ? \`<strong>Error:</strong> <span style="color:red;">\${result.error}</span><br>\` : ''}
+                            \${result.error ? \`<strong>Error:</strong> <span style="color:red;">\${result.error}</span>\` : ''}
                         </p>
                         <table class="modal-table">
                             <thead><tr><th>#</th><th>URL</th><th>Status</th><th>Server</th><th>Time (s)</th></tr></thead>
                             <tbody>\${result.redirectChain.map((hop, i) => \`
-                                <tr>
-                                    <td>\${i+1}</td>
-                                    <td>\${hop.url}</td>
-                                    <td>\${hop.status}</td>
-                                    <td>\${hop.server}</td>
-                                    <td>\${hop.timestamp.toFixed(2)}</td>
-                                </tr>\`).join('')}
-                            </tbody>
+                                <tr><td>\${i+1}</td><td>\${hop.url}</td><td>\${hop.status}</td><td>\${hop.server}</td><td>\${hop.timestamp.toFixed(2)}</td></tr>
+                            \`).join('')}</tbody>
                         </table>\`;
                     Swal.fire({ title: 'Redirect Details', html: modalContent, width: '800px', confirmButtonText: 'Close' });
                 });
             });
+
+            // Excel Export Logic
             document.getElementById('export-btn').addEventListener('click', () => {
-                const summaryData = resultsData.map(r => ({
+                const summarySheet = XLSX.utils.json_to_sheet(resultsData.map(r => ({
                     'Source URL': r.originalURL, 'Source Server': r.sourceServer, 'Target URL': r.finalURL,
                     'Target Server': r.targetServer, 'Final Status': r.finalStatus, 'Redirects': r.redirectChain.length - 1,
                     'Total Time (s)': r.totalTime.toFixed(2), 'Error': r.error || 'None'
-                }));
-                const summarySheet = XLSX.utils.json_to_sheet(summaryData);
+                })));
                 const wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, summarySheet, 'Summary');
-                resultsData.forEach((r, i) => {
-                    if (r.redirectChain.length > 0) {
-                        const detailData = r.redirectChain.map((hop, j) => ({
-                            'Hop': j + 1, 'URL': hop.url, 'Status': hop.status,
-                            'Server': hop.server, 'Timestamp (s)': hop.timestamp.toFixed(2)
-                        }));
-                        let sheetName = r.originalURL.replace(/https?:\\/\\//, '').substring(0, 25);
-                        sheetName = \`Detail \${i+1} - \${sheetName}\`;
-                        const detailSheet = XLSX.utils.json_to_sheet(detailData);
-                        XLSX.utils.book_append_sheet(wb, detailSheet, sheetName);
-                    }
-                });
                 XLSX.writeFile(wb, 'URL_Journey_Analysis_Report.xlsx');
             });
         });
-    `);
+    </script>
+</body>
+</html>`;
 }
 
 // --- Main Execution Logic (No changes) ---
