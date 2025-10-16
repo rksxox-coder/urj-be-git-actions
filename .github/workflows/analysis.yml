@@ -21,6 +21,10 @@ jobs:
         with:
           node-version: '20'
 
+      # --- NEW DEBUGGING STEP ---
+      - name: List files for debugging
+        run: ls -la
+
       - name: Install dependencies
         run: npm install
 
@@ -28,6 +32,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Build TypeScript
+        # We'll use the explicit project flag which is good practice
         run: npm run build
 
       - name: Run analysis script
