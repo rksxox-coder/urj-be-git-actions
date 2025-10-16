@@ -288,13 +288,14 @@ function generateHtmlReport(results: AnalysisResult[]): string {
 // --- Main Execution Logic (Updated to handle multi-line input) ---
 async function main() {
     console.log("Starting URL analysis...");
-    const inputArg = process.argv[2] || '';
     
-    // NEW: Parse multi-line string input from GitHub Actions
-    const urls = inputArg.split('\\n') // GitHub Actions may escape newlines
-                         .flatMap(line => line.split('\n')) // Handle local testing with actual newlines
-                         .map(url => url.trim())
-                         .filter(url => url && validator.isURL(url));
+    // NEW: Robustly handle both space-separated and newline-separated URLs
+    const allArgs = process.argv.slice(2);
+    const urls = allArgs
+        .join(' ')        // 1. Join all arguments into one big string
+        .split(/\s+/)     // 2. Split that string by any whitespace (spaces, newlines, etc.)
+        .map(url => url.trim())
+        .filter(url => url && validator.isURL(url)); // 3. Keep only valid URLs
 
     if (urls.length === 0) {
         console.error("Error: No valid URLs provided. Please paste a list of URLs (one per line).");
@@ -304,6 +305,7 @@ async function main() {
     console.log(`Found ${urls.length} valid URLs to analyze.`);
 
     const browser = await chromium.launch({ headless: true });
+    // Use Promise.all for better concurrency
     const analysisPromises = urls.map(url => fetchUrlWithPlaywright(browser, url));
     const results = await Promise.all(analysisPromises);
     
