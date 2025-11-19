@@ -1,1 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Analyzer Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { margin-top: 0; color: #333; }
+        textarea { width: 100%; height: 150px; padding: 12px; margin: 15px 0; border: 2px solid #eee; border-radius: 8px; font-family: monospace; resize: vertical; box-sizing: border-box;}
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .note { font-size: 0.85em; color: #666; margin-top: 10px; display: block; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🚀 Run URL Analysis</h2>
+        <p>Paste your URLs below (one per line):</p>
+        <textarea id="urls" placeholder="https://google.com&#10;https://github.com"></textarea>
+        <button id="btn" onclick="triggerAnalysis()">Start Analysis</button>
+        <span class="note">This will trigger the GitHub Action. Check your repo Actions tab for the report.</span>
+    </div>
 
+    <script>
+        async function triggerAnalysis() {
+            const urls = document.getElementById('urls').value;
+            const btn = document.getElementById('btn');
+            
+            if (!urls.trim()) return Swal.fire('Error', 'Please enter at least one URL', 'error');
+
+            btn.disabled = true;
+            btn.innerText = 'Starting Engine...';
+
+            try {
+                // Call our local Netlify function (The Middleman)
+                const res = await fetch('/.netlify/functions/trigger', {
+                    method: 'POST',
+                    body: JSON.stringify({ urls: urls })
+                });
+
+                if (res.ok) {
+                    Swal.fire('Success', 'Analysis started! Go to GitHub Actions to see progress.', 'success');
+                } else {
+                    throw new Error('Failed to start');
+                }
+            } catch (e) {
+                Swal.fire('Error', 'Something went wrong.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Start Analysis';
+            }
+        }
+    </script>
+</body>
+</html>
