@@ -1,17 +1,16 @@
 // @ts-ignore
-declare module 'ip-range-check';
+import ipRangeCheck from 'ip-range-check';
 import { chromium, Browser, errors } from 'playwright-chromium';
 import validator from 'validator';
 import { URL } from 'url';
 import dns from 'dns/promises';
-import ipRangeCheck from 'ip-range-check';
-import { writeFile, readFile } from 'fs/promises';
+import { writeFile, readFile, mkdir } from 'fs/promises';
+import * as path from 'path';
 
 // --- CONFIGURATION ---
-const BATCH_SIZE = 5;       // Number of URLs to check simultaneously
-const DELAY_MS = 2000;      // Wait time (ms) between batches to avoid rate limits
-const REPORT_FILENAME = 'report.html';
-const INPUT_FILENAME = 'urls.txt';
+const BATCH_SIZE = 5;
+const DELAY_MS = 2000;
+const HISTORY_FILE = 'history.json';
 
 // --- TYPE DEFINITIONS ---
 interface Hop {
@@ -30,6 +29,14 @@ interface AnalysisResult {
     redirectChain: Hop[];
     totalTime: number;
     error?: string;
+}
+
+interface HistoryEntry {
+    id: string;
+    date: string;
+    timestamp: number;
+    path: string;
+    urlCount: number;
 }
 
 // --- SERVER IDENTIFICATION ---
@@ -63,17 +70,14 @@ async function getServerName(headers: Record<string, string>, url: string, statu
     const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
     const xCache = lowerHeaders["x-cache"] || "";
     
-    // 1. Pro Check: X-Cache headers (Injected via Pragma)
     if (statusCode === 301 || statusCode === 302) {
         if (xCache.includes("TCP_HIT") || xCache.includes("TCP_MEM_HIT")) return ServerType.AKAMAI;
         if (xCache.includes("TCP_MISS")) return ServerType.AEM;
     }
 
-    // 2. Standard Server Header
     const serverValue = lowerHeaders["server"]?.toLowerCase() || "";
     if (serverValue.includes("akamai") || serverValue.includes("ghost")) return ServerType.AKAMAI;
     
-    // 3. AEM Specific Indicators
     const hostname = new URL(url).hostname;
     if (hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"))) {
         if ("x-dispatcher" in lowerHeaders || "x-aem-instance" in lowerHeaders) return ServerType.AEM;
@@ -82,7 +86,6 @@ async function getServerName(headers: Record<string, string>, url: string, statu
 
     if (serverValue.includes("apache")) return ServerType.AEM;
 
-    // 4. Server Timing & IP Fallback
     const serverTiming = lowerHeaders["server-timing"] || "";
     if (serverTiming.includes("cdn-cache; desc=HIT") && (statusCode === 301 || statusCode === 302)) return ServerType.AKAMAI;
 
@@ -142,7 +145,7 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
 }
 
 // --- HTML REPORT GENERATION ---
-function generateHtmlReport(results: AnalysisResult[]): string {
+function generateHtmlReport(results: AnalysisResult[], timestampStr: string): string {
     let tableRows = '';
     results.forEach((result, index) => {
         const sourceIcon = serverIconMap[result.sourceServer || ServerType.UNKNOWN];
@@ -170,7 +173,7 @@ function generateHtmlReport(results: AnalysisResult[]): string {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Redirect Analysis Report</title>
+    <title>Report ${timestampStr}</title>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
@@ -203,7 +206,7 @@ function generateHtmlReport(results: AnalysisResult[]): string {
 <body>
     <div class="container">
         <div class="header">
-            <h1>Redirect Analysis Report</h1>
+            <h1>Analysis Report (${timestampStr})</h1>
             <div class="header-controls">
                 <button id="export-btn"><i data-feather="file-text"></i> Export to Excel</button>
                 <button onclick="document.body.classList.toggle('dark-mode')"><i data-feather="moon"></i></button>
@@ -280,53 +283,80 @@ async function main() {
     
     let urls: string[] = [];
     
-    // 1. Try to read from urls.txt (GitHub Actions mode)
+    // 1. Read Input
     try {
-        const fileContent = await readFile(INPUT_FILENAME, 'utf-8');
+        const fileContent = await readFile('urls.txt', 'utf-8');
         urls = fileContent.split('\n').map(u => u.trim()).filter(u => u && validator.isURL(u));
-        console.log(`Loaded ${urls.length} URLs from ${INPUT_FILENAME}`);
     } catch (e) {
-        // 2. Fallback to CLI args (Local testing mode)
-        console.log(`${INPUT_FILENAME} not found, checking command line args...`);
+        console.log("urls.txt not found, checking CLI args...");
         const allArgs = process.argv.slice(2);
         urls = allArgs.join(' ').split(/\s+/).map(u => u.trim()).filter(u => u && validator.isURL(u));
     }
 
     if (urls.length === 0) {
-        console.error("Error: No valid URLs found. Please provide 'urls.txt' or CLI arguments.");
+        console.error("No valid URLs found.");
         process.exit(1);
     }
 
-    console.log(`Total URLs to process: ${urls.length}`);
-    console.log(`Configuration: Batch Size = ${BATCH_SIZE}, Delay = ${DELAY_MS}ms`);
-
+    // 2. Run Analysis
     const browser = await chromium.launch({ headless: true });
     const allResults: AnalysisResult[] = [];
 
-    // --- BATCH PROCESSING LOOP ---
     for (let i = 0; i < urls.length; i += BATCH_SIZE) {
         const batch = urls.slice(i, i + BATCH_SIZE);
-        const batchNumber = Math.floor(i / BATCH_SIZE) + 1;
-        const totalBatches = Math.ceil(urls.length / BATCH_SIZE);
-
-        console.log(`Processing Batch ${batchNumber}/${totalBatches} (${batch.length} URLs)...`);
-
         const batchPromises = batch.map(url => fetchUrlWithPlaywright(browser, url));
         const batchResults = await Promise.all(batchPromises);
         allResults.push(...batchResults);
 
         if (i + BATCH_SIZE < urls.length) {
-            console.log(`Waiting ${DELAY_MS}ms...`);
             await new Promise(resolve => setTimeout(resolve, DELAY_MS));
         }
     }
-
-    console.log("All batches complete. Generating report...");
-    const htmlContent = generateHtmlReport(allResults);
-    await writeFile(REPORT_FILENAME, htmlContent);
-    console.log(`✅ Report generated successfully: ${REPORT_FILENAME}`);
-    
     await browser.close();
+
+    // 3. Generate Dynamic Path: reports/YYYY/MM/DD/
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const timestamp = now.getTime(); // Unique ID
+
+    const folderPath = `reports/${year}/${month}/${day}`;
+    const fileName = `report-${timestamp}.html`;
+    const fullPath = path.join(folderPath, fileName);
+
+    // Create Directory
+    await mkdir(folderPath, { recursive: true });
+
+    // Write HTML Report
+    const htmlContent = generateHtmlReport(allResults, new Date().toLocaleString());
+    await writeFile(fullPath, htmlContent);
+    console.log(`✅ Report generated: ${fullPath}`);
+
+    // 4. Update History File (history.json)
+    const historyEntry: HistoryEntry = {
+        id: timestamp.toString(),
+        date: new Date().toLocaleString(),
+        timestamp: timestamp,
+        path: fullPath, // Relative path
+        urlCount: urls.length
+    };
+
+    let history: HistoryEntry[] = [];
+    try {
+        const historyData = await readFile(HISTORY_FILE, 'utf-8');
+        history = JSON.parse(historyData);
+    } catch (e) {
+        console.log("No existing history.json, creating new one.");
+    }
+
+    // Add new entry to TOP of list
+    history.unshift(historyEntry);
+    // Keep only last 50 reports to avoid massive file
+    if (history.length > 50) history = history.slice(0, 50);
+
+    await writeFile(HISTORY_FILE, JSON.stringify(history, null, 2));
+    console.log("✅ History Updated");
 }
 
 main().catch(err => {
