@@ -37,10 +37,11 @@ jobs:
       - name: Run Analysis Script
         run: npx ts-node src/main.ts
 
-      - name: Deploy Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./ # Publishes the root where report.html is
-          destination_dir: reports # accessible at your-site/reports/report.html
-          keep_files: true # Don't delete old reports
+      - name: Commit Report to Repo
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add report.html
+          # Commit only if the file has changed
+          git commit -m "Update Analysis Report [skip ci]" || echo "No changes to commit"
+          git push
