@@ -3,13 +3,15 @@ import validator from 'validator';
 import { URL } from 'url';
 import dns from 'dns/promises';
 import ipRangeCheck from 'ip-range-check';
-import { writeFile } from 'fs/promises';
+import { writeFile, readFile } from 'fs/promises';
 
-// --- CONFIGURATION FOR RATE LIMITING ---
-const BATCH_SIZE = 5;       // Number of URLs to check simultaneously (Keep low, 3-5 is safe)
-const DELAY_MS = 2000;      // Wait time (in ms) between batches to avoid 403/429 blocks
+// --- CONFIGURATION ---
+const BATCH_SIZE = 5;       // Number of URLs to check simultaneously
+const DELAY_MS = 2000;      // Wait time (ms) between batches to avoid rate limits
+const REPORT_FILENAME = 'report.html';
+const INPUT_FILENAME = 'urls.txt';
 
-// --- Type Definitions ---
+// --- TYPE DEFINITIONS ---
 interface Hop {
     url: string;
     status: number;
@@ -28,7 +30,7 @@ interface AnalysisResult {
     error?: string;
 }
 
-// --- Server Identification ---
+// --- SERVER IDENTIFICATION ---
 const AKAMAI_IP_RANGES = ["23.192.0.0/11", "104.64.0.0/10", "184.24.0.0/13"];
 const ipCache = new Map<string, string>();
 const ServerType = { AKAMAI: 'Akamai', AEM: 'Apache (AEM)', UNKNOWN: 'Unknown' };
@@ -38,7 +40,7 @@ const serverIconMap: Record<string, string> = {
     [ServerType.UNKNOWN]: '<i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i>'
 };
 
-// --- Helper Functions ---
+// --- HELPER FUNCTIONS ---
 async function resolveIp(url: string): Promise<string | null> {
     try {
         const hostname = new URL(url).hostname;
@@ -59,14 +61,17 @@ async function getServerName(headers: Record<string, string>, url: string, statu
     const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
     const xCache = lowerHeaders["x-cache"] || "";
     
+    // 1. Pro Check: X-Cache headers (Injected via Pragma)
     if (statusCode === 301 || statusCode === 302) {
         if (xCache.includes("TCP_HIT") || xCache.includes("TCP_MEM_HIT")) return ServerType.AKAMAI;
         if (xCache.includes("TCP_MISS")) return ServerType.AEM;
     }
 
+    // 2. Standard Server Header
     const serverValue = lowerHeaders["server"]?.toLowerCase() || "";
     if (serverValue.includes("akamai") || serverValue.includes("ghost")) return ServerType.AKAMAI;
     
+    // 3. AEM Specific Indicators
     const hostname = new URL(url).hostname;
     if (hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"))) {
         if ("x-dispatcher" in lowerHeaders || "x-aem-instance" in lowerHeaders) return ServerType.AEM;
@@ -75,6 +80,7 @@ async function getServerName(headers: Record<string, string>, url: string, statu
 
     if (serverValue.includes("apache")) return ServerType.AEM;
 
+    // 4. Server Timing & IP Fallback
     const serverTiming = lowerHeaders["server-timing"] || "";
     if (serverTiming.includes("cdn-cache; desc=HIT") && (statusCode === 301 || statusCode === 302)) return ServerType.AKAMAI;
 
@@ -84,7 +90,7 @@ async function getServerName(headers: Record<string, string>, url: string, statu
     return ServerType.UNKNOWN;
 }
 
-// --- Core Analysis Logic ---
+// --- CORE ANALYSIS LOGIC ---
 async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<AnalysisResult> {
     let context;
     const startTime = Date.now();
@@ -110,7 +116,7 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
             }
         });
 
-        await page.goto(url, { timeout: 45000, waitUntil: "domcontentloaded" }); // Increased timeout for batching safety
+        await page.goto(url, { timeout: 45000, waitUntil: "domcontentloaded" });
         
         const finalHop = redirectChain[redirectChain.length - 1];
         return {
@@ -133,7 +139,7 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
     }
 }
 
-// --- HTML Report Generation (WITH EXCEL FIX) ---
+// --- HTML REPORT GENERATION ---
 function generateHtmlReport(results: AnalysisResult[]): string {
     let tableRows = '';
     results.forEach((result, index) => {
@@ -141,13 +147,11 @@ function generateHtmlReport(results: AnalysisResult[]): string {
         const targetIcon = result.error ? '<i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i>' : serverIconMap[result.targetServer || ServerType.UNKNOWN];
         const finalStatusBadge = result.error ? `<span class="status-badge error">${result.finalStatus || 'ERR'}</span>` : `<span class="status-badge success">${result.finalStatus || 'OK'}</span>`;
         
-        // Safely handle redirect chain for mapping
         const chainBadges = result.redirectChain.map(h => {
             const statusClass = h.status >= 400 ? 'error' : (h.status >= 300 ? 'redirect' : 'success');
             return `<span class="status-badge small ${statusClass}">${h.status}</span>`;
         }).join('');
         
-        // Safely escape tooltip data
         const chainTooltip = result.redirectChain.map((h, i) => `Hop ${i + 1}: ${h.status} (${h.server})`).join(' &#013; ');
 
         tableRows += `
@@ -189,7 +193,6 @@ function generateHtmlReport(results: AnalysisResult[]): string {
         .status-badge.redirect { background-color: #ffc107; color: #333; }
         .status-badge.error { background-color: #dc3545; }
         .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
-        /* Modal Table Styling */
         .modal-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; color: #333; }
         .modal-table th { background: #f8f9fa; border-bottom: 2px solid #dee2e6; text-align: left; padding: 8px; }
         .modal-table td { border-bottom: 1px solid #eee; padding: 8px; }
@@ -214,12 +217,9 @@ function generateHtmlReport(results: AnalysisResult[]): string {
             const resultsData = ${JSON.stringify(results)};
             new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
 
-            // --- FIXED EXCEL EXPORT LOGIC ---
             document.getElementById('export-btn').addEventListener('click', () => {
                 try {
                     const wb = XLSX.utils.book_new();
-                    
-                    // 1. Create Summary Sheet
                     const summaryData = resultsData.map(r => ({
                         'Source URL': r.originalURL,
                         'Source Server': r.sourceServer,
@@ -233,28 +233,18 @@ function generateHtmlReport(results: AnalysisResult[]): string {
                     const summarySheet = XLSX.utils.json_to_sheet(summaryData);
                     XLSX.utils.book_append_sheet(wb, summarySheet, 'Overview');
 
-                    // 2. Create Detail Sheets (Sanitizing Names)
                     let sheetCounter = 1;
                     resultsData.forEach((r) => {
                         if (r.redirectChain.length > 0) {
                             const detailData = r.redirectChain.map((hop, i) => ({
-                                'Step': i + 1,
-                                'URL': hop.url,
-                                'Status': hop.status,
-                                'Server': hop.server,
-                                'Time': hop.timestamp
+                                'Step': i + 1, 'URL': hop.url, 'Status': hop.status, 'Server': hop.server, 'Time': hop.timestamp
                             }));
-                            
-                            // FIX: Excel Sheet names max 31 chars and NO special chars like / \ ? * [ ]
-                            // We use a generic name "Row_1", "Row_2" to be safe, or a sanitized snippet
                             let safeName = "Row_" + sheetCounter;
                             sheetCounter++;
-                            
                             const detailSheet = XLSX.utils.json_to_sheet(detailData);
                             XLSX.utils.book_append_sheet(wb, detailSheet, safeName);
                         }
                     });
-
                     XLSX.writeFile(wb, 'Redirect_Analysis.xlsx');
                 } catch (err) {
                     console.error(err);
@@ -262,25 +252,19 @@ function generateHtmlReport(results: AnalysisResult[]): string {
                 }
             });
 
-            // Detail View Modal
             document.querySelector('tbody').addEventListener('click', (e) => {
                 const btn = e.target.closest('.details-btn');
                 if (!btn) return;
                 const idx = btn.dataset.index;
                 const data = resultsData[idx];
-                
                 const chainHtml = data.redirectChain.map((h, i) => 
                     \`<tr><td>\${i+1}</td><td>\${h.url}</td><td>\${h.status}</td><td>\${h.server}</td></tr>\`
                 ).join('');
-
                 Swal.fire({
-                    title: 'Redirect Chain',
-                    width: '800px',
-                    html: \`<p><strong>Start:</strong> \${data.originalURL}</p>
-                           <table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>\${chainHtml}</tbody></table>\`
+                    title: 'Redirect Chain', width: '800px',
+                    html: \`<p><strong>Start:</strong> \${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>\${chainHtml}</tbody></table>\`
                 });
             });
-
             feather.replace();
         });
     </script>
@@ -288,19 +272,31 @@ function generateHtmlReport(results: AnalysisResult[]): string {
 </html>`;
 }
 
-// --- MAIN EXECUTION WITH BATCHING ---
+// --- MAIN EXECUTION ---
 async function main() {
     console.log("Starting Analysis...");
-    console.log(`Rate Limiting Configured: Batch Size = ${BATCH_SIZE}, Delay = ${DELAY_MS}ms`);
-
-    const allArgs = process.argv.slice(2);
-    const urls = allArgs.join(' ').split(/\s+/).map(u => u.trim()).filter(u => u && validator.isURL(u));
+    
+    let urls: string[] = [];
+    
+    // 1. Try to read from urls.txt (GitHub Actions mode)
+    try {
+        const fileContent = await readFile(INPUT_FILENAME, 'utf-8');
+        urls = fileContent.split('\n').map(u => u.trim()).filter(u => u && validator.isURL(u));
+        console.log(`Loaded ${urls.length} URLs from ${INPUT_FILENAME}`);
+    } catch (e) {
+        // 2. Fallback to CLI args (Local testing mode)
+        console.log(`${INPUT_FILENAME} not found, checking command line args...`);
+        const allArgs = process.argv.slice(2);
+        urls = allArgs.join(' ').split(/\s+/).map(u => u.trim()).filter(u => u && validator.isURL(u));
+    }
 
     if (urls.length === 0) {
-        console.error("No URLs provided.");
+        console.error("Error: No valid URLs found. Please provide 'urls.txt' or CLI arguments.");
         process.exit(1);
     }
+
     console.log(`Total URLs to process: ${urls.length}`);
+    console.log(`Configuration: Batch Size = ${BATCH_SIZE}, Delay = ${DELAY_MS}ms`);
 
     const browser = await chromium.launch({ headless: true });
     const allResults: AnalysisResult[] = [];
@@ -313,23 +309,25 @@ async function main() {
 
         console.log(`Processing Batch ${batchNumber}/${totalBatches} (${batch.length} URLs)...`);
 
-        // Process current batch in parallel
         const batchPromises = batch.map(url => fetchUrlWithPlaywright(browser, url));
         const batchResults = await Promise.all(batchPromises);
         allResults.push(...batchResults);
 
-        // Wait before next batch (unless it's the last one)
         if (i + BATCH_SIZE < urls.length) {
-            console.log(`Waiting ${DELAY_MS}ms to avoid rate limits...`);
+            console.log(`Waiting ${DELAY_MS}ms...`);
             await new Promise(resolve => setTimeout(resolve, DELAY_MS));
         }
     }
 
     console.log("All batches complete. Generating report...");
     const htmlContent = generateHtmlReport(allResults);
-    await writeFile('report.html', htmlContent);
-    console.log("✅ Report generated: report.html");
+    await writeFile(REPORT_FILENAME, htmlContent);
+    console.log(`✅ Report generated successfully: ${REPORT_FILENAME}`);
+    
     await browser.close();
 }
 
-main().catch(console.error);
+main().catch(err => {
+    console.error("Critical Error:", err);
+    process.exit(1);
+});
