@@ -42,12 +42,13 @@ jobs:
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "actions@github.com"
           
-          # Pull latest changes first to avoid conflicts (Rebase strategy)
-          git pull --rebase
-          
-          # Add the new nested report and the history file
+          # 1. Stage and Commit the new files FIRST
           git add reports/
           git add history.json
+          git commit -m "Add Scan Report [skip ci]" || echo "No changes to commit"
           
-          git commit -m "Add Scan Report [skip ci]" || echo "No changes"
+          # 2. THEN Pull the latest changes (Rebase applies your commit on top)
+          git pull --rebase
+          
+          # 3. Finally Push
           git push
