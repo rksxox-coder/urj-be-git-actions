@@ -2,58 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Analyzer Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        body { font-family: -apple-system, sans-serif; background: #f4f6f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
-        h2 { margin-top: 0; color: #333; }
-        textarea { width: 100%; height: 150px; padding: 12px; margin: 15px 0; border: 2px solid #eee; border-radius: 8px; font-family: monospace; resize: vertical; box-sizing: border-box;}
-        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.2s; }
-        button:hover { background: #0056b3; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        .note { font-size: 0.85em; color: #666; margin-top: 10px; display: block; }
-    </style>
+    <title>Redirect Analyzer Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="card">
-        <h2>🚀 Run URL Analysis</h2>
-        <p>Paste your URLs below (one per line):</p>
-        <textarea id="urls" placeholder="https://google.com&#10;https://github.com"></textarea>
-        <button id="btn" onclick="triggerAnalysis()">Start Analysis</button>
-        <span class="note">This will trigger the GitHub Action. Check your repo Actions tab for the report.</span>
+<body class="bg-gray-100 p-8">
+
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded shadow">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">BMW Redirect Analyzer</h1>
+
+        <div class="mb-6 p-4 bg-blue-50 rounded border border-blue-200">
+            <label class="block text-xs font-bold uppercase text-blue-600 mb-1">GitHub PAT Token</label>
+            <input type="password" id="ghToken" class="w-full p-2 border rounded bg-white" placeholder="Paste your GitHub PAT here (repo scope)">
+            <p class="text-xs text-gray-500 mt-1">Token is saved in your browser locally. Never shared.</p>
+        </div>
+
+        <div class="mb-6">
+            <label class="block font-bold mb-2">Target URLs</label>
+            <textarea id="urlInput" rows="8" class="w-full p-3 border rounded font-mono text-sm" placeholder="https://www.bmw.com&#10;https://www.mini.com"></textarea>
+        </div>
+
+        <div class="flex gap-4 items-center">
+            <button id="runBtn" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition">
+                Run Analysis via GitHub Actions
+            </button>
+            <span id="statusMsg" class="text-sm font-semibold text-gray-600"></span>
+        </div>
+
+        <div class="mt-8 border-t pt-6">
+            <h3 class="font-bold mb-2">Latest Reports</h3>
+            <a href="./reports/report.html" target="_blank" class="text-blue-600 hover:underline block">
+                📄 View Last Generated Report
+            </a>
+            <a href="https://github.com/YOUR_USERNAME/YOUR_REPO/actions" target="_blank" class="text-gray-500 text-sm hover:underline block mt-2">
+                ⚙️ View Job Progress in GitHub Actions
+            </a>
+        </div>
     </div>
 
     <script>
-        async function triggerAnalysis() {
-            const urls = document.getElementById('urls').value;
-            const btn = document.getElementById('btn');
-            
-            if (!urls.trim()) return Swal.fire('Error', 'Please enter at least one URL', 'error');
+        // 1. Configuration
+        const OWNER = 'YOUR_GITHUB_USERNAME'; // <--- REPLACE THIS
+        const REPO = 'YOUR_REPO_NAME';       // <--- REPLACE THIS
+        const WORKFLOW_FILE = 'scan.yml';    // The filename in .github/workflows/
 
-            btn.disabled = true;
-            btn.innerText = 'Starting Engine...';
+        // 2. Load Token from Storage
+        const tokenInput = document.getElementById('ghToken');
+        if(localStorage.getItem('gh_pat')) {
+            tokenInput.value = localStorage.getItem('gh_pat');
+        }
+
+        tokenInput.addEventListener('change', () => {
+            localStorage.setItem('gh_pat', tokenInput.value);
+        });
+
+        // 3. Trigger Action
+        document.getElementById('runBtn').addEventListener('click', async () => {
+            const token = tokenInput.value;
+            const urls = document.getElementById('urlInput').value;
+            const status = document.getElementById('statusMsg');
+
+            if (!token) return alert("Please enter a GitHub PAT Token");
+            if (!urls) return alert("Please enter URLs");
+
+            status.innerText = "Triggering GitHub Action...";
+            status.className = "text-blue-600";
 
             try {
-                // Call our local Netlify function (The Middleman)
-                const res = await fetch('/.netlify/functions/trigger', {
+                const response = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW_FILE}/dispatches`, {
                     method: 'POST',
-                    body: JSON.stringify({ urls: urls })
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                        ref: 'main', // or 'master'
+                        inputs: {
+                            url_list: urls
+                        }
+                    })
                 });
 
-                if (res.ok) {
-                    Swal.fire('Success', 'Analysis started! Go to GitHub Actions to see progress.', 'success');
+                if (response.ok) {
+                    status.innerText = "✅ Job Queued! Check GitHub Actions tab.";
+                    status.className = "text-green-600";
                 } else {
-                    throw new Error('Failed to start');
+                    const err = await response.json();
+                    throw new Error(err.message);
                 }
-            } catch (e) {
-                Swal.fire('Error', 'Something went wrong.', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = 'Start Analysis';
+            } catch (error) {
+                status.innerText = "❌ Error: " + error.message;
+                status.className = "text-red-600";
             }
-        }
+        });
     </script>
 </body>
 </html>
