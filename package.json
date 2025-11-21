@@ -1,15 +1,12 @@
 {
   "name": "url-analyzer-cli",
   "version": "1.0.0",
-  "description": "A CLI tool to analyze URL redirect chains and generate an HTML report.",
+  "description": "A CLI tool to analyze URL redirect chains.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "start": "node dist/index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "ip-range-check": "^0.2.0",
     "playwright-chromium": "^1.44.1",
@@ -19,7 +16,6 @@
     "@types/node": "^20.14.2",
     "@types/validator": "^13.11.10",
     "typescript": "^5.4.5",
-    "ts-node": "^10.9.2",
-    "@types/ip-range-check": "^0.2.0"
+    "ts-node": "^10.9.2" 
   }
 }
