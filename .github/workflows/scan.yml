@@ -35,7 +35,7 @@ jobs:
           echo "${{ github.event.inputs.url_list }}" > urls.txt
 
       - name: Run Analysis Script
-        run: npx ts-node main.ts
+        run: npx ts-node src/main.ts
 
       - name: Deploy Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
