@@ -11,7 +11,7 @@
         .log-window::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #progressBar { transition: width 0.5s linear; }
+        #progressBar { transition: width 1s linear; } /* Smoother transition */
     </style>
 </head>
 <body class="bg-gray-100 p-6 h-screen flex flex-col">
@@ -27,7 +27,6 @@
                 <select id="historySelect" class="border rounded p-2 text-sm bg-gray-50 hover:bg-gray-100">
                     <option value="">Loading past scans...</option>
                 </select>
-                
                 <div id="status-badge" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-gray-200 text-gray-600">IDLE</div>
             </div>
         </div>
@@ -45,9 +44,14 @@
                     <textarea id="urlInput" class="w-full h-48 p-3 border rounded text-sm font-mono focus:ring-2 focus:ring-blue-500" placeholder="https://www.bmw.com"></textarea>
                 </div>
 
-                <div id="progressContainer" class="hidden">
-                    <div class="flex justify-between text-xs text-gray-600 mb-1"><span>Progress</span><span id="etaText">ETA: Calculating...</span></div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5"><div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div></div>
+                <div id="progressContainer" class="hidden bg-gray-50 p-3 rounded border">
+                    <div class="flex justify-between text-xs font-bold text-gray-700 mb-2">
+                        <span id="elapsedText">Time: 0s</span>
+                        <span id="etaText" class="text-blue-600">ETA: Calculating...</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
                 </div>
 
                 <button id="runBtn" class="w-full bg-black text-white py-3 rounded font-semibold hover:bg-gray-800 transition flex justify-center items-center gap-2">
@@ -75,9 +79,9 @@
 
     <script>
         // --- CONFIGURATION ---
-       const OWNER = 'rksxox-coder'; // <--- REPLACE THIS
-        const REPO = 'urj-be-git-actions';       // <--- REPLACE THIS
-        const WORKFLOW_FILE = 'scan.yml';    // The filename in .github/workflows/
+        const OWNER = 'rksxox-coder'; 
+        const REPO = 'urj-be-git-actions';       
+        const WORKFLOW_FILE = 'scan.yml';
         
         // --- DOM ELEMENTS ---
         const consoleDiv = document.getElementById('consoleLogs');
@@ -89,50 +93,50 @@
         const tokenInput = document.getElementById('ghToken');
         const newTabLink = document.getElementById('newTabLink');
         const historySelect = document.getElementById('historySelect');
+        
+        // Progress Elements
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const etaText = document.getElementById('etaText');
+        const elapsedText = document.getElementById('elapsedText');
 
         // --- INIT ---
         if(localStorage.getItem('gh_pat')) tokenInput.value = localStorage.getItem('gh_pat');
         tokenInput.addEventListener('change', () => localStorage.setItem('gh_pat', tokenInput.value));
         
-        // Load History on Boot
         fetchHistory();
 
-        // Resume Session?
         window.addEventListener('load', () => {
             const savedRunId = localStorage.getItem('active_run_id');
-            if (savedRunId) trackProgress(savedRunId, localStorage.getItem('gh_pat'));
+            const savedStartTime = localStorage.getItem('active_start_time');
+            const savedUrlCount = localStorage.getItem('active_url_count');
+
+            if (savedRunId && savedStartTime) {
+                // Resume UI state
+                const elapsedSecs = Math.floor((Date.now() - parseInt(savedStartTime)) / 1000);
+                startTimers(parseInt(savedUrlCount) || 2, elapsedSecs);
+                trackProgress(savedRunId, localStorage.getItem('gh_pat'));
+            }
         });
 
-        // --- HISTORY LOGIC ---
+        // --- LOGIC ---
         async function fetchHistory() {
             try {
-                // Fetch history.json from the repo root
                 const resp = await fetch(`https://${OWNER}.github.io/${REPO}/history.json?t=${Date.now()}`);
-                if(!resp.ok) throw new Error("No history yet");
+                if(!resp.ok) throw new Error("No history");
                 const history = await resp.json();
-                
                 historySelect.innerHTML = '<option value="">-- Select Past Report --</option>';
                 history.forEach(entry => {
                     const opt = document.createElement('option');
-                    opt.value = entry.path; // "reports/2025/11/21/report-123.html"
+                    opt.value = entry.path;
                     opt.innerText = `${entry.date} (${entry.urlCount} URLs)`;
                     historySelect.appendChild(opt);
                 });
-            } catch (e) {
-                historySelect.innerHTML = '<option value="">No past reports found</option>';
-            }
+            } catch (e) { historySelect.innerHTML = '<option value="">No past reports found</option>'; }
         }
 
-        // Load selected report from history
-        historySelect.addEventListener('change', () => {
-            const path = historySelect.value;
-            if(path) loadReportFrame(path);
-        });
+        historySelect.addEventListener('change', () => { if(historySelect.value) loadReportFrame(historySelect.value); });
 
-        // --- LOGGING ---
         function log(msg, type = 'info') {
             const p = document.createElement('p');
             p.innerHTML = `> ${msg}`;
@@ -142,14 +146,10 @@
             consoleDiv.scrollTop = consoleDiv.scrollHeight;
         }
 
-        // --- LOAD REPORT INTO IFRAME ---
         function loadReportFrame(relativePath) {
-            // Use the Token to fetch via API if possible (to bypass cache), or fallback to raw link
             const token = tokenInput.value;
-            if(token) {
-                displayReportFromApi(token, relativePath);
-            } else {
-                // Fallback to public URL
+            if(token) displayReportFromApi(token, relativePath);
+            else {
                 const fullUrl = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
                 reportFrame.src = fullUrl;
                 previewPlaceholder.classList.add('hidden');
@@ -159,7 +159,7 @@
             }
         }
 
-        // --- START ANALYSIS ---
+        // --- START CLICK ---
         runBtn.addEventListener('click', async () => {
             const token = tokenInput.value;
             const urls = document.getElementById('urlInput').value;
@@ -174,7 +174,9 @@
             badge.innerText = "QUEUED";
             previewPlaceholder.classList.remove('hidden');
             reportFrame.classList.add('hidden');
-            startEstimatedProgress(urlCount);
+            
+            // Start Timers
+            startTimers(urlCount, 0);
 
             try {
                 log("Triggering Workflow...", 'info');
@@ -182,7 +184,11 @@
                     method: 'POST', headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
                     body: JSON.stringify({ ref: 'main', inputs: { url_list: urls } })
                 });
-                if (!triggerResp.ok) throw new Error("Failed to trigger");
+                
+                if (!triggerResp.ok) {
+                    const errJson = await triggerResp.json();
+                    throw new Error("GitHub Error: " + (errJson.message || triggerResp.statusText));
+                }
                 
                 log("Waiting for Run ID...");
                 await new Promise(r => setTimeout(r, 5000));
@@ -191,7 +197,11 @@
                 const runsData = await runsResp.json();
                 const latestRun = runsData.workflow_runs[0];
                 
+                // Save State
                 localStorage.setItem('active_run_id', latestRun.id);
+                localStorage.setItem('active_start_time', Date.now());
+                localStorage.setItem('active_url_count', urlCount);
+
                 log(`Run ID: ${latestRun.id}`);
                 trackProgress(latestRun.id, token);
 
@@ -199,11 +209,10 @@
                 log(err.message, 'error');
                 runBtn.disabled = false;
                 btnLoader.classList.add('hidden');
-                stopProgress();
+                stopTimers();
             }
         });
 
-        // --- TRACKING ---
         function trackProgress(runId, token) {
             badge.innerText = "RUNNING";
             badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-blue-200 text-blue-800";
@@ -216,24 +225,21 @@
                 
                 if (statusData.status === 'completed') {
                     clearInterval(pollInterval);
-                    localStorage.removeItem('active_run_id');
-                    stopProgress();
+                    clearSession();
+                    stopTimers();
 
                     if (statusData.conclusion === 'success') {
-                        log("Success! Refreshing history...", 'success');
+                        log("Success! Fetching history...", 'success');
                         badge.innerText = "SUCCESS";
                         badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800";
                         
-                        // Wait 2 seconds for GitHub pages to potentially see the file, then reload history
                         setTimeout(async () => {
                             await fetchHistory();
-                            // Auto-select the newest report (first option after default)
                             if(historySelect.options.length > 1) {
                                 historySelect.selectedIndex = 1;
                                 loadReportFrame(historySelect.value);
                             }
                         }, 3000);
-
                     } else {
                         log("Workflow Failed.", 'error');
                         badge.innerText = "FAILED";
@@ -244,6 +250,12 @@
             }, 4000);
         }
 
+        function clearSession() {
+            localStorage.removeItem('active_run_id');
+            localStorage.removeItem('active_start_time');
+            localStorage.removeItem('active_url_count');
+        }
+
         async function displayReportFromApi(token, relativePath) {
             try {
                 const fileResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${relativePath}`, {
@@ -251,38 +263,71 @@
                 });
                 const fileData = await fileResp.json();
                 const rawHtml = atob(fileData.content);
-                
                 previewPlaceholder.classList.add('hidden');
                 reportFrame.classList.remove('hidden');
                 const doc = reportFrame.contentWindow.document;
                 doc.open(); doc.write(rawHtml); doc.close();
-                
                 newTabLink.href = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
                 newTabLink.classList.remove('hidden');
                 runBtn.disabled = false;
                 btnLoader.classList.add('hidden');
-            } catch(e) { log("Error fetching report content: " + e.message, 'error'); }
+            } catch(e) { log("Error content: " + e.message, 'error'); }
         }
 
-        // --- ETA ---
-        let progressInterval;
-        function startEstimatedProgress(urlCount) {
+        // --- NEW TIMER LOGIC ---
+        let stopwatchInterval;
+        let countdownInterval;
+        
+        function startTimers(urlCount, startingElapsed = 0) {
             progressContainer.classList.remove('hidden');
             progressBar.style.width = '0%';
-            const estimatedSeconds = 25 + (urlCount * 4.5);
-            etaText.innerText = `ETA: ~${estimatedSeconds}s`;
-            let currentPercentage = 0;
-            const step = 90 / estimatedSeconds; 
-            if (progressInterval) clearInterval(progressInterval);
-            progressInterval = setInterval(() => {
-                if (currentPercentage < 90) { currentPercentage += step; progressBar.style.width = `${currentPercentage}%`; }
+            
+            // 1. STOPWATCH (Actual Time)
+            let elapsed = startingElapsed;
+            elapsedText.innerText = `Time: ${elapsed}s`;
+            
+            if (stopwatchInterval) clearInterval(stopwatchInterval);
+            stopwatchInterval = setInterval(() => {
+                elapsed++;
+                elapsedText.innerText = `Time: ${elapsed}s`;
+            }, 1000);
+
+            // 2. COUNTDOWN (ETA)
+            // Formula: 45s base boot time + 5s per URL
+            const totalEstimatedSeconds = 45 + (urlCount * 5);
+            let remaining = totalEstimatedSeconds - startingElapsed;
+            if (remaining < 5) remaining = 5; // Minimum buffer
+
+            etaText.innerText = `ETA: ${remaining}s`;
+            
+            // Calculate progress percentage step per second to reach 90%
+            // We want to reach 90% when remaining hits 0
+            let currentPercentage = (startingElapsed / totalEstimatedSeconds) * 90;
+            const step = 90 / remaining; 
+
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                if (remaining > 0) {
+                    remaining--;
+                    etaText.innerText = `ETA: ${remaining}s`;
+                } else {
+                    etaText.innerText = `Finalizing...`;
+                }
+
+                if (currentPercentage < 90) {
+                    currentPercentage += step;
+                    progressBar.style.width = `${currentPercentage}%`;
+                }
             }, 1000);
         }
-        function stopProgress() {
-            if (progressInterval) clearInterval(progressInterval);
+
+        function stopTimers() {
+            if (stopwatchInterval) clearInterval(stopwatchInterval);
+            if (countdownInterval) clearInterval(countdownInterval);
             progressBar.style.width = '100%';
             etaText.innerText = "Done";
         }
+
         feather.replace();
     </script>
 </body>
