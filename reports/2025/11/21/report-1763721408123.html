@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report 11/21/2025, 10:36:48 AM</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <style>
+        :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #dee2e6; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); --link-color: #007bff; }
+        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e0e0e0; --border-color: #444; --header-bg: #333; --shadow-color: rgba(0,0,0,0.5); --link-color: #4dabf7; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+        .container { max-width: 1600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px var(--shadow-color); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-controls { display: flex; align-items: center; gap: 20px; }
+        #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        table { width: 100% !important; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .url-cell { display: flex; align-items: center; }
+        .url-cell i.feather { margin-right: 10px; flex-shrink: 0; }
+        td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 13px; margin: 2px; }
+        .status-badge.success { background-color: #28a745; }
+        .status-badge.redirect { background-color: #ffc107; color: #333; }
+        .status-badge.error { background-color: #dc3545; }
+        .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
+        .modal-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; color: #333; }
+        .modal-table th { background: #f8f9fa; border-bottom: 2px solid #dee2e6; text-align: left; padding: 8px; }
+        .modal-table td { border-bottom: 1px solid #eee; padding: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Analysis Report (11/21/2025, 10:36:48 AM)</h1>
+            <div class="header-controls">
+                <button id="export-btn"><i data-feather="file-text"></i> Export to Excel</button>
+                <button onclick="document.body.classList.toggle('dark-mode')"><i data-feather="moon"></i></button>
+            </div>
+        </div>
+        <table id="analysisTable">
+            <thead><tr><th>Source URL</th><th>Target URL</th><th>Status</th><th>Chain</th><th>Details</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/topics/offers-and-services/bmw-ozel-satislar/ozel-satislar-genel-bakis.html" target="_blank">https://www.bmw.com.tr/tr/topics/offers-and-services/bmw-ozel-satislar/ozel-satislar-genel-bakis.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/topics/offers-and-services/bmw-ozel-satislar/ozel-satislar-genel-bakis.html" target="_blank">https://www.bmw.com.tr/tr/topics/offers-and-services/bmw-ozel-satislar/ozel-satislar-genel-bakis.html</a></div></td>
+                <td><span class="status-badge success">404</span></td>
+                <td class="chain-cell" title="Hop 1: 404 (Apache (AEM))"><span class="status-badge small error">404</span></td>
+                <td><button class="details-btn" data-index="0"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/forms/campaign/keep-me-informed-ix3.html" target="_blank">https://www.bmw.ro/forms/campaign/keep-me-informed-ix3.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/forms/campaign/keep-me-informed-ix3.html" target="_blank">https://www.bmw.ro/forms/campaign/keep-me-informed-ix3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="1"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/forms/campaign/keep-me-informed-ix3.html" target="_blank">https://www.bmw.pl/forms/campaign/keep-me-informed-ix3.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/forms/campaign/keep-me-informed-ix3.html" target="_blank">https://www.bmw.pl/forms/campaign/keep-me-informed-ix3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="2"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1-date-tehnice.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1-date-tehnice.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1-date-tehnice.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1-date-tehnice.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="3"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html" target="_blank">https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html" target="_blank">https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="4"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-u11-ice-phev.html" target="_blank">https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-u11-ice-phev.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-u11-ice-phev.html" target="_blank">https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-u11-ice-phev.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="5"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="6"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="7"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-u11-ice-phev.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-u11-ice-phev.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-u11-ice-phev.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-u11-ice-phev.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="8"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x3/dane-techniczne-bmw-x3.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x3/dane-techniczne-bmw-x3.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x3/dane-techniczne-bmw-x3.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x3/dane-techniczne-bmw-x3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="9"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/samochod-elektryczny.html" target="_blank">https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/samochod-elektryczny.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 302 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">302</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="10"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zarzadzanie-energia.html" target="_blank">https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zarzadzanie-energia.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zuzycie-emisja.html" target="_blank">https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zuzycie-emisja.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="11"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/topics/fascination-bmw/bmw-lifestyle/bmw-lifestyle-lookbook.html" target="_blank">https://www.bmw.pl/pl/topics/fascination-bmw/bmw-lifestyle/bmw-lifestyle-lookbook.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/more-bmw/bmw-lifestyle.html" target="_blank">https://www.bmw.pl/pl/more-bmw/bmw-lifestyle.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="12"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/art-club.html" target="_blank">https://www.bmw.pl/pl/art-club.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/art-club.html" target="_blank">https://www.bmw.pl/pl/art-club.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="13"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/x5/bmw-x5.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/x5/bmw-x5.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/x5/bmw-x5.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/x5/bmw-x5.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="14"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="15"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/all-models/x-serisi/ix3/bmw-ix3.html" target="_blank">https://www.bmw.com.tr/tr/all-models/x-serisi/ix3/bmw-ix3.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/all-models/x-serisi/ix3/bmw-ix3.html" target="_blank">https://www.bmw.com.tr/tr/all-models/x-serisi/ix3/bmw-ix3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="16"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="17"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html" target="_blank">https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html" target="_blank">https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="18"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x6/bmw-x6-dane-techniczne.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x6/bmw-x6-dane-techniczne.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x6/bmw-x6-dane-techniczne.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x6/bmw-x6-dane-techniczne.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="19"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/more-bmw/bmw-special-sales.html" target="_blank">https://www.bmw.ro/ro/more-bmw/bmw-special-sales.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/more-bmw/bmw-special-sales.html" target="_blank">https://www.bmw.ro/ro/more-bmw/bmw-special-sales.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="20"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/bmw-service.html#service-5+" target="_blank">https://www.bmw.ro/ro/bmw-service.html#service-5+</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/bmw-service.html#service-5+" target="_blank">https://www.bmw.ro/ro/bmw-service.html#service-5+</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="21"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x1/bmw-x1.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x1/bmw-x1.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x1/bmw-x1.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x1/bmw-x1.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="22"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/ix1/bmw-ix1.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/ix1/bmw-ix1.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/ix1/bmw-ix1.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/ix1/bmw-ix1.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="23"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/x1-m35i/bmw-x1-m35i-xdrive.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/x1-m35i/bmw-x1-m35i-xdrive.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/x1-m35i/bmw-x1-m35i-xdrive.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/x1-m35i/bmw-x1-m35i-xdrive.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="24"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models.html" target="_blank">https://www.bmw.pl/pl/all-models.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models.html" target="_blank">https://www.bmw.pl/pl/all-models.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="25"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/1-series/1-series-5doors/bmw-serii1.html" target="_blank">https://www.bmw.pl/pl/all-models/1-series/1-series-5doors/bmw-serii1.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/1-series/1-series-5doors/bmw-serii1.html" target="_blank">https://www.bmw.pl/pl/all-models/1-series/1-series-5doors/bmw-serii1.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="26"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-m-135/bmw-m135.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-m-135/bmw-m135.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-m-135/bmw-m135.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-m-135/bmw-m135.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="27"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/2-series/2-series-active-tourer/bmw-serii-2-active-tourer.html" target="_blank">https://www.bmw.pl/pl/all-models/2-series/2-series-active-tourer/bmw-serii-2-active-tourer.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/2-series/2-series-active-tourer/bmw-serii-2-active-tourer.html" target="_blank">https://www.bmw.pl/pl/all-models/2-series/2-series-active-tourer/bmw-serii-2-active-tourer.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="28"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m235-xdrive-gran-coupe/bmw-m235-xdrive-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m235-xdrive-gran-coupe/bmw-m235-xdrive-gran-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m235-xdrive-gran-coupe/bmw-m235-xdrive-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m235-xdrive-gran-coupe/bmw-m235-xdrive-gran-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="29"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/2-series/gran-coupe/bmw-2er-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/2-series/gran-coupe/bmw-2er-gran-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/2-series/gran-coupe/bmw-2er-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/2-series/gran-coupe/bmw-2er-gran-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="30"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m2-series/bmw-m2-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m2-series/bmw-m2-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m2-series/bmw-m2-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m2-series/bmw-m2-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="31"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-limuzyna.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-limuzyna.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="32"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-touring.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-touring.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="33"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/2-series/serii-2-coupe/bmw-serii-2-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/2-series/serii-2-coupe/bmw-serii-2-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/2-series/serii-2-coupe/bmw-serii-2-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/2-series/serii-2-coupe/bmw-serii-2-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="34"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="35"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/4-series/gran-coupe/bmw-serii-4-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/4-series/gran-coupe/bmw-serii-4-gran-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/4-series/gran-coupe/bmw-serii-4-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/4-series/gran-coupe/bmw-serii-4-gran-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="36"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-w-skrocie.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="37"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-limuzyna.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-limuzyna.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="38"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/seria-bmw-z/z4-roadster/bmw-z4-roadster.html" target="_blank">https://www.bmw.pl/pl/all-models/seria-bmw-z/z4-roadster/bmw-z4-roadster.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/seria-bmw-z/z4-roadster/bmw-z4-roadster.html" target="_blank">https://www.bmw.pl/pl/all-models/seria-bmw-z/z4-roadster/bmw-z4-roadster.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="39"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="40"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/i4/bmw-i4-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/i4/bmw-i4-gran-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/i4/bmw-i4-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/i4/bmw-i4-gran-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="41"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/4-series/coupe/bmw-serii-4-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/4-series/coupe/bmw-serii-4-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/4-series/coupe/bmw-serii-4-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/4-series/coupe/bmw-serii-4-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="42"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="43"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-cabrio.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-cabrio.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-cabrio.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-cabrio.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="44"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/4-series/convertible/bmw-serii-4-cabrio.html" target="_blank">https://www.bmw.pl/pl/all-models/4-series/convertible/bmw-serii-4-cabrio.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/4-series/convertible/bmw-serii-4-cabrio.html" target="_blank">https://www.bmw.pl/pl/all-models/4-series/convertible/bmw-serii-4-cabrio.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="45"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m440i-xdrive-gran-coupe/bmw-m440i-xdrive-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m440i-xdrive-gran-coupe/bmw-m440i-xdrive-gran-coupe.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/m440i-xdrive-gran-coupe/bmw-m440i-xdrive-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/m440i-xdrive-gran-coupe/bmw-m440i-xdrive-gran-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="46"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="47"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/i5/bmw-i5-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/i5/bmw-i5-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/i5/bmw-i5-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/i5/bmw-i5-w-skrocie.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="48"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-phev-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-phev-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-phev-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-phev-w-skrocie.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="49"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring-phev.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring-phev.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring-phev.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring-phev.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="50"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-i5-m60/bmw-i5-m60xdrive-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-i5-m60/bmw-i5-m60xdrive-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-i5-m60/bmw-i5-m60xdrive-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-i5-m60/bmw-i5-m60xdrive-w-skrocie.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="51"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/x3-m50/bmw-x3-m50.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/x3-m50/bmw-x3-m50.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/x3-m50/bmw-x3-m50.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/x3-m50/bmw-x3-m50.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="52"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3-phev.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3-phev.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3-phev.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3-phev.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="53"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="54"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="55"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="56"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring-hybryda-plug-in.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring-hybryda-plug-in.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring-hybryda-plug-in.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring-hybryda-plug-in.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="57"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna-hybryda-plug-in.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna-hybryda-plug-in.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna-hybryda-plug-in.html" target="_blank">https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna-hybryda-plug-in.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="58"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/ix2/bmw-ix2-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/ix2/bmw-ix2-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/bmw-i/ix2/bmw-ix2-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/bmw-i/ix2/bmw-ix2-w-skrocie.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="59"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/X2/bmw-x2-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/X2/bmw-x2-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/X2/bmw-x2-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/X2/bmw-x2-w-skrocie.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="60"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/x2-m35i/bmw-x2-m35ixdrive-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/x2-m35i/bmw-x2-m35ixdrive-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/x2-m35i/bmw-x2-m35ixdrive-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/x2-m35i/bmw-x2-m35ixdrive-w-skrocie.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="61"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/7-series/limuzyna-serii-7/bmw-serii-7-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/7-series/limuzyna-serii-7/bmw-serii-7-limuzyna.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/7-series/limuzyna-serii-7/bmw-serii-7-limuzyna.html" target="_blank">https://www.bmw.pl/pl/all-models/7-series/limuzyna-serii-7/bmw-serii-7-limuzyna.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="62"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/samochod-elektryczny.html" target="_blank">https://www.bmw.pl/pl/samochod-elektryczny.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/samochod-elektryczny.html" target="_blank">https://www.bmw.pl/pl/samochod-elektryczny.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="63"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/bmw-seria-5-prezentare-generala/sedan/bmw-seria-5-sedan-sumar.html" target="_blank">https://www.bmw.ro/ro/all-models/bmw-seria-5-prezentare-generala/sedan/bmw-seria-5-sedan-sumar.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/bmw-seria-5-prezentare-generala/sedan/bmw-seria-5-sedan-sumar.html" target="_blank">https://www.bmw.ro/ro/all-models/bmw-seria-5-prezentare-generala/sedan/bmw-seria-5-sedan-sumar.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="64"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/7-series/bmw-7-seria-sedan/bmw-seria-7-sedan.html" target="_blank">https://www.bmw.ro/ro/all-models/7-series/bmw-7-seria-sedan/bmw-seria-7-sedan.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/7-series/bmw-7-seria-sedan/bmw-seria-7-sedan.html" target="_blank">https://www.bmw.ro/ro/all-models/7-series/bmw-7-seria-sedan/bmw-seria-7-sedan.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="65"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/modele-electrice.html" target="_blank">https://www.bmw.ro/ro/modele-electrice.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/modele-electrice.html" target="_blank">https://www.bmw.ro/ro/modele-electrice.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="66"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/3-series/bmw-3-series-sedan/bmw-seria-3-sedan.html" target="_blank">https://www.bmw.ro/ro/all-models/3-series/bmw-3-series-sedan/bmw-seria-3-sedan.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/3-series/bmw-3-series-sedan/bmw-seria-3-sedan.html" target="_blank">https://www.bmw.ro/ro/all-models/3-series/bmw-3-series-sedan/bmw-seria-3-sedan.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="67"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-corporate-sales.html" target="_blank">https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-corporate-sales.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-corporate-sales.html" target="_blank">https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-corporate-sales.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="68"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/serwis-bmw.html" target="_blank">https://www.bmw.pl/pl/serwis-bmw.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/serwis-bmw.html" target="_blank">https://www.bmw.pl/pl/serwis-bmw.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="69"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/shop/ls/cp/connected-drive" target="_blank">https://www.bmw.pl/pl/shop/ls/cp/connected-drive</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/shop/ls/cp/connected-drive" target="_blank">https://www.bmw.pl/pl/shop/ls/cp/connected-drive</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="70"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/shop/ls/cp/connected-drive" target="_blank">https://www.bmw.ro/ro/shop/ls/cp/connected-drive</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/shop/ls/cp/connected-drive" target="_blank">https://www.bmw.ro/ro/shop/ls/cp/connected-drive</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="71"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/digital-services/bmw-digital-key.html" target="_blank">https://www.bmw.ro/ro/digital-services/bmw-digital-key.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/digital-services/bmw-digital-key.html" target="_blank">https://www.bmw.ro/ro/digital-services/bmw-digital-key.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 200 (Apache (AEM))"><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="72"><i data-feather="eye"></i></button></td>
+            </tr></tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsData = [{"originalURL":"https://www.bmw.com.tr/tr/topics/offers-and-services/bmw-ozel-satislar/ozel-satislar-genel-bakis.html","finalURL":"https://www.bmw.com.tr/tr/topics/offers-and-services/bmw-ozel-satislar/ozel-satislar-genel-bakis.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":404,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/topics/offers-and-services/bmw-ozel-satislar/ozel-satislar-genel-bakis.html","status":404,"server":"Apache (AEM)","timestamp":0.72}],"totalTime":0.725},{"originalURL":"https://www.bmw.ro/forms/campaign/keep-me-informed-ix3.html","finalURL":"https://www.bmw.ro/forms/campaign/keep-me-informed-ix3.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/forms/campaign/keep-me-informed-ix3.html","status":200,"server":"Apache (AEM)","timestamp":0.826}],"totalTime":1.717},{"originalURL":"https://www.bmw.pl/forms/campaign/keep-me-informed-ix3.html","finalURL":"https://www.bmw.pl/forms/campaign/keep-me-informed-ix3.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/forms/campaign/keep-me-informed-ix3.html","status":200,"server":"Apache (AEM)","timestamp":1.075}],"totalTime":1.752},{"originalURL":"https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1-date-tehnice.html","finalURL":"https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1-date-tehnice.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1-date-tehnice.html","status":200,"server":"Apache (AEM)","timestamp":0.578}],"totalTime":1.209},{"originalURL":"https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html","finalURL":"https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html","status":200,"server":"Apache (AEM)","timestamp":0.455}],"totalTime":1.222},{"originalURL":"https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-u11-ice-phev.html","finalURL":"https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-u11-ice-phev.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/x-series/x1/x1-2025-u11-ice-phev.html","status":200,"server":"Apache (AEM)","timestamp":0.453}],"totalTime":1.121},{"originalURL":"https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1.html","finalURL":"https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/seria-x/x1/bmw-x1.html","status":200,"server":"Apache (AEM)","timestamp":0.783}],"totalTime":1.122},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-ice-phev-technical-data.html","status":200,"server":"Apache (AEM)","timestamp":0.248}],"totalTime":0.545},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-u11-ice-phev.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-u11-ice-phev.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/x1/x1-2025-u11-ice-phev.html","status":200,"server":"Apache (AEM)","timestamp":0.234}],"totalTime":0.577},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/x3/dane-techniczne-bmw-x3.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x3/dane-techniczne-bmw-x3.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/x3/dane-techniczne-bmw-x3.html","status":200,"server":"Apache (AEM)","timestamp":0.292}],"totalTime":0.62},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-i.html","finalURL":"https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/samochod-elektryczny.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-i.html","status":302,"server":"Apache (AEM)","timestamp":0.741},{"url":"https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/samochod-elektryczny.html","status":200,"server":"Apache (AEM)","timestamp":0.867}],"totalTime":1.083},{"originalURL":"https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zarzadzanie-energia.html","finalURL":"https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zuzycie-emisja.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zarzadzanie-energia.html","status":301,"server":"Apache (AEM)","timestamp":0.139},{"url":"https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/zuzycie-emisja.html","status":200,"server":"Apache (AEM)","timestamp":0.25}],"totalTime":0.466},{"originalURL":"https://www.bmw.pl/pl/topics/fascination-bmw/bmw-lifestyle/bmw-lifestyle-lookbook.html","finalURL":"https://www.bmw.pl/pl/more-bmw/bmw-lifestyle.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/topics/fascination-bmw/bmw-lifestyle/bmw-lifestyle-lookbook.html","status":301,"server":"Apache (AEM)","timestamp":0.159},{"url":"https://www.bmw.pl/pl/more-bmw/bmw-lifestyle.html","status":200,"server":"Apache (AEM)","timestamp":0.407}],"totalTime":0.714},{"originalURL":"https://www.bmw.pl/pl/art-club.html","finalURL":"https://www.bmw.pl/pl/art-club.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/art-club.html","status":200,"server":"Apache (AEM)","timestamp":0.388}],"totalTime":0.628},{"originalURL":"https://www.bmw.ro/ro/all-models/seria-x/x5/bmw-x5.html","finalURL":"https://www.bmw.ro/ro/all-models/seria-x/x5/bmw-x5.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/seria-x/x5/bmw-x5.html","status":200,"server":"Apache (AEM)","timestamp":0.403}],"totalTime":0.808},{"originalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html","finalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html","status":200,"server":"Apache (AEM)","timestamp":0.622}],"totalTime":1.03},{"originalURL":"https://www.bmw.com.tr/tr/all-models/x-serisi/ix3/bmw-ix3.html","finalURL":"https://www.bmw.com.tr/tr/all-models/x-serisi/ix3/bmw-ix3.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/all-models/x-serisi/ix3/bmw-ix3.html","status":200,"server":"Apache (AEM)","timestamp":0.366}],"totalTime":1.26},{"originalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","finalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","status":200,"server":"Apache (AEM)","timestamp":0.649}],"totalTime":1.055},{"originalURL":"https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html","finalURL":"https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html","status":200,"server":"Apache (AEM)","timestamp":0.26}],"totalTime":0.711},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/x6/bmw-x6-dane-techniczne.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x6/bmw-x6-dane-techniczne.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/x6/bmw-x6-dane-techniczne.html","status":200,"server":"Apache (AEM)","timestamp":0.404}],"totalTime":0.722},{"originalURL":"https://www.bmw.ro/ro/more-bmw/bmw-special-sales.html","finalURL":"https://www.bmw.ro/ro/more-bmw/bmw-special-sales.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/more-bmw/bmw-special-sales.html","status":200,"server":"Apache (AEM)","timestamp":0.237}],"totalTime":0.905},{"originalURL":"https://www.bmw.ro/ro/bmw-service.html#service-5+","finalURL":"https://www.bmw.ro/ro/bmw-service.html#service-5+","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/bmw-service.html","status":200,"server":"Apache (AEM)","timestamp":0.229}],"totalTime":0.973},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/x1/bmw-x1.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x1/bmw-x1.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/x1/bmw-x1.html","status":200,"server":"Apache (AEM)","timestamp":0.301}],"totalTime":1.01},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-i/ix1/bmw-ix1.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-i/ix1/bmw-ix1.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-i/ix1/bmw-ix1.html","status":200,"server":"Apache (AEM)","timestamp":0.298}],"totalTime":1.059},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/x1-m35i/bmw-x1-m35i-xdrive.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/x1-m35i/bmw-x1-m35i-xdrive.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/x1-m35i/bmw-x1-m35i-xdrive.html","status":200,"server":"Apache (AEM)","timestamp":0.348}],"totalTime":1.015},{"originalURL":"https://www.bmw.pl/pl/all-models.html","finalURL":"https://www.bmw.pl/pl/all-models.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models.html","status":200,"server":"Apache (AEM)","timestamp":0.45}],"totalTime":1.134},{"originalURL":"https://www.bmw.pl/pl/all-models/1-series/1-series-5doors/bmw-serii1.html","finalURL":"https://www.bmw.pl/pl/all-models/1-series/1-series-5doors/bmw-serii1.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/1-series/1-series-5doors/bmw-serii1.html","status":200,"server":"Apache (AEM)","timestamp":0.264}],"totalTime":0.848},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-m-135/bmw-m135.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-m-135/bmw-m135.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/bmw-m-135/bmw-m135.html","status":200,"server":"Apache (AEM)","timestamp":0.361}],"totalTime":0.929},{"originalURL":"https://www.bmw.pl/pl/all-models/2-series/2-series-active-tourer/bmw-serii-2-active-tourer.html","finalURL":"https://www.bmw.pl/pl/all-models/2-series/2-series-active-tourer/bmw-serii-2-active-tourer.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/2-series/2-series-active-tourer/bmw-serii-2-active-tourer.html","status":200,"server":"Apache (AEM)","timestamp":0.37}],"totalTime":0.831},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/m235-xdrive-gran-coupe/bmw-m235-xdrive-gran-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/m235-xdrive-gran-coupe/bmw-m235-xdrive-gran-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/m235-xdrive-gran-coupe/bmw-m235-xdrive-gran-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.297}],"totalTime":0.878},{"originalURL":"https://www.bmw.pl/pl/all-models/2-series/gran-coupe/bmw-2er-gran-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/2-series/gran-coupe/bmw-2er-gran-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/2-series/gran-coupe/bmw-2er-gran-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.26}],"totalTime":0.772},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/m2-series/bmw-m2-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/m2-series/bmw-m2-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/m2-series/bmw-m2-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.227}],"totalTime":0.817},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-limuzyna.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-limuzyna.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-limuzyna.html","status":200,"server":"Apache (AEM)","timestamp":0.472}],"totalTime":1.032},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-touring.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-touring.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/m5-series/bmw-m5-touring.html","status":200,"server":"Apache (AEM)","timestamp":0.472}],"totalTime":1.05},{"originalURL":"https://www.bmw.pl/pl/all-models/2-series/serii-2-coupe/bmw-serii-2-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/2-series/serii-2-coupe/bmw-serii-2-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/2-series/serii-2-coupe/bmw-serii-2-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.244}],"totalTime":0.668},{"originalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring.html","finalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring.html","status":200,"server":"Apache (AEM)","timestamp":0.373}],"totalTime":0.569},{"originalURL":"https://www.bmw.pl/pl/all-models/4-series/gran-coupe/bmw-serii-4-gran-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/4-series/gran-coupe/bmw-serii-4-gran-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/4-series/gran-coupe/bmw-serii-4-gran-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.333}],"totalTime":0.775},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-w-skrocie.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-w-skrocie.html","status":200,"server":"Apache (AEM)","timestamp":0.471}],"totalTime":0.972},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-limuzyna.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-limuzyna.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-limuzyna.html","status":200,"server":"Apache (AEM)","timestamp":0.482}],"totalTime":1.013},{"originalURL":"https://www.bmw.pl/pl/all-models/seria-bmw-z/z4-roadster/bmw-z4-roadster.html","finalURL":"https://www.bmw.pl/pl/all-models/seria-bmw-z/z4-roadster/bmw-z4-roadster.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/seria-bmw-z/z4-roadster/bmw-z4-roadster.html","status":200,"server":"Apache (AEM)","timestamp":0.318}],"totalTime":0.806},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.251}],"totalTime":0.404},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-i/i4/bmw-i4-gran-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-i/i4/bmw-i4-gran-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-i/i4/bmw-i4-gran-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.453}],"totalTime":1.218},{"originalURL":"https://www.bmw.pl/pl/all-models/4-series/coupe/bmw-serii-4-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/4-series/coupe/bmw-serii-4-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/4-series/coupe/bmw-serii-4-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.28}],"totalTime":0.483},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.701}],"totalTime":1.185},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-cabrio.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-cabrio.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/m4-series/bmw-m4-cabrio.html","status":200,"server":"Apache (AEM)","timestamp":0.707}],"totalTime":1.148},{"originalURL":"https://www.bmw.pl/pl/all-models/4-series/convertible/bmw-serii-4-cabrio.html","finalURL":"https://www.bmw.pl/pl/all-models/4-series/convertible/bmw-serii-4-cabrio.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/4-series/convertible/bmw-serii-4-cabrio.html","status":200,"server":"Apache (AEM)","timestamp":0.368}],"totalTime":0.943},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/m440i-xdrive-gran-coupe/bmw-m440i-xdrive-gran-coupe.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/m440i-xdrive-gran-coupe/bmw-m440i-xdrive-gran-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/m440i-xdrive-gran-coupe/bmw-m440i-xdrive-gran-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.32}],"totalTime":0.835},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring.html","status":200,"server":"Apache (AEM)","timestamp":0.382}],"totalTime":1.036},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-i/i5/bmw-i5-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-i/i5/bmw-i5-w-skrocie.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-i/i5/bmw-i5-w-skrocie.html","status":200,"server":"Apache (AEM)","timestamp":0.298}],"totalTime":0.895},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-phev-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-phev-w-skrocie.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/sedan/bmw-serii-5-limuzyna-phev-w-skrocie.html","status":200,"server":"Apache (AEM)","timestamp":0.339}],"totalTime":0.98},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring-phev.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring-phev.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-serii-5-w-skrocie/5-series-touring/bmw-serii-5-touring-phev.html","status":200,"server":"Apache (AEM)","timestamp":0.475}],"totalTime":0.99},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-i5-m60/bmw-i5-m60xdrive-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-i5-m60/bmw-i5-m60xdrive-w-skrocie.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/bmw-i5-m60/bmw-i5-m60xdrive-w-skrocie.html","status":200,"server":"Apache (AEM)","timestamp":0.475}],"totalTime":0.943},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/x3-m50/bmw-x3-m50.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/x3-m50/bmw-x3-m50.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/x3-m50/bmw-x3-m50.html","status":200,"server":"Apache (AEM)","timestamp":0.238}],"totalTime":0.606},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3-phev.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3-phev.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3-phev.html","status":200,"server":"Apache (AEM)","timestamp":0.289}],"totalTime":0.825},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/x3/bmw-x3.html","status":200,"server":"Apache (AEM)","timestamp":0.257}],"totalTime":0.75},{"originalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna.html","finalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna.html","status":200,"server":"Apache (AEM)","timestamp":0.306}],"totalTime":0.928},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html","status":200,"server":"Apache (AEM)","timestamp":0.345}],"totalTime":1.134},{"originalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring-hybryda-plug-in.html","finalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring-hybryda-plug-in.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-touring/bmw-serii-3-touring-hybryda-plug-in.html","status":200,"server":"Apache (AEM)","timestamp":0.442}],"totalTime":1.118},{"originalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna-hybryda-plug-in.html","finalURL":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna-hybryda-plug-in.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/3-series/bmw-serii-3-limuzyna/bmw-serii-3-limuzyna-hybryda-plug-in.html","status":200,"server":"Apache (AEM)","timestamp":0.366}],"totalTime":1.104},{"originalURL":"https://www.bmw.pl/pl/all-models/bmw-i/ix2/bmw-ix2-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/bmw-i/ix2/bmw-ix2-w-skrocie.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/bmw-i/ix2/bmw-ix2-w-skrocie.html","status":200,"server":"Apache (AEM)","timestamp":0.314}],"totalTime":0.867},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/X2/bmw-x2-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/X2/bmw-x2-w-skrocie.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/X2/bmw-x2-w-skrocie.html","status":200,"server":"Apache (AEM)","timestamp":0.253}],"totalTime":0.725},{"originalURL":"https://www.bmw.pl/pl/all-models/m-series/x2-m35i/bmw-x2-m35ixdrive-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/x2-m35i/bmw-x2-m35ixdrive-w-skrocie.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/m-series/x2-m35i/bmw-x2-m35ixdrive-w-skrocie.html","status":200,"server":"Apache (AEM)","timestamp":0.277}],"totalTime":0.981},{"originalURL":"https://www.bmw.pl/pl/all-models/7-series/limuzyna-serii-7/bmw-serii-7-limuzyna.html","finalURL":"https://www.bmw.pl/pl/all-models/7-series/limuzyna-serii-7/bmw-serii-7-limuzyna.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/7-series/limuzyna-serii-7/bmw-serii-7-limuzyna.html","status":200,"server":"Apache (AEM)","timestamp":0.284}],"totalTime":0.924},{"originalURL":"https://www.bmw.pl/pl/samochod-elektryczny.html","finalURL":"https://www.bmw.pl/pl/samochod-elektryczny.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/samochod-elektryczny.html","status":200,"server":"Apache (AEM)","timestamp":0.272}],"totalTime":1.005},{"originalURL":"https://www.bmw.ro/ro/all-models/bmw-seria-5-prezentare-generala/sedan/bmw-seria-5-sedan-sumar.html","finalURL":"https://www.bmw.ro/ro/all-models/bmw-seria-5-prezentare-generala/sedan/bmw-seria-5-sedan-sumar.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/bmw-seria-5-prezentare-generala/sedan/bmw-seria-5-sedan-sumar.html","status":200,"server":"Apache (AEM)","timestamp":0.496}],"totalTime":1.064},{"originalURL":"https://www.bmw.ro/ro/all-models/7-series/bmw-7-seria-sedan/bmw-seria-7-sedan.html","finalURL":"https://www.bmw.ro/ro/all-models/7-series/bmw-7-seria-sedan/bmw-seria-7-sedan.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/7-series/bmw-7-seria-sedan/bmw-seria-7-sedan.html","status":200,"server":"Apache (AEM)","timestamp":0.231}],"totalTime":0.623},{"originalURL":"https://www.bmw.ro/ro/modele-electrice.html","finalURL":"https://www.bmw.ro/ro/modele-electrice.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/modele-electrice.html","status":200,"server":"Apache (AEM)","timestamp":0.428}],"totalTime":1.042},{"originalURL":"https://www.bmw.ro/ro/all-models/3-series/bmw-3-series-sedan/bmw-seria-3-sedan.html","finalURL":"https://www.bmw.ro/ro/all-models/3-series/bmw-3-series-sedan/bmw-seria-3-sedan.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/3-series/bmw-3-series-sedan/bmw-seria-3-sedan.html","status":200,"server":"Apache (AEM)","timestamp":0.427}],"totalTime":1.042},{"originalURL":"https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-corporate-sales.html","finalURL":"https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-corporate-sales.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-corporate-sales.html","status":200,"server":"Apache (AEM)","timestamp":0.233}],"totalTime":0.433},{"originalURL":"https://www.bmw.pl/pl/serwis-bmw.html","finalURL":"https://www.bmw.pl/pl/serwis-bmw.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/serwis-bmw.html","status":200,"server":"Apache (AEM)","timestamp":0.44}],"totalTime":1.003},{"originalURL":"https://www.bmw.pl/pl/shop/ls/cp/connected-drive","finalURL":"https://www.bmw.pl/pl/shop/ls/cp/connected-drive","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/shop/ls/cp/connected-drive","status":200,"server":"Apache (AEM)","timestamp":1.906}],"totalTime":2.648},{"originalURL":"https://www.bmw.ro/ro/shop/ls/cp/connected-drive","finalURL":"https://www.bmw.ro/ro/shop/ls/cp/connected-drive","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/shop/ls/cp/connected-drive","status":200,"server":"Apache (AEM)","timestamp":1.914}],"totalTime":2.298},{"originalURL":"https://www.bmw.ro/ro/digital-services/bmw-digital-key.html","finalURL":"https://www.bmw.ro/ro/digital-services/bmw-digital-key.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.ro/ro/digital-services/bmw-digital-key.html","status":200,"server":"Apache (AEM)","timestamp":0.204}],"totalTime":0.557}];
+            new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
+
+            document.getElementById('export-btn').addEventListener('click', () => {
+                try {
+                    const wb = XLSX.utils.book_new();
+                    const summaryData = resultsData.map(r => ({
+                        'Source URL': r.originalURL,
+                        'Source Server': r.sourceServer,
+                        'Target URL': r.finalURL,
+                        'Target Server': r.targetServer,
+                        'Final Status': r.finalStatus,
+                        'Hop Count': r.redirectChain.length - 1,
+                        'Total Time (s)': r.totalTime,
+                        'Error': r.error || ''
+                    }));
+                    const summarySheet = XLSX.utils.json_to_sheet(summaryData);
+                    XLSX.utils.book_append_sheet(wb, summarySheet, 'Overview');
+
+                    let sheetCounter = 1;
+                    resultsData.forEach((r) => {
+                        if (r.redirectChain.length > 0) {
+                            const detailData = r.redirectChain.map((hop, i) => ({
+                                'Step': i + 1, 'URL': hop.url, 'Status': hop.status, 'Server': hop.server, 'Time': hop.timestamp
+                            }));
+                            let safeName = "Row_" + sheetCounter;
+                            sheetCounter++;
+                            const detailSheet = XLSX.utils.json_to_sheet(detailData);
+                            XLSX.utils.book_append_sheet(wb, detailSheet, safeName);
+                        }
+                    });
+                    XLSX.writeFile(wb, 'Redirect_Analysis.xlsx');
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Export Error', 'Failed to generate Excel file. Check console.', 'error');
+                }
+            });
+
+            document.querySelector('tbody').addEventListener('click', (e) => {
+                const btn = e.target.closest('.details-btn');
+                if (!btn) return;
+                const idx = btn.dataset.index;
+                const data = resultsData[idx];
+                const chainHtml = data.redirectChain.map((h, i) => 
+                    `<tr><td>${i+1}</td><td>${h.url}</td><td>${h.status}</td><td>${h.server}</td></tr>`
+                ).join('');
+                Swal.fire({
+                    title: 'Redirect Chain', width: '800px',
+                    html: `<p><strong>Start:</strong> ${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>${chainHtml}</tbody></table>`
+                });
+            });
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
