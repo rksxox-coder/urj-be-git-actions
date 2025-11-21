@@ -1,3 +1,5 @@
+// @ts-ignore
+declare module 'ip-range-check';
 import { chromium, Browser, errors } from 'playwright-chromium';
 import validator from 'validator';
 import { URL } from 'url';
