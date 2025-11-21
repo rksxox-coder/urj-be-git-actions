@@ -77,7 +77,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
         // --- CONFIGURATION ---
         const OWNER = 'rksxox-coder'; 
         const REPO = 'urj-be-git-actions';       
@@ -106,13 +106,13 @@
         
         fetchHistory();
 
+        // Resume Session Logic (Only on actual page load/refresh)
         window.addEventListener('load', () => {
             const savedRunId = localStorage.getItem('active_run_id');
             const savedStartTime = localStorage.getItem('active_start_time');
             const savedUrlCount = localStorage.getItem('active_url_count');
 
             if (savedRunId && savedStartTime) {
-                // Resume UI state
                 const elapsedSecs = Math.floor((Date.now() - parseInt(savedStartTime)) / 1000);
                 startTimers(parseInt(savedUrlCount) || 2, elapsedSecs);
                 trackProgress(savedRunId, localStorage.getItem('gh_pat'));
@@ -122,6 +122,7 @@
         // --- LOGIC ---
         async function fetchHistory() {
             try {
+                // Cache Buster (t=Date.now()) forces fresh history list
                 const resp = await fetch(`https://${OWNER}.github.io/${REPO}/history.json?t=${Date.now()}`);
                 if(!resp.ok) throw new Error("No history");
                 const history = await resp.json();
@@ -150,7 +151,8 @@
             const token = tokenInput.value;
             if(token) displayReportFromApi(token, relativePath);
             else {
-                const fullUrl = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
+                // Cache buster added to URL to prevent showing old cached iframe content
+                const fullUrl = `https://${OWNER}.github.io/${REPO}/${relativePath}?t=${Date.now()}`;
                 reportFrame.src = fullUrl;
                 previewPlaceholder.classList.add('hidden');
                 reportFrame.classList.remove('hidden');
@@ -167,15 +169,21 @@
             
             const urlCount = urls.split('\n').filter(u => u.trim()).length;
             
-            // UI Reset
+            // --- FIX 1: Explicitly Reset UI and Variables ---
             runBtn.disabled = true;
             btnLoader.classList.remove('hidden');
             badge.classList.remove('hidden');
             badge.innerText = "QUEUED";
-            previewPlaceholder.classList.remove('hidden');
-            reportFrame.classList.add('hidden');
             
-            // Start Timers
+            // Clear previous report immediately
+            reportFrame.src = "about:blank"; 
+            reportFrame.classList.add('hidden');
+            previewPlaceholder.classList.remove('hidden');
+            newTabLink.classList.add('hidden');
+            
+            // Clear previous session storage to prevent "Resume" logic from interfering
+            clearSession(); 
+
             startTimers(urlCount, 0);
 
             try {
@@ -197,7 +205,7 @@
                 const runsData = await runsResp.json();
                 const latestRun = runsData.workflow_runs[0];
                 
-                // Save State
+                // Save New State
                 localStorage.setItem('active_run_id', latestRun.id);
                 localStorage.setItem('active_start_time', Date.now());
                 localStorage.setItem('active_url_count', urlCount);
@@ -235,9 +243,13 @@
                         
                         setTimeout(async () => {
                             await fetchHistory();
+                            // --- FIX 2: Wait a moment to ensure history list is populated before selecting ---
                             if(historySelect.options.length > 1) {
-                                historySelect.selectedIndex = 1;
+                                historySelect.selectedIndex = 1; // Select the newest item (index 1)
                                 loadReportFrame(historySelect.value);
+                            } else {
+                                // Fallback if history.json update is slow to propagate
+                                log("History update slow, check dropdown shortly.", 'info');
                             }
                         }, 3000);
                     } else {
@@ -258,15 +270,19 @@
 
         async function displayReportFromApi(token, relativePath) {
             try {
-                const fileResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${relativePath}`, {
+                // --- FIX 3: Cache Buster in API call ---
+                const fileResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${relativePath}?t=${Date.now()}`, {
                     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
                 });
                 const fileData = await fileResp.json();
                 const rawHtml = atob(fileData.content);
+                
                 previewPlaceholder.classList.add('hidden');
                 reportFrame.classList.remove('hidden');
+                
                 const doc = reportFrame.contentWindow.document;
                 doc.open(); doc.write(rawHtml); doc.close();
+                
                 newTabLink.href = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
                 newTabLink.classList.remove('hidden');
                 runBtn.disabled = false;
@@ -274,60 +290,36 @@
             } catch(e) { log("Error content: " + e.message, 'error'); }
         }
 
-        // --- NEW TIMER LOGIC ---
+        // --- TIMERS (Same as before) ---
         let stopwatchInterval;
         let countdownInterval;
-        
         function startTimers(urlCount, startingElapsed = 0) {
             progressContainer.classList.remove('hidden');
             progressBar.style.width = '0%';
-            
-            // 1. STOPWATCH (Actual Time)
             let elapsed = startingElapsed;
             elapsedText.innerText = `Time: ${elapsed}s`;
-            
             if (stopwatchInterval) clearInterval(stopwatchInterval);
-            stopwatchInterval = setInterval(() => {
-                elapsed++;
-                elapsedText.innerText = `Time: ${elapsed}s`;
-            }, 1000);
-
-            // 2. COUNTDOWN (ETA)
-            // Formula: 45s base boot time + 5s per URL
+            stopwatchInterval = setInterval(() => { elapsed++; elapsedText.innerText = `Time: ${elapsed}s`; }, 1000);
+            
             const totalEstimatedSeconds = 45 + (urlCount * 5);
             let remaining = totalEstimatedSeconds - startingElapsed;
-            if (remaining < 5) remaining = 5; // Minimum buffer
-
+            if (remaining < 5) remaining = 5;
             etaText.innerText = `ETA: ${remaining}s`;
-            
-            // Calculate progress percentage step per second to reach 90%
-            // We want to reach 90% when remaining hits 0
             let currentPercentage = (startingElapsed / totalEstimatedSeconds) * 90;
             const step = 90 / remaining; 
-
             if (countdownInterval) clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
-                if (remaining > 0) {
-                    remaining--;
-                    etaText.innerText = `ETA: ${remaining}s`;
-                } else {
-                    etaText.innerText = `Finalizing...`;
-                }
-
-                if (currentPercentage < 90) {
-                    currentPercentage += step;
-                    progressBar.style.width = `${currentPercentage}%`;
-                }
+                if (remaining > 0) { remaining--; etaText.innerText = `ETA: ${remaining}s`; }
+                else { etaText.innerText = `Finalizing...`; }
+                if (currentPercentage < 90) { currentPercentage += step; progressBar.style.width = `${currentPercentage}%`; }
             }, 1000);
         }
-
         function stopTimers() {
             if (stopwatchInterval) clearInterval(stopwatchInterval);
             if (countdownInterval) clearInterval(countdownInterval);
             progressBar.style.width = '100%';
             etaText.innerText = "Done";
         }
-
         feather.replace();
     </script>
 </body>
