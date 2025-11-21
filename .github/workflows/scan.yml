@@ -1,0 +1,46 @@
+name: Redirect Analysis Tool
+
+on:
+  workflow_dispatch:
+    inputs:
+      url_list:
+        description: 'Paste URLs here (one per line)'
+        required: true
+        default: 'https://www.bmw.com'
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install chromium
+
+      - name: Create URL Input File
+        # This takes the input from the API and saves it to a file
+        run: |
+          echo "${{ github.event.inputs.url_list }}" > urls.txt
+
+      - name: Run Analysis Script
+        run: npx ts-node main.ts
+
+      - name: Deploy Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./ # Publishes the root where report.html is
+          destination_dir: reports # accessible at your-site/reports/report.html
+          keep_files: true # Don't delete old reports
