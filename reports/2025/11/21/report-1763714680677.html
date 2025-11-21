@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report 11/21/2025, 8:44:40 AM</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <style>
+        :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #dee2e6; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); --link-color: #007bff; }
+        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e0e0e0; --border-color: #444; --header-bg: #333; --shadow-color: rgba(0,0,0,0.5); --link-color: #4dabf7; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+        .container { max-width: 1600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px var(--shadow-color); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-controls { display: flex; align-items: center; gap: 20px; }
+        #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        table { width: 100% !important; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .url-cell { display: flex; align-items: center; }
+        .url-cell i.feather { margin-right: 10px; flex-shrink: 0; }
+        td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 13px; margin: 2px; }
+        .status-badge.success { background-color: #28a745; }
+        .status-badge.redirect { background-color: #ffc107; color: #333; }
+        .status-badge.error { background-color: #dc3545; }
+        .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
+        .modal-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; color: #333; }
+        .modal-table th { background: #f8f9fa; border-bottom: 2px solid #dee2e6; text-align: left; padding: 8px; }
+        .modal-table td { border-bottom: 1px solid #eee; padding: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Analysis Report (11/21/2025, 8:44:40 AM)</h1>
+            <div class="header-controls">
+                <button id="export-btn"><i data-feather="file-text"></i> Export to Excel</button>
+                <button onclick="document.body.classList.toggle('dark-mode')"><i data-feather="moon"></i></button>
+            </div>
+        </div>
+        <table id="analysisTable">
+            <thead><tr><th>Source URL</th><th>Target URL</th><th>Status</th><th>Chain</th><th>Details</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-fleet-service.html" target="_blank">https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-fleet-service.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html" target="_blank">https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="0"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-male-srednie-przedsiebiorstwa.html" target="_blank">https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-male-srednie-przedsiebiorstwa.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html" target="_blank">https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="1"><i data-feather="eye"></i></button></td>
+            </tr></tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsData = [{"originalURL":"https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-fleet-service.html","finalURL":"https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-fleet-service.html","status":301,"server":"Apache (AEM)","timestamp":0.376},{"url":"https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html","status":200,"server":"Apache (AEM)","timestamp":0.606}],"totalTime":0.823},{"originalURL":"https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-male-srednie-przedsiebiorstwa.html","finalURL":"https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-male-srednie-przedsiebiorstwa.html","status":301,"server":"Apache (AEM)","timestamp":0.377},{"url":"https://www.bmw.pl/pl/more-bmw/bmw-special-sales.html","status":200,"server":"Apache (AEM)","timestamp":0.572}],"totalTime":0.783}];
+            new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
+
+            document.getElementById('export-btn').addEventListener('click', () => {
+                try {
+                    const wb = XLSX.utils.book_new();
+                    const summaryData = resultsData.map(r => ({
+                        'Source URL': r.originalURL,
+                        'Source Server': r.sourceServer,
+                        'Target URL': r.finalURL,
+                        'Target Server': r.targetServer,
+                        'Final Status': r.finalStatus,
+                        'Hop Count': r.redirectChain.length - 1,
+                        'Total Time (s)': r.totalTime,
+                        'Error': r.error || ''
+                    }));
+                    const summarySheet = XLSX.utils.json_to_sheet(summaryData);
+                    XLSX.utils.book_append_sheet(wb, summarySheet, 'Overview');
+
+                    let sheetCounter = 1;
+                    resultsData.forEach((r) => {
+                        if (r.redirectChain.length > 0) {
+                            const detailData = r.redirectChain.map((hop, i) => ({
+                                'Step': i + 1, 'URL': hop.url, 'Status': hop.status, 'Server': hop.server, 'Time': hop.timestamp
+                            }));
+                            let safeName = "Row_" + sheetCounter;
+                            sheetCounter++;
+                            const detailSheet = XLSX.utils.json_to_sheet(detailData);
+                            XLSX.utils.book_append_sheet(wb, detailSheet, safeName);
+                        }
+                    });
+                    XLSX.writeFile(wb, 'Redirect_Analysis.xlsx');
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Export Error', 'Failed to generate Excel file. Check console.', 'error');
+                }
+            });
+
+            document.querySelector('tbody').addEventListener('click', (e) => {
+                const btn = e.target.closest('.details-btn');
+                if (!btn) return;
+                const idx = btn.dataset.index;
+                const data = resultsData[idx];
+                const chainHtml = data.redirectChain.map((h, i) => 
+                    `<tr><td>${i+1}</td><td>${h.url}</td><td>${h.status}</td><td>${h.server}</td></tr>`
+                ).join('');
+                Swal.fire({
+                    title: 'Redirect Chain', width: '800px',
+                    html: `<p><strong>Start:</strong> ${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>${chainHtml}</tbody></table>`
+                });
+            });
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
