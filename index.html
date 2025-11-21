@@ -11,7 +11,6 @@
         .log-window::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Smooth progress bar transition */
         #progressBar { transition: width 0.5s linear; }
     </style>
 </head>
@@ -24,8 +23,11 @@
                 <h1 class="text-2xl font-bold text-gray-800">BMW Redirect Validator</h1>
                 <p class="text-sm text-gray-500">Serverless Analyzer via GitHub Actions</p>
             </div>
-            <div class="flex items-center gap-2">
-                <button id="loadLastBtn" class="text-xs text-blue-600 underline mr-4">Load Last Report</button>
+            <div class="flex items-center gap-4">
+                <select id="historySelect" class="border rounded p-2 text-sm bg-gray-50 hover:bg-gray-100">
+                    <option value="">Loading past scans...</option>
+                </select>
+                
                 <div id="status-badge" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-gray-200 text-gray-600">IDLE</div>
             </div>
         </div>
@@ -33,7 +35,6 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow overflow-hidden">
             
             <div class="lg:col-span-1 flex flex-col gap-4 overflow-y-auto">
-                
                 <div class="p-4 bg-blue-50 rounded border border-blue-100">
                     <label class="block text-xs font-bold uppercase text-blue-600 mb-1">GitHub PAT Token</label>
                     <input type="password" id="ghToken" class="w-full p-2 border rounded text-sm" placeholder="Paste Token Here">
@@ -41,17 +42,12 @@
 
                 <div class="flex-grow">
                     <label class="block font-bold text-sm mb-2 text-gray-700">Target URLs</label>
-                    <textarea id="urlInput" class="w-full h-48 p-3 border rounded text-sm font-mono focus:ring-2 focus:ring-blue-500" placeholder="https://www.bmw.com&#10;https://www.mini.com"></textarea>
+                    <textarea id="urlInput" class="w-full h-48 p-3 border rounded text-sm font-mono focus:ring-2 focus:ring-blue-500" placeholder="https://www.bmw.com"></textarea>
                 </div>
 
                 <div id="progressContainer" class="hidden">
-                    <div class="flex justify-between text-xs text-gray-600 mb-1">
-                        <span>Progress</span>
-                        <span id="etaText">ETA: Calculating...</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
+                    <div class="flex justify-between text-xs text-gray-600 mb-1"><span>Progress</span><span id="etaText">ETA: Calculating...</span></div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5"><div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div></div>
                 </div>
 
                 <button id="runBtn" class="w-full bg-black text-white py-3 rounded font-semibold hover:bg-gray-800 transition flex justify-center items-center gap-2">
@@ -70,7 +66,7 @@
                 </div>
                 <div id="previewPlaceholder" class="flex-grow flex flex-col items-center justify-center text-gray-400">
                     <i data-feather="layout" class="w-16 h-16 mb-2"></i>
-                    <p>Report will appear here after analysis</p>
+                    <p>Select a past report or run a new scan</p>
                 </div>
                 <iframe id="reportFrame" class="w-full h-full hidden bg-white rounded"></iframe>
             </div>
@@ -92,26 +88,51 @@
         const badge = document.getElementById('status-badge');
         const tokenInput = document.getElementById('ghToken');
         const newTabLink = document.getElementById('newTabLink');
-        const loadLastBtn = document.getElementById('loadLastBtn');
-        
-        // Progress Elements
+        const historySelect = document.getElementById('historySelect');
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const etaText = document.getElementById('etaText');
 
-        // --- STATE MANAGEMENT ---
+        // --- INIT ---
         if(localStorage.getItem('gh_pat')) tokenInput.value = localStorage.getItem('gh_pat');
         tokenInput.addEventListener('change', () => localStorage.setItem('gh_pat', tokenInput.value));
+        
+        // Load History on Boot
+        fetchHistory();
 
-        // Check if we were running before page reload
+        // Resume Session?
         window.addEventListener('load', () => {
             const savedRunId = localStorage.getItem('active_run_id');
-            if (savedRunId) {
-                log("Found active session. Resuming tracking...", 'info');
-                trackProgress(savedRunId, localStorage.getItem('gh_pat'));
-            }
+            if (savedRunId) trackProgress(savedRunId, localStorage.getItem('gh_pat'));
         });
 
+        // --- HISTORY LOGIC ---
+        async function fetchHistory() {
+            try {
+                // Fetch history.json from the repo root
+                const resp = await fetch(`https://${OWNER}.github.io/${REPO}/history.json?t=${Date.now()}`);
+                if(!resp.ok) throw new Error("No history yet");
+                const history = await resp.json();
+                
+                historySelect.innerHTML = '<option value="">-- Select Past Report --</option>';
+                history.forEach(entry => {
+                    const opt = document.createElement('option');
+                    opt.value = entry.path; // "reports/2025/11/21/report-123.html"
+                    opt.innerText = `${entry.date} (${entry.urlCount} URLs)`;
+                    historySelect.appendChild(opt);
+                });
+            } catch (e) {
+                historySelect.innerHTML = '<option value="">No past reports found</option>';
+            }
+        }
+
+        // Load selected report from history
+        historySelect.addEventListener('change', () => {
+            const path = historySelect.value;
+            if(path) loadReportFrame(path);
+        });
+
+        // --- LOGGING ---
         function log(msg, type = 'info') {
             const p = document.createElement('p');
             p.innerHTML = `> ${msg}`;
@@ -121,70 +142,57 @@
             consoleDiv.scrollTop = consoleDiv.scrollHeight;
         }
 
-        // --- HELPER: UPDATE LINK ---
-        function updateExternalLink() {
-            // Points to the root report.html
-            const fullUrl = `https://${OWNER}.github.io/${REPO}/report.html?t=${Date.now()}`;
-            newTabLink.href = fullUrl;
-            newTabLink.classList.remove('hidden');
+        // --- LOAD REPORT INTO IFRAME ---
+        function loadReportFrame(relativePath) {
+            // Use the Token to fetch via API if possible (to bypass cache), or fallback to raw link
+            const token = tokenInput.value;
+            if(token) {
+                displayReportFromApi(token, relativePath);
+            } else {
+                // Fallback to public URL
+                const fullUrl = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
+                reportFrame.src = fullUrl;
+                previewPlaceholder.classList.add('hidden');
+                reportFrame.classList.remove('hidden');
+                newTabLink.href = fullUrl;
+                newTabLink.classList.remove('hidden');
+            }
         }
-
-        // --- LOAD LAST REPORT MANUALLY ---
-        loadLastBtn.addEventListener('click', async () => {
-             const token = tokenInput.value;
-             if(!token) return alert("Need Token");
-             log("Fetching last known report...", 'info');
-             await displayReport(token);
-        });
 
         // --- START ANALYSIS ---
         runBtn.addEventListener('click', async () => {
             const token = tokenInput.value;
             const urls = document.getElementById('urlInput').value;
-            
-            if (!token) return log("Error: Missing GitHub Token", 'error');
-            if (!urls.trim()) return log("Error: No URLs provided", 'error');
+            if (!token || !urls.trim()) return log("Error: Missing Token or URLs", 'error');
             
             const urlCount = urls.split('\n').filter(u => u.trim()).length;
-
+            
             // UI Reset
             runBtn.disabled = true;
             btnLoader.classList.remove('hidden');
             badge.classList.remove('hidden');
             badge.innerText = "QUEUED";
-            badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-yellow-200 text-yellow-800";
             previewPlaceholder.classList.remove('hidden');
             reportFrame.classList.add('hidden');
-            
-            // Start Estimated Progress Bar
             startEstimatedProgress(urlCount);
 
             try {
                 log("Triggering Workflow...", 'info');
-                
                 const triggerResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW_FILE}/dispatches`, {
-                    method: 'POST',
-                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
+                    method: 'POST', headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
                     body: JSON.stringify({ ref: 'main', inputs: { url_list: urls } })
                 });
-
-                if (!triggerResp.ok) throw new Error("Failed to trigger action");
-                log("Job dispatched. Waiting for run ID...");
-
+                if (!triggerResp.ok) throw new Error("Failed to trigger");
+                
+                log("Waiting for Run ID...");
                 await new Promise(r => setTimeout(r, 5000));
 
-                const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?per_page=1`, {
-                    headers: { 'Authorization': `token ${token}` }
-                });
+                const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?per_page=1`, { headers: { 'Authorization': `token ${token}` } });
                 const runsData = await runsResp.json();
                 const latestRun = runsData.workflow_runs[0];
                 
-                if(!latestRun) throw new Error("Could not find the triggered run.");
-                
-                // Save Session so we can close tab
                 localStorage.setItem('active_run_id', latestRun.id);
-                
-                log(`Tracking Run ID: ${latestRun.id}`);
+                log(`Run ID: ${latestRun.id}`);
                 trackProgress(latestRun.id, token);
 
             } catch (err) {
@@ -195,7 +203,7 @@
             }
         });
 
-        // --- PROGRESS TRACKING LOOP ---
+        // --- TRACKING ---
         function trackProgress(runId, token) {
             badge.innerText = "RUNNING";
             badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-blue-200 text-blue-800";
@@ -203,103 +211,78 @@
             btnLoader.classList.remove('hidden');
 
             const pollInterval = setInterval(async () => {
-                try {
-                    const statusResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${runId}`, {
-                        headers: { 'Authorization': `token ${token}` }
-                    });
-                    const statusData = await statusResp.json();
-                    
-                    log(`Status: ${statusData.status} (${statusData.conclusion || 'pending'})`);
+                const statusResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${runId}`, { headers: { 'Authorization': `token ${token}` } });
+                const statusData = await statusResp.json();
+                
+                if (statusData.status === 'completed') {
+                    clearInterval(pollInterval);
+                    localStorage.removeItem('active_run_id');
+                    stopProgress();
 
-                    if (statusData.status === 'completed') {
-                        clearInterval(pollInterval);
-                        localStorage.removeItem('active_run_id'); // Clear session
-                        stopProgress(); // Fill bar to 100%
+                    if (statusData.conclusion === 'success') {
+                        log("Success! Refreshing history...", 'success');
+                        badge.innerText = "SUCCESS";
+                        badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800";
+                        
+                        // Wait 2 seconds for GitHub pages to potentially see the file, then reload history
+                        setTimeout(async () => {
+                            await fetchHistory();
+                            // Auto-select the newest report (first option after default)
+                            if(historySelect.options.length > 1) {
+                                historySelect.selectedIndex = 1;
+                                loadReportFrame(historySelect.value);
+                            }
+                        }, 3000);
 
-                        if (statusData.conclusion === 'success') {
-                            log("Analysis Complete! Fetching Report...", 'success');
-                            badge.innerText = "SUCCESS";
-                            badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800";
-                            await displayReport(token);
-                        } else {
-                            log("Workflow Failed. Check GitHub Actions tab.", 'error');
-                            badge.innerText = "FAILED";
-                            badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-200 text-red-800";
-                            runBtn.disabled = false;
-                            btnLoader.classList.add('hidden');
-                        }
+                    } else {
+                        log("Workflow Failed.", 'error');
+                        badge.innerText = "FAILED";
+                        badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-200 text-red-800";
+                        runBtn.disabled = false;
                     }
-                } catch (e) {
-                    console.error(e);
                 }
             }, 4000);
         }
 
-        // --- DISPLAY REPORT ---
-        async function displayReport(token) {
+        async function displayReportFromApi(token, relativePath) {
             try {
-                // 1. Attempt to fetch content via API (fastest)
-                const fileResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/report.html`, {
+                const fileResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${relativePath}`, {
                     headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
                 });
-
-                if(!fileResp.ok) throw new Error("Report file not found (might be deploying).");
-
                 const fileData = await fileResp.json();
                 const rawHtml = atob(fileData.content);
-
+                
                 previewPlaceholder.classList.add('hidden');
                 reportFrame.classList.remove('hidden');
-                
                 const doc = reportFrame.contentWindow.document;
-                doc.open();
-                doc.write(rawHtml);
-                doc.close();
+                doc.open(); doc.write(rawHtml); doc.close();
                 
-                updateExternalLink();
+                newTabLink.href = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
+                newTabLink.classList.remove('hidden');
                 runBtn.disabled = false;
                 btnLoader.classList.add('hidden');
-
-            } catch (e) {
-                log("Error loading report: " + e.message, 'error');
-                // Fallback: Just show the link if API fetch fails
-                updateExternalLink();
-            }
+            } catch(e) { log("Error fetching report content: " + e.message, 'error'); }
         }
 
-        // --- ETA & PROGRESS VISUALS ---
+        // --- ETA ---
         let progressInterval;
-        
         function startEstimatedProgress(urlCount) {
             progressContainer.classList.remove('hidden');
             progressBar.style.width = '0%';
-            
-            // Math: 
-            // Boot up GitHub Action = ~20 seconds
-            // Processing = (Count / 5) * (RequestTime + 2s Delay)
-            // Let's assume conservatively 4 seconds per URL total
-            const estimatedSeconds = 20 + (urlCount * 4);
+            const estimatedSeconds = 25 + (urlCount * 4.5);
             etaText.innerText = `ETA: ~${estimatedSeconds}s`;
-            
             let currentPercentage = 0;
-            const step = 90 / estimatedSeconds; // Go to 90% over the estimated time
-
+            const step = 90 / estimatedSeconds; 
             if (progressInterval) clearInterval(progressInterval);
-
             progressInterval = setInterval(() => {
-                if (currentPercentage < 90) {
-                    currentPercentage += step;
-                    progressBar.style.width = `${currentPercentage}%`;
-                }
+                if (currentPercentage < 90) { currentPercentage += step; progressBar.style.width = `${currentPercentage}%`; }
             }, 1000);
         }
-
         function stopProgress() {
             if (progressInterval) clearInterval(progressInterval);
             progressBar.style.width = '100%';
-            etaText.innerText = "Processing Complete";
+            etaText.innerText = "Done";
         }
-
         feather.replace();
     </script>
 </body>
