@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report 11/21/2025, 9:01:04 AM</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <style>
+        :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #dee2e6; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); --link-color: #007bff; }
+        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e0e0e0; --border-color: #444; --header-bg: #333; --shadow-color: rgba(0,0,0,0.5); --link-color: #4dabf7; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+        .container { max-width: 1600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px var(--shadow-color); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-controls { display: flex; align-items: center; gap: 20px; }
+        #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        table { width: 100% !important; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .url-cell { display: flex; align-items: center; }
+        .url-cell i.feather { margin-right: 10px; flex-shrink: 0; }
+        td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 13px; margin: 2px; }
+        .status-badge.success { background-color: #28a745; }
+        .status-badge.redirect { background-color: #ffc107; color: #333; }
+        .status-badge.error { background-color: #dc3545; }
+        .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
+        .modal-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; color: #333; }
+        .modal-table th { background: #f8f9fa; border-bottom: 2px solid #dee2e6; text-align: left; padding: 8px; }
+        .modal-table td { border-bottom: 1px solid #eee; padding: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Analysis Report (11/21/2025, 9:01:04 AM)</h1>
+            <div class="header-controls">
+                <button id="export-btn"><i data-feather="file-text"></i> Export to Excel</button>
+                <button onclick="document.body.classList.toggle('dark-mode')"><i data-feather="moon"></i></button>
+            </div>
+        </div>
+        <table id="analysisTable">
+            <thead><tr><th>Source URL</th><th>Target URL</th><th>Status</th><th>Chain</th><th>Details</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/topics/fascination-bmw/bmw-concept-vehicle/detalii-importante-bmw-i-vision-circular.html" target="_blank">https://www.bmw.ro/ro/topics/fascination-bmw/bmw-concept-vehicle/detalii-importante-bmw-i-vision-circular.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/topics/fascination-bmw/bmw-concept-vehicle/detalii-importante-bmw-i-vision-circular.html" target="_blank">https://www.bmw.ro/ro/topics/fascination-bmw/bmw-concept-vehicle/detalii-importante-bmw-i-vision-circular.html</a></div></td>
+                <td><span class="status-badge success">404</span></td>
+                <td class="chain-cell" title="Hop 1: 404 (Apache (AEM))"><span class="status-badge small error">404</span></td>
+                <td><button class="details-btn" data-index="0"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/iX3/2021/bmw-ix3-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/iX3/2021/bmw-ix3-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/ix3/bmw-ix3.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/ix3/bmw-ix3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="1"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/iX3/2021/bmw-ix3-detalii-importante.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/iX3/2021/bmw-ix3-detalii-importante.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.ro/ro/all-models/seria-x/iX3/2021/bmw-ix3-detalii-importante.html" target="_blank">https://www.bmw.ro/ro/all-models/seria-x/iX3/2021/bmw-ix3-detalii-importante.html</a></div></td>
+                <td><span class="status-badge success">404</span></td>
+                <td class="chain-cell" title="Hop 1: 404 (Apache (AEM))"><span class="status-badge small error">404</span></td>
+                <td><button class="details-btn" data-index="2"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl_PL/all-models/m-series/i4-m50/2021/bmw-i4-m50-highlights.html" target="_blank">https://www.bmw.pl/pl_PL/all-models/m-series/i4-m50/2021/bmw-i4-m50-highlights.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html" target="_blank">https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="3"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/x" target="_blank">https://www.bmw.pl/x</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/all-models/x-series/x1/bmw-x1.html" target="_blank">https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/all-models/x-series/x1/bmw-x1.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 302 (Apache (AEM)) &#013; Hop 3: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small redirect">302</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="4"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/X5/2023/bmw-x5-w-skrocie.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/X5/2023/bmw-x5-w-skrocie.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.pl/pl/all-models/x-series/x5/bmw-x5.html" target="_blank">https://www.bmw.pl/pl/all-models/x-series/x5/bmw-x5.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Apache (AEM)) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="5"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i> <a href="https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-concept-vehicle/bmw-neue-klasse-genel-bakis.html" target="_blank">https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-concept-vehicle/bmw-neue-klasse-genel-bakis.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="6"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i> <a href="https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-m-next.html" target="_blank">https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-m-next.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="7"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i> <a href="https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/concept-cars-vision-neue-klasse.html" target="_blank">https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/concept-cars-vision-neue-klasse.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="8"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i> <a href="https://www.bmw.com.tr/tr/all-models/Concept-Cars/bmw-vision-neue-klasse-x/2024.html" target="_blank">https://www.bmw.com.tr/tr/all-models/Concept-Cars/bmw-vision-neue-klasse-x/2024.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html" target="_blank">https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="9"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i> <a href="https://www.bmw.com.tr/tr/all-models/Concept-Cars/concept-cars-vision-neue-klasse/2023.html" target="_blank">https://www.bmw.com.tr/tr/all-models/Concept-Cars/concept-cars-vision-neue-klasse/2023.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="10"><i data-feather="eye"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i> <a href="https://www.bmw.com.tr/tr/all-models/Concept-Cars/i-vision/2023.html" target="_blank">https://www.bmw.com.tr/tr/all-models/Concept-Cars/i-vision/2023.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i> <a href="https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html" target="_blank">https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai) &#013; Hop 2: 200 (Apache (AEM))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="11"><i data-feather="eye"></i></button></td>
+            </tr></tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsData = [{"originalURL":"https://www.bmw.ro/ro/topics/fascination-bmw/bmw-concept-vehicle/detalii-importante-bmw-i-vision-circular.html","finalURL":"https://www.bmw.ro/ro/topics/fascination-bmw/bmw-concept-vehicle/detalii-importante-bmw-i-vision-circular.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":404,"redirectChain":[{"url":"https://www.bmw.ro/ro/topics/fascination-bmw/bmw-concept-vehicle/detalii-importante-bmw-i-vision-circular.html","status":404,"server":"Apache (AEM)","timestamp":1.036}],"totalTime":1.429},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/iX3/2021/bmw-ix3-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/ix3/bmw-ix3.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/iX3/2021/bmw-ix3-w-skrocie.html","status":301,"server":"Apache (AEM)","timestamp":0.406},{"url":"https://www.bmw.pl/pl/all-models/x-series/ix3/bmw-ix3.html","status":200,"server":"Apache (AEM)","timestamp":0.636}],"totalTime":0.994},{"originalURL":"https://www.bmw.ro/ro/all-models/seria-x/iX3/2021/bmw-ix3-detalii-importante.html","finalURL":"https://www.bmw.ro/ro/all-models/seria-x/iX3/2021/bmw-ix3-detalii-importante.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":404,"redirectChain":[{"url":"https://www.bmw.ro/ro/all-models/seria-x/iX3/2021/bmw-ix3-detalii-importante.html","status":404,"server":"Apache (AEM)","timestamp":1.221}],"totalTime":1.512},{"originalURL":"https://www.bmw.pl/pl_PL/all-models/m-series/i4-m50/2021/bmw-i4-m50-highlights.html","finalURL":"https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl_PL/all-models/m-series/i4-m50/2021/bmw-i4-m50-highlights.html","status":301,"server":"Apache (AEM)","timestamp":0.406},{"url":"https://www.bmw.pl/pl/all-models/m-series/bmw-i4-m50/bmw-i4-m60-xdrive-gran-coupe.html","status":200,"server":"Apache (AEM)","timestamp":0.661}],"totalTime":1.028},{"originalURL":"https://www.bmw.pl/x","finalURL":"https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/all-models/x-series/x1/bmw-x1.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/x","status":301,"server":"Apache (AEM)","timestamp":0.415},{"url":"https://www.bmw.pl/pl/all-models/x-series.html","status":302,"server":"Apache (AEM)","timestamp":1.029},{"url":"https://www.bmw.pl/content/bmw/marketPL/bmw_pl/pl/all-models/x-series/x1/bmw-x1.html","status":200,"server":"Apache (AEM)","timestamp":1.2}],"totalTime":1.524},{"originalURL":"https://www.bmw.pl/pl/all-models/x-series/X5/2023/bmw-x5-w-skrocie.html","finalURL":"https://www.bmw.pl/pl/all-models/x-series/x5/bmw-x5.html","sourceServer":"Apache (AEM)","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.pl/pl/all-models/x-series/X5/2023/bmw-x5-w-skrocie.html","status":301,"server":"Apache (AEM)","timestamp":0.106},{"url":"https://www.bmw.pl/pl/all-models/x-series/x5/bmw-x5.html","status":200,"server":"Apache (AEM)","timestamp":0.286}],"totalTime":0.488},{"originalURL":"https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-concept-vehicle/bmw-neue-klasse-genel-bakis.html","finalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html","sourceServer":"Akamai","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-concept-vehicle/bmw-neue-klasse-genel-bakis.html","status":301,"server":"Akamai","timestamp":0.411},{"url":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse.html","status":200,"server":"Apache (AEM)","timestamp":0.875}],"totalTime":1.387},{"originalURL":"https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-m-next.html","finalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","sourceServer":"Akamai","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-m-next.html","status":301,"server":"Akamai","timestamp":0.594},{"url":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","status":200,"server":"Apache (AEM)","timestamp":1.024}],"totalTime":1.319},{"originalURL":"https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/concept-cars-vision-neue-klasse.html","finalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","sourceServer":"Akamai","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/concept-cars-vision-neue-klasse.html","status":301,"server":"Akamai","timestamp":0.455},{"url":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","status":200,"server":"Apache (AEM)","timestamp":0.737}],"totalTime":1.03},{"originalURL":"https://www.bmw.com.tr/tr/all-models/Concept-Cars/bmw-vision-neue-klasse-x/2024.html","finalURL":"https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html","sourceServer":"Akamai","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/all-models/Concept-Cars/bmw-vision-neue-klasse-x/2024.html","status":301,"server":"Akamai","timestamp":0.454},{"url":"https://www.bmw.com.tr/tr/all-models/x-series/ix3/ix3-2025-na5-bev.html","status":200,"server":"Apache (AEM)","timestamp":8.46}],"totalTime":9.149},{"originalURL":"https://www.bmw.com.tr/tr/all-models/Concept-Cars/concept-cars-vision-neue-klasse/2023.html","finalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","sourceServer":"Akamai","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/all-models/Concept-Cars/concept-cars-vision-neue-klasse/2023.html","status":301,"server":"Akamai","timestamp":0.148},{"url":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","status":200,"server":"Apache (AEM)","timestamp":0.736}],"totalTime":1.116},{"originalURL":"https://www.bmw.com.tr/tr/all-models/Concept-Cars/i-vision/2023.html","finalURL":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","sourceServer":"Akamai","targetServer":"Apache (AEM)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.tr/tr/all-models/Concept-Cars/i-vision/2023.html","status":301,"server":"Akamai","timestamp":0.154},{"url":"https://www.bmw.com.tr/tr/more-bmw/neue-klasse-family.html","status":200,"server":"Apache (AEM)","timestamp":0.744}],"totalTime":1.149}];
+            new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
+
+            document.getElementById('export-btn').addEventListener('click', () => {
+                try {
+                    const wb = XLSX.utils.book_new();
+                    const summaryData = resultsData.map(r => ({
+                        'Source URL': r.originalURL,
+                        'Source Server': r.sourceServer,
+                        'Target URL': r.finalURL,
+                        'Target Server': r.targetServer,
+                        'Final Status': r.finalStatus,
+                        'Hop Count': r.redirectChain.length - 1,
+                        'Total Time (s)': r.totalTime,
+                        'Error': r.error || ''
+                    }));
+                    const summarySheet = XLSX.utils.json_to_sheet(summaryData);
+                    XLSX.utils.book_append_sheet(wb, summarySheet, 'Overview');
+
+                    let sheetCounter = 1;
+                    resultsData.forEach((r) => {
+                        if (r.redirectChain.length > 0) {
+                            const detailData = r.redirectChain.map((hop, i) => ({
+                                'Step': i + 1, 'URL': hop.url, 'Status': hop.status, 'Server': hop.server, 'Time': hop.timestamp
+                            }));
+                            let safeName = "Row_" + sheetCounter;
+                            sheetCounter++;
+                            const detailSheet = XLSX.utils.json_to_sheet(detailData);
+                            XLSX.utils.book_append_sheet(wb, detailSheet, safeName);
+                        }
+                    });
+                    XLSX.writeFile(wb, 'Redirect_Analysis.xlsx');
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Export Error', 'Failed to generate Excel file. Check console.', 'error');
+                }
+            });
+
+            document.querySelector('tbody').addEventListener('click', (e) => {
+                const btn = e.target.closest('.details-btn');
+                if (!btn) return;
+                const idx = btn.dataset.index;
+                const data = resultsData[idx];
+                const chainHtml = data.redirectChain.map((h, i) => 
+                    `<tr><td>${i+1}</td><td>${h.url}</td><td>${h.status}</td><td>${h.server}</td></tr>`
+                ).join('');
+                Swal.fire({
+                    title: 'Redirect Chain', width: '800px',
+                    html: `<p><strong>Start:</strong> ${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>${chainHtml}</tbody></table>`
+                });
+            });
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
