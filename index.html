@@ -5,383 +5,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirect Validator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#1a202c',
-                        darkCard: '#2d3748',
-                        darkInput: '#4a5568'
-                    }
-                }
-            }
-        }
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
     <style>
-        .log-window::-webkit-scrollbar { width: 8px; }
-        .log-window::-webkit-scrollbar-track { background: transparent; }
-        .log-window::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         #progressBar { transition: width 1s linear; }
-
-        /* --- THEME TOGGLE ANIMATION --- */
-        .theme-toggle-btn {
-            position: relative;
-            width: 24px;
-            height: 24px;
-            overflow: hidden;
-            cursor: pointer;
-            color: #4a5568;
-        }
-        .dark .theme-toggle-btn { color: #fbbf24; } /* Yellow sun/moon in dark mode */
-        
-        .theme-icon {
-            position: absolute;
-            top: 0;
-            left: 0;
-            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s;
-        }
-        
-        /* Light Mode State */
-        .icon-moon { transform: rotate(90deg) scale(0.5); opacity: 0; }
-        .icon-sun { transform: rotate(0deg) scale(1); opacity: 1; }
-        
-        /* Dark Mode State */
-        .dark .icon-moon { transform: rotate(0deg) scale(1); opacity: 1; }
-        .dark .icon-sun { transform: rotate(-90deg) scale(0.5); opacity: 0; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 p-6 h-screen flex flex-col transition-colors duration-300">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans h-screen flex flex-col">
 
-    <div class="max-w-7xl mx-auto w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col flex-grow transition-colors duration-300">
-        
-        <div class="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Enterprise Redirect Validator</h1>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Serverless Analyzer via GitHub Actions</p>
-            </div>
-            <div class="flex items-center gap-4">
-                <select id="historySelect" class="border dark:border-gray-600 rounded p-2 text-sm bg-gray-50 dark:bg-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                    <option value="">Loading past scans...</option>
-                </select>
-
-                <div id="status-badge" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-gray-200 text-gray-600">IDLE</div>
-
-                <div class="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-2"></div>
-
-                <button id="themeToggle" class="theme-toggle-btn" title="Toggle Theme">
-                    <div class="theme-icon icon-sun"><i data-feather="sun"></i></div>
-                    <div class="theme-icon icon-moon"><i data-feather="moon"></i></div>
-                </button>
-
-                <a href="https://github.com/bindrakesh" target="_blank" class="text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition" title="Visit my GitHub">
-                    <i data-feather="github"></i>
-                </a>
-            </div>
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-96">
+            <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+            <input id="username" type="text" placeholder="Username" class="w-full p-3 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <input id="password" type="password" placeholder="Password" class="w-full p-3 mb-6 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <button id="loginBtn" class="w-full bg-blue-600 text-white py-3 rounded font-bold hover:bg-blue-700">Enter</button>
+            <p id="loginError" class="text-red-500 text-center mt-3 text-sm hidden"></p>
         </div>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow overflow-hidden">
+    <div id="appContent" class="flex-grow flex flex-col p-6 hidden">
+        <div class="max-w-7xl mx-auto w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col flex-grow">
             
-            <div class="lg:col-span-1 flex flex-col gap-4 overflow-y-auto pr-2">
-                
-                <div class="p-4 bg-blue-50 dark:bg-gray-700/50 rounded border border-blue-100 dark:border-gray-600">
-                    <label class="block text-xs font-bold uppercase text-blue-600 dark:text-blue-400 mb-1">GitHub PAT Token</label>
-                    <input type="password" id="ghToken" class="w-full p-2 border rounded text-sm bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paste Token Here">
+            <div class="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">
+                <div>
+                    <h1 class="text-2xl font-bold">Enterprise Redirect Validator</h1>
+                    <p id="userBadge" class="text-sm text-blue-500 font-mono"></p>
                 </div>
-
-                <div class="flex-grow">
-                    <label class="block font-bold text-sm mb-2 text-gray-700 dark:text-gray-300">Target URLs</label>
-                    <textarea id="urlInput" class="w-full h-48 p-3 border rounded text-sm font-mono bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://www.example.com"></textarea>
-                </div>
-
-                <div id="progressContainer" class="hidden bg-gray-50 dark:bg-gray-700 p-3 rounded border dark:border-gray-600">
-                    <div class="flex justify-between text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
-                        <span id="elapsedText">Time: 0s</span>
-                        <span id="etaText" class="text-blue-600 dark:text-blue-400">ETA: Calculating...</span>
-                    </div>
-                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
-                        <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <button id="runBtn" class="w-full bg-black dark:bg-blue-600 text-white py-3 rounded font-semibold hover:bg-gray-800 dark:hover:bg-blue-700 transition flex justify-center items-center gap-2 shadow-md">
-                    <span id="btnText">Start Analysis</span>
-                    <div id="btnLoader" class="loader hidden"></div>
-                </button>
-
-                <div class="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs h-48 overflow-y-auto log-window border border-gray-800" id="consoleLogs">
-                    <p class="text-gray-500">> Ready for input...</p>
+                <div class="flex items-center gap-4">
+                    <select id="historySelect" class="border dark:border-gray-600 rounded p-2 text-sm bg-gray-50 dark:bg-gray-700">
+                        <option value="">Loading history...</option>
+                    </select>
+                    <div id="status-badge" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-gray-200 text-gray-600">IDLE</div>
+                    <button id="logoutBtn" class="text-xs text-red-400 underline">Logout</button>
                 </div>
             </div>
 
-            <div class="lg:col-span-2 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded flex flex-col relative overflow-hidden">
-                <div class="absolute top-2 right-2 z-10">
-                    <a id="newTabLink" href="#" target="_blank" class="hidden bg-white dark:bg-gray-700 dark:text-white border dark:border-gray-600 shadow px-3 py-1 text-xs rounded hover:bg-gray-100 dark:hover:bg-gray-600 text-blue-600 font-bold transition">Open in New Tab ↗</a>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow overflow-hidden">
+                <div class="lg:col-span-1 flex flex-col gap-4">
+                    <div class="flex-grow">
+                        <label class="block font-bold text-sm mb-2">Target URLs</label>
+                        <textarea id="urlInput" class="w-full h-64 p-3 border rounded text-sm font-mono dark:bg-gray-700 dark:border-gray-600" placeholder="https://www.example.com"></textarea>
+                    </div>
+
+                    <div id="progressContainer" class="hidden bg-gray-50 dark:bg-gray-700 p-3 rounded border dark:border-gray-600">
+                        <div class="flex justify-between text-xs font-bold mb-2"><span id="elapsedText">Time: 0s</span><span id="etaText">ETA: Calculating...</span></div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5"><div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div></div>
+                    </div>
+
+                    <button id="runBtn" class="w-full bg-black dark:bg-blue-600 text-white py-3 rounded font-bold hover:bg-gray-800 flex justify-center items-center gap-2">
+                        <span>Start Analysis</span> <div id="btnLoader" class="loader hidden"></div>
+                    </button>
+                    
+                    <div id="consoleLogs" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs h-32 overflow-y-auto">
+                        <p class="text-gray-500">> System Ready.</p>
+                    </div>
                 </div>
-                <div id="previewPlaceholder" class="flex-grow flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
-                    <i data-feather="layout" class="w-16 h-16 mb-2"></i>
-                    <p>Select a past report or run a new scan</p>
+
+                <div class="lg:col-span-2 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded relative">
+                    <iframe id="reportFrame" class="w-full h-full hidden bg-white rounded"></iframe>
+                    <div id="previewPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-400">
+                        <p>Report View</p>
+                    </div>
                 </div>
-                <iframe id="reportFrame" class="w-full h-full hidden bg-white rounded"></iframe>
             </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        const OWNER = 'rksxox-coder'; 
-        const REPO = 'urj-be-git-actions';       
-        const WORKFLOW_FILE = 'scan.yml';
-        
-        // --- DOM ELEMENTS ---
-        const consoleDiv = document.getElementById('consoleLogs');
+        // --- AUTHENTICATION ---
+        const loginModal = document.getElementById('loginModal');
+        const appContent = document.getElementById('appContent');
+        const userBadge = document.getElementById('userBadge');
+        let CREDENTIALS = null;
+
+        // Check Session
+        if(sessionStorage.getItem('auth_user')) {
+            CREDENTIALS = JSON.parse(sessionStorage.getItem('auth_user'));
+            showApp();
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            
+            // Verify via Netlify Function (Mock Check)
+            // We send a dummy request to test creds
+            try {
+                const resp = await callApi('get_history', {}, u, p); // Use history fetch as auth check
+                if(resp.error) throw new Error("Invalid Credentials");
+                
+                CREDENTIALS = { username: u, password: p };
+                sessionStorage.setItem('auth_user', JSON.stringify(CREDENTIALS));
+                showApp();
+            } catch(e) {
+                document.getElementById('loginError').innerText = "Invalid Username or Password";
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            sessionStorage.clear();
+            location.reload();
+        });
+
+        function showApp() {
+            loginModal.classList.add('hidden');
+            appContent.classList.remove('hidden');
+            userBadge.innerText = `Logged in as: ${CREDENTIALS.username}`;
+            fetchHistory();
+        }
+
+        // --- API WRAPPER (Talks to Netlify) ---
+        async function callApi(action, payload = {}, user = CREDENTIALS?.username, pass = CREDENTIALS?.password) {
+            const res = await fetch('/api', {
+                method: 'POST',
+                body: JSON.stringify({ action, username: user, password: pass, payload })
+            });
+            return await res.json();
+        }
+
+        // --- CORE LOGIC ---
         const runBtn = document.getElementById('runBtn');
-        const btnLoader = document.getElementById('btnLoader');
+        const consoleLogs = document.getElementById('consoleLogs');
         const reportFrame = document.getElementById('reportFrame');
         const previewPlaceholder = document.getElementById('previewPlaceholder');
-        const badge = document.getElementById('status-badge');
-        const tokenInput = document.getElementById('ghToken');
-        const newTabLink = document.getElementById('newTabLink');
         const historySelect = document.getElementById('historySelect');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const etaText = document.getElementById('etaText');
-        const elapsedText = document.getElementById('elapsedText');
-        const themeToggle = document.getElementById('themeToggle');
 
-        // --- THEME LOGIC ---
-        // Check LocalStorage or System Preference
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
+        function log(msg, type='info') {
+            const p = document.createElement('p');
+            p.innerText = `> ${msg}`;
+            if(type==='error') p.classList.add('text-red-400');
+            consoleLogs.appendChild(p);
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
         }
 
-        themeToggle.addEventListener('click', () => {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.theme = 'light';
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.theme = 'dark';
-            }
-        });
-
-        // --- INIT ---
-        if(localStorage.getItem('gh_pat')) tokenInput.value = localStorage.getItem('gh_pat');
-        tokenInput.addEventListener('change', () => localStorage.setItem('gh_pat', tokenInput.value));
-        
-        fetchHistory();
-
-        // Resume Session Logic
-        window.addEventListener('load', () => {
-            const savedRunId = localStorage.getItem('active_run_id');
-            const savedStartTime = localStorage.getItem('active_start_time');
-            const savedUrlCount = localStorage.getItem('active_url_count');
-
-            if (savedRunId && savedStartTime) {
-                const elapsedSecs = Math.floor((Date.now() - parseInt(savedStartTime)) / 1000);
-                startTimers(parseInt(savedUrlCount) || 2, elapsedSecs);
-                trackProgress(savedRunId, localStorage.getItem('gh_pat'));
-            }
-        });
-
-        // --- HISTORY LOGIC ---
         async function fetchHistory() {
             try {
-                const resp = await fetch(`https://${OWNER}.github.io/${REPO}/history.json?t=${Date.now()}`);
-                if(!resp.ok) throw new Error("No history");
-                const history = await resp.json();
-                historySelect.innerHTML = '<option value="">-- Select Past Report --</option>';
-                history.forEach(entry => {
+                const data = await callApi('get_history');
+                if(data.error) throw new Error(data.error);
+                
+                const history = JSON.parse(data); // API returns raw content string
+                historySelect.innerHTML = '<option value="">-- History --</option>';
+                history.forEach(h => {
                     const opt = document.createElement('option');
-                    opt.value = entry.path;
-                    opt.innerText = `${entry.date} (${entry.urlCount} URLs)`;
+                    opt.value = h.path;
+                    opt.innerText = `${h.date} (${h.urlCount})`;
                     historySelect.appendChild(opt);
                 });
-            } catch (e) { historySelect.innerHTML = '<option value="">No past reports found</option>'; }
+            } catch(e) { console.log(e); }
         }
 
-        historySelect.addEventListener('change', () => { if(historySelect.value) loadReportFrame(historySelect.value); });
-
-        function log(msg, type = 'info') {
-            const p = document.createElement('p');
-            p.innerHTML = `> ${msg}`;
-            if(type === 'error') p.className = 'text-red-400';
-            if(type === 'success') p.className = 'text-white font-bold';
-            consoleDiv.appendChild(p);
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-        }
-
-        function loadReportFrame(relativePath) {
-            const token = tokenInput.value;
-            if(token) displayReportFromApi(token, relativePath);
-            else {
-                const fullUrl = `https://${OWNER}.github.io/${REPO}/${relativePath}?t=${Date.now()}`;
-                reportFrame.src = fullUrl;
-                previewPlaceholder.classList.add('hidden');
-                reportFrame.classList.remove('hidden');
-                newTabLink.href = fullUrl;
-                newTabLink.classList.remove('hidden');
-            }
-        }
-
-        // --- START CLICK ---
-        runBtn.addEventListener('click', async () => {
-            const token = tokenInput.value;
-            const urls = document.getElementById('urlInput').value;
-            if (!token || !urls.trim()) return log("Error: Missing Token or URLs", 'error');
-            
-            const urlCount = urls.split('\n').filter(u => u.trim()).length;
-            
-            runBtn.disabled = true;
-            btnLoader.classList.remove('hidden');
-            badge.classList.remove('hidden');
-            badge.innerText = "QUEUED";
-            
-            reportFrame.src = "about:blank"; 
-            reportFrame.classList.add('hidden');
-            previewPlaceholder.classList.remove('hidden');
-            newTabLink.classList.add('hidden');
-            clearSession(); 
-
-            startTimers(urlCount, 0);
-
-            try {
-                log("Triggering Workflow...", 'info');
-                const triggerResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/workflows/${WORKFLOW_FILE}/dispatches`, {
-                    method: 'POST', headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' },
-                    body: JSON.stringify({ ref: 'main', inputs: { url_list: urls } })
-                });
-                
-                if (!triggerResp.ok) {
-                    const errJson = await triggerResp.json();
-                    throw new Error("GitHub Error: " + (errJson.message || triggerResp.statusText));
-                }
-                
-                log("Waiting for Run ID...");
-                await new Promise(r => setTimeout(r, 5000));
-
-                const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?per_page=1`, { headers: { 'Authorization': `token ${token}` } });
-                const runsData = await runsResp.json();
-                const latestRun = runsData.workflow_runs[0];
-                
-                localStorage.setItem('active_run_id', latestRun.id);
-                localStorage.setItem('active_start_time', Date.now());
-                localStorage.setItem('active_url_count', urlCount);
-
-                log(`Run ID: ${latestRun.id}`);
-                trackProgress(latestRun.id, token);
-
-            } catch (err) {
-                log(err.message, 'error');
-                runBtn.disabled = false;
-                btnLoader.classList.add('hidden');
-                stopTimers();
-            }
+        historySelect.addEventListener('change', async () => {
+            if(!historySelect.value) return;
+            const data = await callApi('get_report', { path: historySelect.value });
+            if(data.content) renderReport(data.content);
         });
 
-        function trackProgress(runId, token) {
-            badge.innerText = "RUNNING";
-            badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-blue-200 text-blue-800";
+        function renderReport(html) {
+            previewPlaceholder.classList.add('hidden');
+            reportFrame.classList.remove('hidden');
+            const doc = reportFrame.contentWindow.document;
+            doc.open(); doc.write(html); doc.close();
+        }
+
+        runBtn.addEventListener('click', async () => {
+            const urls = document.getElementById('urlInput').value;
+            if(!urls.trim()) return log("No URLs", 'error');
+            
             runBtn.disabled = true;
-            btnLoader.classList.remove('hidden');
+            log("Authenticating & Uploading...");
+            
+            const resp = await callApi('upload', urls);
+            
+            if(resp.error) {
+                log(resp.error, 'error');
+                alert(resp.error); // Show popup for limit exceeded
+                runBtn.disabled = false;
+                return;
+            }
 
-            const pollInterval = setInterval(async () => {
-                const statusResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${runId}`, { headers: { 'Authorization': `token ${token}` } });
-                const statusData = await statusResp.json();
+            log(`Queued. Run ID: ${resp.runId}`);
+            trackProgress(resp.runId);
+        });
+
+        function trackProgress(runId) {
+            const interval = setInterval(async () => {
+                const status = await callApi('check_run', { runId });
+                log(`Status: ${status.status}`);
                 
-                if (statusData.status === 'completed') {
-                    clearInterval(pollInterval);
-                    clearSession();
-                    stopTimers();
-
-                    if (statusData.conclusion === 'success') {
-                        log("Success! Fetching history...", 'success');
-                        badge.innerText = "SUCCESS";
-                        badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800";
-                        
-                        setTimeout(async () => {
-                            await fetchHistory();
-                            if(historySelect.options.length > 1) {
-                                historySelect.selectedIndex = 1;
-                                loadReportFrame(historySelect.value);
-                            } else { log("History update slow, check dropdown shortly.", 'info'); }
+                if(status.status === 'completed') {
+                    clearInterval(interval);
+                    runBtn.disabled = false;
+                    if(status.conclusion === 'success') {
+                        log("Success! Loading...", 'success');
+                        setTimeout(() => {
+                            fetchHistory();
+                            // Auto load logic can go here
                         }, 3000);
                     } else {
-                        log("Workflow Failed.", 'error');
-                        badge.innerText = "FAILED";
-                        badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-200 text-red-800";
-                        runBtn.disabled = false;
+                        log("Failed.", 'error');
                     }
                 }
             }, 4000);
         }
-
-        function clearSession() {
-            localStorage.removeItem('active_run_id');
-            localStorage.removeItem('active_start_time');
-            localStorage.removeItem('active_url_count');
-        }
-
-        async function displayReportFromApi(token, relativePath) {
-            try {
-                const fileResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/contents/${relativePath}?t=${Date.now()}`, {
-                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
-                });
-                const fileData = await fileResp.json();
-                const rawHtml = atob(fileData.content);
-                
-                previewPlaceholder.classList.add('hidden');
-                reportFrame.classList.remove('hidden');
-                
-                const doc = reportFrame.contentWindow.document;
-                doc.open(); doc.write(rawHtml); doc.close();
-                
-                newTabLink.href = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
-                newTabLink.classList.remove('hidden');
-                runBtn.disabled = false;
-                btnLoader.classList.add('hidden');
-            } catch(e) { log("Error content: " + e.message, 'error'); }
-        }
-
-        // --- TIMERS ---
-        let stopwatchInterval;
-        let countdownInterval;
-        function startTimers(urlCount, startingElapsed = 0) {
-            progressContainer.classList.remove('hidden');
-            progressBar.style.width = '0%';
-            let elapsed = startingElapsed;
-            elapsedText.innerText = `Time: ${elapsed}s`;
-            if (stopwatchInterval) clearInterval(stopwatchInterval);
-            stopwatchInterval = setInterval(() => { elapsed++; elapsedText.innerText = `Time: ${elapsed}s`; }, 1000);
-            
-            const totalEstimatedSeconds = 45 + (urlCount * 5);
-            let remaining = totalEstimatedSeconds - startingElapsed;
-            if (remaining < 5) remaining = 5;
-            etaText.innerText = `ETA: ${remaining}s`;
-            let currentPercentage = (startingElapsed / totalEstimatedSeconds) * 90;
-            const step = 90 / remaining; 
-            if (countdownInterval) clearInterval(countdownInterval);
-            countdownInterval = setInterval(() => {
-                if (remaining > 0) { remaining--; etaText.innerText = `ETA: ${remaining}s`; }
-                else { etaText.innerText = `Finalizing...`; }
-                if (currentPercentage < 90) { currentPercentage += step; progressBar.style.width = `${currentPercentage}%`; }
-            }, 1000);
-        }
-        function stopTimers() {
-            if (stopwatchInterval) clearInterval(stopwatchInterval);
-            if (countdownInterval) clearInterval(countdownInterval);
-            progressBar.style.width = '100%';
-            etaText.innerText = "Done";
-        }
-        feather.replace();
     </script>
 </body>
 </html>
