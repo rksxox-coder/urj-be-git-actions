@@ -1,14 +1,12 @@
 const fetch = require('node-fetch');
 
 // --- SECURE CONFIGURATION ---
-// Instead of hardcoding, we read from Netlify's secure environment
 const GH_TOKEN = process.env.GH_TOKEN;
 const OWNER = process.env.GH_USER;
 const REPO = process.env.GH_REPO;
 
 let USERS = {};
 try {
-    // parse the JSON string stored in Netlify
     USERS = JSON.parse(process.env.APP_USERS || '{}');
 } catch (e) {
     console.error("Critical Error: APP_USERS environment variable is missing or invalid JSON.");
@@ -26,7 +24,7 @@ exports.handler = async (event, context) => {
     // 2. ROUTING
     try {
         if (action === 'upload') {
-            // --- ENFORCE LIMITS ---
+            // Enforce Limits
             const urls = payload.split('\n').filter(u => u.trim());
             if (urls.length > user.limit) {
                 return { 
@@ -49,6 +47,7 @@ exports.handler = async (event, context) => {
         return { statusCode: 400, body: "Invalid Action" };
 
     } catch (e) {
+        console.error("API Error:", e); // Log error to Netlify console
         return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
     }
 };
@@ -59,7 +58,7 @@ async function uploadToGitHub(content) {
     const path = "urls.txt";
     const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
     
-    // Get SHA
+    // 1. Get SHA (Existing file check)
     let sha = null;
     try {
         const getResp = await fetch(url, { headers: { 'Authorization': `token ${GH_TOKEN}` } });
@@ -69,6 +68,7 @@ async function uploadToGitHub(content) {
         }
     } catch (e) {}
 
+    // 2. Upload File
     const body = {
         message: "Trigger Scan via Netlify",
         content: Buffer.from(content).toString('base64'),
@@ -85,17 +85,44 @@ async function uploadToGitHub(content) {
         body: JSON.stringify(body)
     });
 
-    if (!putResp.ok) throw new Error("GitHub Upload Failed");
+    if (!putResp.ok) throw new Error("GitHub Upload Failed. Check Token Permissions.");
 
-    // Wait briefly for Action to start
-    await new Promise(r => setTimeout(r, 8000));
+    // 3. ROBUST RETRY LOOP (The Fix)
+    // We try to find the run 5 times, waiting 3 seconds between tries.
+    let latestRun = null;
+    
+    for (let i = 0; i < 5; i++) {
+        console.log(`Attempt ${i+1}: Looking for active workflow run...`);
+        
+        // Wait 3 seconds
+        await new Promise(r => setTimeout(r, 3000));
 
-    // Find the Run ID
-    const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?event=push&per_page=1`, { 
-        headers: { 'Authorization': `token ${GH_TOKEN}` } 
-    });
-    const runsData = await runsResp.json();
-    const latestRun = runsData.workflow_runs[0];
+        // Fetch runs triggered by 'push' event
+        const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?event=push&per_page=1`, { 
+            headers: { 'Authorization': `token ${GH_TOKEN}` } 
+        });
+        
+        if (runsResp.ok) {
+            const runsData = await runsResp.json();
+            
+            // Check if a run exists
+            if (runsData.workflow_runs && runsData.workflow_runs.length > 0) {
+                const run = runsData.workflow_runs[0];
+                const runTime = new Date(run.created_at).getTime();
+                const now = Date.now();
+                
+                // Verify this is a NEW run (created in the last 60 seconds), not an old one
+                if ((now - runTime) < 60000) { 
+                    latestRun = run;
+                    break; // Found it! Exit loop.
+                }
+            }
+        }
+    }
+
+    if (!latestRun) {
+        throw new Error("Upload succeeded, but the Workflow failed to start within 15 seconds. Please refresh history manually.");
+    }
 
     return { statusCode: 200, body: JSON.stringify({ runId: latestRun.id }) };
 }
@@ -104,6 +131,9 @@ async function checkRunStatus(runId) {
     const resp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs/${runId}`, { 
         headers: { 'Authorization': `token ${GH_TOKEN}` } 
     });
+    
+    if (!resp.ok) return { statusCode: 404, body: JSON.stringify({ status: 'unknown' }) };
+    
     const data = await resp.json();
     return { statusCode: 200, body: JSON.stringify(data) };
 }
