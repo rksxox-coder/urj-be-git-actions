@@ -1,6 +1,7 @@
 [build]
-  command = "echo 'No build needed for static site'"
-  publish = "/"
+  functions = "functions"
 
-[functions]
-  directory = "netlify/functions"
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api"
+  status = 200
