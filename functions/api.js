@@ -91,7 +91,7 @@ async function uploadToGitHub(content) {
     // We try to find the run 5 times, waiting 3 seconds between tries.
     let latestRun = null;
     
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
         console.log(`Attempt ${i+1}: Looking for active workflow run...`);
         
         // Wait 3 seconds
