@@ -61,14 +61,13 @@ async function uploadToGitHub(content) {
         }
     } catch (e) {}
 
-    // 2. FORCE UNIQUE CONTENT (The Fix)
-    // We append a timestamp comment so GitHub ALWAYS sees a change and triggers the workflow.
+    // 2. FORCE UNIQUE CONTENT
     const uniqueContent = content + `\n# Trigger ID: ${Date.now()}`;
 
     const body = {
         message: "Trigger Scan via Netlify",
         content: Buffer.from(uniqueContent).toString('base64'),
-        branch: "master", // <--- UPDATED TO MASTER
+        branch: "master", // <--- IMPORTANT: Verify this matches your repo's default branch!
         sha: sha 
     };
 
@@ -78,13 +77,17 @@ async function uploadToGitHub(content) {
         body: JSON.stringify(body)
     });
 
-    if (!putResp.ok) throw new Error("GitHub Upload Failed");
+    // --- IMPROVED ERROR LOGGING ---
+    if (!putResp.ok) {
+        const errText = await putResp.text();
+        console.error("GitHub Upload Error:", putResp.status, errText); // Check Netlify Function logs
+        throw new Error(`GitHub Rejected Upload (${putResp.status}): ${errText}`);
+    }
 
     return { statusCode: 200, body: JSON.stringify({ status: "uploaded", timestamp: Date.now() }) };
 }
 
 async function getLatestRun() {
-    // Look for runs created in the last 2 minutes
     const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?event=push&per_page=1`, { 
         headers: { 'Authorization': `token ${GH_TOKEN}` } 
     });
@@ -96,7 +99,6 @@ async function getLatestRun() {
         const run = runsData.workflow_runs[0];
         const runTime = new Date(run.created_at).getTime();
         
-        // Only return if it's fresh (created in last 90 seconds)
         if ((Date.now() - runTime) < 90000) {
             return { statusCode: 200, body: JSON.stringify({ runId: run.id }) };
         }
