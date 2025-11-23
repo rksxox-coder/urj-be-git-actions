@@ -265,7 +265,7 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
                 toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
             }
 
-            // --- NEW: LISTEN FOR DYNAMIC THEME CHANGES FROM PARENT ---
+            // Listen for theme changes from parent
             window.addEventListener('message', (event) => {
                 if (event.data && event.data.type === 'theme-change') {
                     const isDark = event.data.theme === 'dark';
@@ -280,7 +280,6 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
                     feather.replace();
                 }
             });
-            // ---------------------------------------------------------
 
             toggleBtn.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
@@ -292,38 +291,36 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
 
             new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
 
+            // --- UPDATED EXPORT LOGIC (SINGLE SHEET FLATTENED) ---
             document.getElementById('export-btn').addEventListener('click', () => {
                 try {
-                    const wb = XLSX.utils.book_new();
-                    const summaryData = resultsData.map(r => ({
-                        'Source URL': r.originalURL,
-                        'Source Server': r.sourceServer,
-                        'Target URL': r.finalURL,
-                        'Target Server': r.targetServer,
-                        'Final Status': r.finalStatus,
-                        'Hop Count': r.redirectChain.length - 1,
-                        'Total Time (s)': r.totalTime,
-                        'Error': r.error || ''
-                    }));
-                    const summarySheet = XLSX.utils.json_to_sheet(summaryData);
-                    XLSX.utils.book_append_sheet(wb, summarySheet, 'Overview');
+                    const flatData = resultsData.map(r => {
+                        const row = {
+                            'Original URL': r.originalURL,
+                            'Final URL': r.finalURL,
+                            'Hop Count': r.redirectChain.length,
+                            'Final Target Status': r.finalStatus,
+                            'Total Time (s)': r.totalTime.toFixed(2),
+                            'Error': r.error || ''
+                        };
 
-                    let sheetCounter = 1;
-                    resultsData.forEach((r) => {
-                        if (r.redirectChain.length > 0) {
-                            const detailData = r.redirectChain.map((hop, i) => ({
-                                'Step': i + 1, 'URL': hop.url, 'Status': hop.status, 'Server': hop.server, 'Time': hop.timestamp
-                            }));
-                            let safeName = "Row_" + sheetCounter;
-                            sheetCounter++;
-                            const detailSheet = XLSX.utils.json_to_sheet(detailData);
-                            XLSX.utils.book_append_sheet(wb, detailSheet, safeName);
-                        }
+                        r.redirectChain.forEach((hop, i) => {
+                            const prefix = \`Hop \${i + 1}\`;
+                            row[\`\${prefix} URL\`] = hop.url;
+                            row[\`\${prefix} Status\`] = hop.status;
+                            row[\`\${prefix} Server\`] = hop.server;
+                        });
+
+                        return row;
                     });
+
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(flatData);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Redirect Report');
                     XLSX.writeFile(wb, 'Redirect_Analysis.xlsx');
                 } catch (err) {
                     console.error(err);
-                    Swal.fire('Export Error', 'Failed to generate Excel file. Check console.', 'error');
+                    Swal.fire('Export Error', 'Failed to generate Excel file.', 'error');
                 }
             });
 
@@ -353,7 +350,6 @@ async function main() {
     
     let urls: string[] = [];
     
-    // 1. Read Input
     try {
         const fileContent = await readFile('urls.txt', 'utf-8');
         urls = fileContent.split('\n').map(u => u.trim()).filter(u => u && validator.isURL(u));
@@ -368,7 +364,6 @@ async function main() {
         process.exit(1);
     }
 
-    // 2. Run Analysis
     const browser = await chromium.launch({ headless: true });
     const allResults: AnalysisResult[] = [];
 
@@ -384,31 +379,29 @@ async function main() {
     }
     await browser.close();
 
-    // 3. Generate Dynamic Path: reports/YYYY/MM/DD/
+    // 3. Generate Dynamic Path
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    const timestamp = now.getTime(); // Unique ID
+    const timestamp = now.getTime(); 
 
     const folderPath = `reports/${year}/${month}/${day}`;
     const fileName = `report-${timestamp}.html`;
     const fullPath = path.join(folderPath, fileName);
 
-    // Create Directory
     await mkdir(folderPath, { recursive: true });
 
-    // Write HTML Report
     const htmlContent = generateHtmlReport(allResults, new Date().toLocaleString());
     await writeFile(fullPath, htmlContent);
     console.log(`✅ Report generated: ${fullPath}`);
 
-    // 4. Update History File (history.json)
+    // 4. Update History
     const historyEntry: HistoryEntry = {
         id: timestamp.toString(),
         date: new Date().toLocaleString(),
         timestamp: timestamp,
-        path: fullPath, // Relative path
+        path: fullPath, 
         urlCount: urls.length
     };
 
@@ -420,7 +413,6 @@ async function main() {
         console.log("No existing history.json, creating new one.");
     }
 
-    // Add new entry to TOP of list
     history.unshift(historyEntry);
     if (history.length > 50) history = history.slice(0, 50);
 
