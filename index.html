@@ -17,6 +17,7 @@
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans h-screen flex flex-col">
 
+    <!-- LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-96">
             <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
@@ -27,9 +28,11 @@
         </div>
     </div>
 
+    <!-- APP CONTENT (Hidden by default) -->
     <div id="appContent" class="flex-grow flex flex-col p-6 hidden">
         <div class="max-w-7xl mx-auto w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col flex-grow">
             
+            <!-- Header -->
             <div class="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">
                 <div>
                     <h1 class="text-2xl font-bold">Enterprise Redirect Validator</h1>
@@ -45,6 +48,7 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow overflow-hidden">
+                <!-- Left Panel -->
                 <div class="lg:col-span-1 flex flex-col gap-4">
                     <div class="flex-grow">
                         <label class="block font-bold text-sm mb-2">Target URLs</label>
@@ -57,7 +61,7 @@
                     </div>
 
                     <button id="runBtn" class="w-full bg-black dark:bg-blue-600 text-white py-3 rounded font-bold hover:bg-gray-800 flex justify-center items-center gap-2">
-                        <span>Start Analysis</span> <div id="btnLoader" class="loader hidden"></div>
+                        <span id="btnText">Start Analysis</span> <div id="btnLoader" class="loader hidden"></div>
                     </button>
                     
                     <div id="consoleLogs" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs h-32 overflow-y-auto">
@@ -65,6 +69,7 @@
                     </div>
                 </div>
 
+                <!-- Right Panel -->
                 <div class="lg:col-span-2 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded relative">
                     <iframe id="reportFrame" class="w-full h-full hidden bg-white rounded"></iframe>
                     <div id="previewPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-400">
@@ -82,7 +87,6 @@
         const userBadge = document.getElementById('userBadge');
         let CREDENTIALS = null;
 
-        // Check Session
         if(sessionStorage.getItem('auth_user')) {
             CREDENTIALS = JSON.parse(sessionStorage.getItem('auth_user'));
             showApp();
@@ -92,10 +96,8 @@
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
             
-            // Verify via Netlify Function (Mock Check)
-            // We send a dummy request to test creds
             try {
-                const resp = await callApi('get_history', {}, u, p); // Use history fetch as auth check
+                const resp = await callApi('get_history', {}, u, p);
                 if(resp.error) throw new Error("Invalid Credentials");
                 
                 CREDENTIALS = { username: u, password: p };
@@ -119,7 +121,7 @@
             fetchHistory();
         }
 
-        // --- API WRAPPER (Talks to Netlify) ---
+        // --- API WRAPPER ---
         async function callApi(action, payload = {}, user = CREDENTIALS?.username, pass = CREDENTIALS?.password) {
             const res = await fetch('/api', {
                 method: 'POST',
@@ -130,15 +132,19 @@
 
         // --- CORE LOGIC ---
         const runBtn = document.getElementById('runBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoader = document.getElementById('btnLoader');
         const consoleLogs = document.getElementById('consoleLogs');
         const reportFrame = document.getElementById('reportFrame');
         const previewPlaceholder = document.getElementById('previewPlaceholder');
         const historySelect = document.getElementById('historySelect');
+        const badge = document.getElementById('status-badge');
 
         function log(msg, type='info') {
             const p = document.createElement('p');
             p.innerText = `> ${msg}`;
             if(type==='error') p.classList.add('text-red-400');
+            if(type==='success') p.classList.add('text-white', 'font-bold');
             consoleLogs.appendChild(p);
             consoleLogs.scrollTop = consoleLogs.scrollHeight;
         }
@@ -148,7 +154,7 @@
                 const data = await callApi('get_history');
                 if(data.error) throw new Error(data.error);
                 
-                const history = JSON.parse(data); // API returns raw content string
+                const history = JSON.parse(data.content); // Parse inner content
                 historySelect.innerHTML = '<option value="">-- History --</option>';
                 history.forEach(h => {
                     const opt = document.createElement('option');
@@ -172,45 +178,92 @@
             doc.open(); doc.write(html); doc.close();
         }
 
+        // --- UPDATED START LOGIC (POLLING) ---
         runBtn.addEventListener('click', async () => {
             const urls = document.getElementById('urlInput').value;
             if(!urls.trim()) return log("No URLs", 'error');
             
             runBtn.disabled = true;
+            btnText.innerText = "Uploading...";
+            btnLoader.classList.remove('hidden');
+            
             log("Authenticating & Uploading...");
             
+            // 1. Upload File
             const resp = await callApi('upload', urls);
             
             if(resp.error) {
                 log(resp.error, 'error');
-                alert(resp.error); // Show popup for limit exceeded
-                runBtn.disabled = false;
+                alert(resp.error); 
+                resetBtn();
                 return;
             }
 
-            log(`Queued. Run ID: ${resp.runId}`);
-            trackProgress(resp.runId);
+            log("Upload Success. Waiting for GitHub to start...");
+            badge.innerText = "QUEUED";
+            badge.classList.remove('hidden');
+            
+            // 2. Wait for Run ID (The new Logic)
+            waitForRunId();
         });
 
+        function waitForRunId() {
+            let attempts = 0;
+            const maxAttempts = 20; // Wait 60 seconds max
+
+            const interval = setInterval(async () => {
+                attempts++;
+                const resp = await callApi('get_latest_run');
+                
+                if (resp.runId) {
+                    clearInterval(interval);
+                    log(`Run ID Found: ${resp.runId}`);
+                    trackProgress(resp.runId);
+                } else {
+                    if (attempts >= maxAttempts) {
+                        clearInterval(interval);
+                        log("Timeout: GitHub didn't start the workflow in time.", 'error');
+                        resetBtn();
+                    } else {
+                        console.log("Waiting for run...");
+                    }
+                }
+            }, 3000); 
+        }
+
         function trackProgress(runId) {
+            badge.innerText = "RUNNING";
+            badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-blue-200 text-blue-800";
+            btnText.innerText = "Analyzing...";
+
             const interval = setInterval(async () => {
                 const status = await callApi('check_run', { runId });
                 log(`Status: ${status.status}`);
                 
                 if(status.status === 'completed') {
                     clearInterval(interval);
-                    runBtn.disabled = false;
+                    resetBtn();
+                    
                     if(status.conclusion === 'success') {
                         log("Success! Loading...", 'success');
+                        badge.innerText = "SUCCESS";
+                        badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800";
                         setTimeout(() => {
                             fetchHistory();
-                            // Auto load logic can go here
-                        }, 3000);
+                        }, 4000); // Wait for GitHub pages/cache
                     } else {
                         log("Failed.", 'error');
+                        badge.innerText = "FAILED";
+                        badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-200 text-red-800";
                     }
                 }
             }, 4000);
+        }
+
+        function resetBtn() {
+            runBtn.disabled = false;
+            btnText.innerText = "Start Analysis";
+            btnLoader.classList.add('hidden');
         }
     </script>
 </body>
