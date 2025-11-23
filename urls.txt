@@ -37,5 +37,7 @@ https://www.bmw.pl/pl_PL/services-and-workshop/bmw-proactive-care.html
 https://www.bmw.pl/pl_PL/topics/offers-and-services/service-workshop/bmw-service-inclusive.html
 https://www.bmw.pl/pl_PL/topics/offers-and-services/service-workshop/bmw-repair-and-care-overview.html
 https://www.bmw.pl/pl_PL/topics/offers-and-services/Uslugi_serwisowe_BMW/bmw-roadside-assistance1.html
+https://www.bmw.pl/pl/topics/offers-and-services/service-workshop/serwis-bmw-w-skrocie.html
+https://www.bmw.pl/pl/topics/offers-and-services/service-workshop/My-BMW-Service-2022.html
 
-# Trigger ID: 1763921713942
+# Trigger ID: 1763922770092
