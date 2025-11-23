@@ -1,16 +1,12 @@
-https://www.bmw.ro:/ro/all-models/seria-x/X1/2022/bmw-x1-privire-de-ansamblu.html
-https://www.bmw.ro:/ro/all-models/seria-x/X5/2023/bmw-x5-overview.html
-https://www.bmw.ro:/ro_RO/all-models/x-series/X5/2023/bmw-x5-highlights.html
-https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-m-next.html
-https://www.bmw.com.tr/tr/more-bmw/concept-cars/vision-neue-klasse-x.html
-https://www.bmw.com.tr/tr/more-bmw/concept-cars/bmw-neue-klasse-genel-bakis.html
-https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
-https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-concept-vehicle/bmw-i-vision-circular-one-cikan-ozellikler.html
-https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
-https://www.bmw.com.tr/tr_TR/topics/fascination-bmw/bmw-concept-vehicle/bmw-i-vision-circular-highlights.html
-https://www.bmw.com.tr/tr_TR/more-bmw/concept-cars/concept-cars-vision-neue-klasse-x.html
-https://www.bmw.com.tr/tr_TR/more-bmw/concept-cars/concept-cars-vision-neue-klasse.html
-https://www.bmw.com.tr/tr/all-models/Concept-Cars/BMW-Vision-M-Next.html
-https://www.bmw.com.tr/tr/all-models/Concept-Cars/BMW-Vision-M-Next/2020.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/yavas-ve-sessiz-bir-yasam-anlayis.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/az-emisyon-iyi-gelecek.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/norrebro-kopenhag-in-en-havali-semti.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/bmw-8-serisi-ile-zamanda-yolculuk.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/avrupadan-kis-destinasyonu-onerileri.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/bmw-iyi-haberler.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/kampin-luks-hali-glamping.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/steve-mccurry-nin-gozunden-iskocya.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/radarinizda-olmasi-gereken-mobil-uygulamalar.html
+https://www.bmw.com.tr/tr/topics/fascination-bmw/bmw-joy-blog/tasarim-sizi-yansitmali.html
 
-# Trigger ID: 1763924249023
+# Trigger ID: 1763924429006
