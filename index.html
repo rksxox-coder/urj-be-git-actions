@@ -4,89 +4,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirect Validator</title>
+    <!-- Tailwind CSS with Dark Mode Configuration -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script>
-        tailwind.config = { darkMode: 'class' }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#1a202c',
+                        darkCard: '#2d3748',
+                        darkInput: '#4a5568'
+                    }
+                }
+            }
+        }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
+        .log-window::-webkit-scrollbar { width: 8px; }
+        .log-window::-webkit-scrollbar-track { background: transparent; }
+        .log-window::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3498db; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         #progressBar { transition: width 1s linear; }
+
+        /* Theme Toggle Animation */
+        .theme-toggle-btn { position: relative; width: 24px; height: 24px; overflow: hidden; cursor: pointer; color: #4a5568; }
+        .dark .theme-toggle-btn { color: #fbbf24; }
+        .theme-icon { position: absolute; top: 0; left: 0; transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s; }
+        .icon-moon { transform: rotate(90deg) scale(0.5); opacity: 0; }
+        .icon-sun { transform: rotate(0deg) scale(1); opacity: 1; }
+        .dark .icon-moon { transform: rotate(0deg) scale(1); opacity: 1; }
+        .dark .icon-sun { transform: rotate(-90deg) scale(0.5); opacity: 0; }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans h-screen flex flex-col">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans h-screen flex flex-col transition-colors duration-300">
 
     <!-- LOGIN MODAL -->
     <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl w-96">
             <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
-            <input id="username" type="text" placeholder="Username" class="w-full p-3 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600">
-            <input id="password" type="password" placeholder="Password" class="w-full p-3 mb-6 border rounded dark:bg-gray-700 dark:border-gray-600">
+            <input id="username" type="text" placeholder="Username" class="w-full p-3 mb-3 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <input id="password" type="password" placeholder="Password" class="w-full p-3 mb-6 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             <button id="loginBtn" class="w-full bg-blue-600 text-white py-3 rounded font-bold hover:bg-blue-700">Enter</button>
             <p id="loginError" class="text-red-500 text-center mt-3 text-sm hidden"></p>
         </div>
     </div>
 
-    <!-- APP CONTENT (Hidden by default) -->
+    <!-- APP CONTENT -->
     <div id="appContent" class="flex-grow flex flex-col p-6 hidden">
-        <div class="max-w-7xl mx-auto w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col flex-grow">
+        <div class="max-w-7xl mx-auto w-full bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col flex-grow transition-colors duration-300">
             
             <!-- Header -->
             <div class="flex justify-between items-center mb-6 border-b dark:border-gray-700 pb-4">
                 <div>
-                    <h1 class="text-2xl font-bold">Enterprise Redirect Validator</h1>
+                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Enterprise Redirect Validator</h1>
                     <p id="userBadge" class="text-sm text-blue-500 font-mono"></p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <select id="historySelect" class="border dark:border-gray-600 rounded p-2 text-sm bg-gray-50 dark:bg-gray-700">
+                    <select id="historySelect" class="border dark:border-gray-600 rounded p-2 text-sm bg-gray-50 dark:bg-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 transition">
                         <option value="">Loading history...</option>
                     </select>
+
                     <div id="status-badge" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-gray-200 text-gray-600">IDLE</div>
-                    <button id="logoutBtn" class="text-xs text-red-400 underline">Logout</button>
+
+                    <div class="h-6 w-px bg-gray-300 dark:bg-gray-600 mx-2"></div>
+
+                    <!-- Theme Toggle -->
+                    <button id="themeToggle" class="theme-toggle-btn" title="Toggle Theme">
+                        <div class="theme-icon icon-sun"><i data-feather="sun"></i></div>
+                        <div class="theme-icon icon-moon"><i data-feather="moon"></i></div>
+                    </button>
+
+                    <button id="logoutBtn" class="text-xs text-red-400 underline hover:text-red-600">Logout</button>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow overflow-hidden">
+                
                 <!-- Left Panel -->
-                <div class="lg:col-span-1 flex flex-col gap-4">
+                <div class="lg:col-span-1 flex flex-col gap-4 pr-2">
                     <div class="flex-grow">
-                        <label class="block font-bold text-sm mb-2">Target URLs</label>
-                        <textarea id="urlInput" class="w-full h-64 p-3 border rounded text-sm font-mono dark:bg-gray-700 dark:border-gray-600" placeholder="https://www.example.com"></textarea>
+                        <label class="block font-bold text-sm mb-2 text-gray-700 dark:text-gray-300">Target URLs</label>
+                        <textarea id="urlInput" class="w-full h-64 p-3 border rounded text-sm font-mono bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://www.example.com"></textarea>
                     </div>
 
-                    <div id="progressContainer" class="hidden bg-gray-50 dark:bg-gray-700 p-3 rounded border dark:border-gray-600">
-                        <div class="flex justify-between text-xs font-bold mb-2"><span id="elapsedText">Time: 0s</span><span id="etaText">ETA: Calculating...</span></div>
-                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5"><div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div></div>
+                    <!-- Progress & Timer Area -->
+                    <div id="progressContainer" class="hidden bg-gray-50 dark:bg-gray-700 p-3 rounded border dark:border-gray-600 transition-all">
+                        <div class="flex justify-between text-xs font-bold text-gray-700 dark:text-gray-300 mb-2">
+                            <span id="elapsedText">Time: 0s</span>
+                            <span id="etaText" class="text-blue-600 dark:text-blue-400">ETA: Calculating...</span>
+                        </div>
+                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
+                            <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                        </div>
                     </div>
 
-                    <button id="runBtn" class="w-full bg-black dark:bg-blue-600 text-white py-3 rounded font-bold hover:bg-gray-800 flex justify-center items-center gap-2">
-                        <span id="btnText">Start Analysis</span> <div id="btnLoader" class="loader hidden"></div>
+                    <button id="runBtn" class="w-full bg-black dark:bg-blue-600 text-white py-3 rounded font-semibold hover:bg-gray-800 dark:hover:bg-blue-700 transition flex justify-center items-center gap-2 shadow-md">
+                        <span id="btnText">Start Analysis</span>
+                        <div id="btnLoader" class="loader hidden"></div>
                     </button>
-                    
-                    <div id="consoleLogs" class="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs h-32 overflow-y-auto">
-                        <p class="text-gray-500">> System Ready.</p>
+
+                    <div class="bg-gray-900 text-green-400 p-4 rounded font-mono text-xs h-40 overflow-y-auto log-window border border-gray-800" id="consoleLogs">
+                        <p class="text-gray-500">> Ready.</p>
                     </div>
                 </div>
 
                 <!-- Right Panel -->
-                <div class="lg:col-span-2 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded relative">
-                    <iframe id="reportFrame" class="w-full h-full hidden bg-white rounded"></iframe>
-                    <div id="previewPlaceholder" class="absolute inset-0 flex items-center justify-center text-gray-400">
-                        <p>Report View</p>
+                <div class="lg:col-span-2 bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded flex flex-col relative overflow-hidden">
+                    <div class="absolute top-2 right-2 z-10">
+                        <a id="newTabLink" href="#" target="_blank" class="hidden bg-white dark:bg-gray-700 dark:text-white border dark:border-gray-600 shadow px-3 py-1 text-xs rounded hover:bg-gray-100 dark:hover:bg-gray-600 text-blue-600 font-bold transition">Open in New Tab ↗</a>
                     </div>
+                    <div id="previewPlaceholder" class="flex-grow flex flex-col items-center justify-center text-gray-400 dark:text-gray-500">
+                        <i data-feather="layout" class="w-16 h-16 mb-2"></i>
+                        <p>Select a past report or run a new scan</p>
+                    </div>
+                    <iframe id="reportFrame" class="w-full h-full hidden bg-white rounded"></iframe>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- AUTHENTICATION ---
+        // --- AUTHENTICATION & UI LOGIC ---
         const loginModal = document.getElementById('loginModal');
         const appContent = document.getElementById('appContent');
         const userBadge = document.getElementById('userBadge');
+        const themeToggle = document.getElementById('themeToggle');
         let CREDENTIALS = null;
 
+        // Theme Init
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        });
+
+        // Session Check
         if(sessionStorage.getItem('auth_user')) {
             CREDENTIALS = JSON.parse(sessionStorage.getItem('auth_user'));
             showApp();
@@ -95,11 +154,9 @@
         document.getElementById('loginBtn').addEventListener('click', async () => {
             const u = document.getElementById('username').value;
             const p = document.getElementById('password').value;
-            
             try {
                 const resp = await callApi('get_history', {}, u, p);
                 if(resp.error) throw new Error("Invalid Credentials");
-                
                 CREDENTIALS = { username: u, password: p };
                 sessionStorage.setItem('auth_user', JSON.stringify(CREDENTIALS));
                 showApp();
@@ -117,8 +174,9 @@
         function showApp() {
             loginModal.classList.add('hidden');
             appContent.classList.remove('hidden');
-            userBadge.innerText = `Logged in as: ${CREDENTIALS.username}`;
+            userBadge.innerText = `User: ${CREDENTIALS.username}`;
             fetchHistory();
+            feather.replace();
         }
 
         // --- API WRAPPER ---
@@ -130,7 +188,7 @@
             return await res.json();
         }
 
-        // --- CORE LOGIC ---
+        // --- CORE VARIABLES ---
         const runBtn = document.getElementById('runBtn');
         const btnText = document.getElementById('btnText');
         const btnLoader = document.getElementById('btnLoader');
@@ -139,6 +197,11 @@
         const previewPlaceholder = document.getElementById('previewPlaceholder');
         const historySelect = document.getElementById('historySelect');
         const badge = document.getElementById('status-badge');
+        const newTabLink = document.getElementById('newTabLink');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const etaText = document.getElementById('etaText');
+        const elapsedText = document.getElementById('elapsedText');
 
         function log(msg, type='info') {
             const p = document.createElement('p');
@@ -149,67 +212,84 @@
             consoleLogs.scrollTop = consoleLogs.scrollHeight;
         }
 
+        // --- HISTORY & REPORT LOADING ---
         async function fetchHistory() {
             try {
                 const data = await callApi('get_history');
-                if(data.error) throw new Error(data.error);
+                if(data.error) throw new Error("No history found");
                 
-                const history = JSON.parse(data.content); // Parse inner content
-                historySelect.innerHTML = '<option value="">-- History --</option>';
-                history.forEach(h => {
+                const historyArray = JSON.parse(data.content);
+                historySelect.innerHTML = '<option value="">-- Select Past Report --</option>';
+                historyArray.forEach(h => {
                     const opt = document.createElement('option');
                     opt.value = h.path;
-                    opt.innerText = `${h.date} (${h.urlCount})`;
+                    opt.innerText = `${h.date} (${h.urlCount} URLs)`;
                     historySelect.appendChild(opt);
                 });
-            } catch(e) { console.log(e); }
+            } catch(e) { historySelect.innerHTML = '<option value="">No history available</option>'; }
         }
 
-        historySelect.addEventListener('change', async () => {
-            if(!historySelect.value) return;
-            const data = await callApi('get_report', { path: historySelect.value });
-            if(data.content) renderReport(data.content);
-        });
+        historySelect.addEventListener('change', () => { if(historySelect.value) loadReportFrame(historySelect.value); });
 
-        function renderReport(html) {
-            previewPlaceholder.classList.add('hidden');
-            reportFrame.classList.remove('hidden');
-            const doc = reportFrame.contentWindow.document;
-            doc.open(); doc.write(html); doc.close();
+        async function loadReportFrame(relativePath) {
+            try {
+                const data = await callApi('get_report', { path: relativePath });
+                if(data.content) {
+                    previewPlaceholder.classList.add('hidden');
+                    reportFrame.classList.remove('hidden');
+                    const doc = reportFrame.contentWindow.document;
+                    doc.open(); doc.write(data.content); doc.close();
+                    
+                    // Since we proxy through Netlify, we don't expose the raw GitHub link directly
+                    // But we can construct a public link if needed (Assuming GitHub Pages is active)
+                    // For now, we hide the button or point to repo root as fallback
+                    newTabLink.classList.remove('hidden');
+                    // Note: This link requires public repo or authenticated browser session. 
+                    // If private, user views inside iframe only.
+                    newTabLink.href = `https://github.com/${process.env.GH_USER || 'rksxox-coder'}/urj-be-git-actions/blob/main/${relativePath}`;
+                }
+            } catch(e) { log("Error loading report", 'error'); }
         }
 
-        // --- UPDATED START LOGIC (POLLING) ---
+        // --- WORKFLOW TRIGGER ---
         runBtn.addEventListener('click', async () => {
             const urls = document.getElementById('urlInput').value;
             if(!urls.trim()) return log("No URLs", 'error');
-            
+            const urlCount = urls.split('\n').filter(u => u.trim()).length;
+
+            // Reset UI
             runBtn.disabled = true;
             btnText.innerText = "Uploading...";
             btnLoader.classList.remove('hidden');
+            reportFrame.src = "about:blank";
+            reportFrame.classList.add('hidden');
+            previewPlaceholder.classList.remove('hidden');
             
             log("Authenticating & Uploading...");
             
-            // 1. Upload File
+            // 1. Upload
             const resp = await callApi('upload', urls);
             
             if(resp.error) {
                 log(resp.error, 'error');
-                alert(resp.error); 
+                alert(resp.error);
                 resetBtn();
                 return;
             }
 
-            log("Upload Success. Waiting for GitHub to start...");
+            log("Upload Success. Queued.");
             badge.innerText = "QUEUED";
             badge.classList.remove('hidden');
             
-            // 2. Wait for Run ID (The new Logic)
+            // Start Visuals
+            startTimers(urlCount);
             waitForRunId();
         });
 
+        // --- POLLING LOGIC ---
         function waitForRunId() {
             let attempts = 0;
-            const maxAttempts = 20; // Wait 60 seconds max
+            const maxAttempts = 40; // Wait 2 minutes max for start
 
             const interval = setInterval(async () => {
                 attempts++;
@@ -224,8 +304,9 @@
                         clearInterval(interval);
                         log("Timeout: GitHub didn't start the workflow in time.", 'error');
                         resetBtn();
+                        stopTimers();
                     } else {
-                        console.log("Waiting for run...");
+                        if(attempts % 5 === 0) console.log("Waiting for run...");
                     }
                 }
             }, 3000); 
@@ -238,24 +319,37 @@
 
             const interval = setInterval(async () => {
                 const status = await callApi('check_run', { runId });
-                log(`Status: ${status.status}`);
                 
                 if(status.status === 'completed') {
                     clearInterval(interval);
                     resetBtn();
+                    stopTimers();
                     
                     if(status.conclusion === 'success') {
-                        log("Success! Loading...", 'success');
+                        log("Success! Loading report...", 'success');
                         badge.innerText = "SUCCESS";
                         badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800";
-                        setTimeout(() => {
-                            fetchHistory();
-                        }, 4000); // Wait for GitHub pages/cache
+                        
+                        // --- AUTO LOAD LOGIC ---
+                        setTimeout(async () => {
+                            await fetchHistory(); // Refresh list
+                            
+                            // Auto-select the second option (Index 1) because Index 0 is "Select Past Report"
+                            // The backend puts new reports at the TOP of the list.
+                            if(historySelect.options.length > 1) {
+                                historySelect.selectedIndex = 1;
+                                const path = historySelect.value;
+                                log(`Auto-loading: ${path}`);
+                                loadReportFrame(path);
+                            }
+                        }, 4000); // Wait 4s for file propagation
                     } else {
-                        log("Failed.", 'error');
+                        log("Workflow Failed.", 'error');
                         badge.innerText = "FAILED";
                         badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-200 text-red-800";
                     }
+                } else {
+                    // Optional: update log with status if needed
                 }
             }, 4000);
         }
@@ -264,6 +358,54 @@
             runBtn.disabled = false;
             btnText.innerText = "Start Analysis";
             btnLoader.classList.add('hidden');
+        }
+
+        // --- TIMERS & PROGRESS ---
+        let stopwatchInterval;
+        let countdownInterval;
+        
+        function startTimers(urlCount) {
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            
+            let elapsed = 0;
+            elapsedText.innerText = `Time: 0s`;
+            
+            if (stopwatchInterval) clearInterval(stopwatchInterval);
+            stopwatchInterval = setInterval(() => {
+                elapsed++;
+                elapsedText.innerText = `Time: ${elapsed}s`;
+            }, 1000);
+
+            // Formula: 45s Boot + 5s per URL
+            const totalEstimated = 45 + (urlCount * 5);
+            let remaining = totalEstimated;
+            etaText.innerText = `ETA: ${remaining}s`;
+            
+            let currentPct = 0;
+            const step = 95 / totalEstimated; 
+
+            if (countdownInterval) clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                if (remaining > 0) {
+                    remaining--;
+                    etaText.innerText = `ETA: ${remaining}s`;
+                } else {
+                    etaText.innerText = "Finishing up...";
+                }
+
+                if (currentPct < 95) {
+                    currentPct += step;
+                    progressBar.style.width = `${currentPct}%`;
+                }
+            }, 1000);
+        }
+
+        function stopTimers() {
+            if (stopwatchInterval) clearInterval(stopwatchInterval);
+            if (countdownInterval) clearInterval(countdownInterval);
+            progressBar.style.width = '100%';
+            etaText.innerText = "Done";
         }
     </script>
 </body>
