@@ -245,9 +245,9 @@
                     const doc = reportFrame.contentWindow.document;
                     doc.open(); doc.write(data.content); doc.close();
                     
-                    // FIX: Use variable OWNER and REPO instead of process.env
+                    // FIX: Link to the Rendered GitHub Pages URL, not the Source Code
                     newTabLink.classList.remove('hidden');
-                    newTabLink.href = `https://github.com/${OWNER}/${REPO}/blob/main/${relativePath}`;
+                    newTabLink.href = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
                 }
             } catch(e) { 
                 log("Error loading report content", 'error');
