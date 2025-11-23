@@ -53,7 +53,8 @@ exports.handler = async (event, context) => {
 // --- HELPER FUNCTIONS ---
 
 async function uploadToGitHub(content) {
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/urls.txt`;
+    const path = "urls.txt";
+    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${path}`;
     
     // 1. Get SHA
     let sha = null;
@@ -65,12 +66,15 @@ async function uploadToGitHub(content) {
         }
     } catch (e) {}
 
-    // 2. Upload
+    // 2. Force Uniqueness (THE FIX)
+    // We add a comment at the bottom so Git ALWAYS sees a change
+    const uniqueContent = content + `\n# Run ID: ${Date.now()}`;
+
     const body = {
         message: "Trigger Scan via Netlify",
-        content: Buffer.from(content).toString('base64'),
+        content: Buffer.from(uniqueContent).toString('base64'),
         branch: "main",
-        sha: sha // Include SHA if file exists
+        sha: sha
     };
 
     const putResp = await fetch(url, {
@@ -81,10 +85,8 @@ async function uploadToGitHub(content) {
 
     if (!putResp.ok) throw new Error("GitHub Upload Failed");
 
-    // Return immediately! No waiting here.
     return { statusCode: 200, body: JSON.stringify({ status: "uploaded", timestamp: Date.now() }) };
 }
-
 async function getLatestRun() {
     // Look for runs created in the last 2 minutes
     const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?event=push&per_page=1`, { 
