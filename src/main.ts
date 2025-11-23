@@ -144,7 +144,7 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
     }
 }
 
-// --- HTML REPORT GENERATION ---
+// --- HTML REPORT GENERATION (Updated for Smaller UI) ---
 function generateHtmlReport(results: AnalysisResult[], timestampStr: string): string {
     let tableRows = '';
     results.forEach((result, index) => {
@@ -165,7 +165,7 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
                 <td><div class="url-cell">${targetIcon} <a href="${result.finalURL}" target="_blank">${result.finalURL}</a></div></td>
                 <td>${finalStatusBadge}</td>
                 <td class="chain-cell" title="${chainTooltip}">${chainBadges || 'N/A'}</td>
-                <td><button class="details-btn" data-index="${index}"><i data-feather="eye"></i></button></td>
+                <td><button class="details-btn" data-index="${index}"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
             </tr>`;
     });
 
@@ -182,34 +182,64 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
     <style>
         :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #dee2e6; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); --link-color: #007bff; }
-        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #e0e0e0; --border-color: #444; --header-bg: #333; --shadow-color: rgba(0,0,0,0.5); --link-color: #4dabf7; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
-        .container { max-width: 1600px; margin: auto; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px var(--shadow-color); }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .header-controls { display: flex; align-items: center; gap: 20px; }
-        #export-btn { background-color: #28a745; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+        
+        body.dark-mode { 
+            --bg-color: #1a202c; --card-bg: #2d3748; --text-color: #e2e8f0; 
+            --border-color: #4a5568; --header-bg: #2d3748; --shadow-color: rgba(0,0,0,0.5); --link-color: #63b3ed; 
+        }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 10px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s; font-size: 14px; }
+        .container { max-width: 100%; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); }
+        
+        /* Smaller Header */
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+        h1 { font-size: 1.2rem; margin: 0; font-weight: 600; } 
+        .header-controls { display: flex; align-items: center; gap: 10px; }
+        
+        /* Smaller Buttons */
+        #export-btn { 
+            background-color: #28a745; color: white; padding: 5px 10px; 
+            border: none; border-radius: 4px; cursor: pointer; font-size: 12px; 
+            display: flex; align-items: center; gap: 5px; 
+        }
+        button#theme-toggle { 
+            background: none; border: none; cursor: pointer; color: var(--text-color); 
+            padding: 2px; display: flex; align-items: center; 
+        }
+        
         table { width: 100% !important; border-collapse: collapse; }
-        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         .url-cell { display: flex; align-items: center; }
-        .url-cell i.feather { margin-right: 10px; flex-shrink: 0; }
+        .url-cell i.feather { margin-right: 8px; flex-shrink: 0; width: 14px; height: 14px; }
         td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
-        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; font-size: 13px; margin: 2px; }
+        
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; color: white; font-weight: bold; font-size: 11px; }
         .status-badge.success { background-color: #28a745; }
         .status-badge.redirect { background-color: #ffc107; color: #333; }
         .status-badge.error { background-color: #dc3545; }
-        .status-badge.small { padding: 3px 8px; font-size: 11px; margin-right: 4px; }
-        .modal-table { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 14px; color: #333; }
-        .modal-table th { background: #f8f9fa; border-bottom: 2px solid #dee2e6; text-align: left; padding: 8px; }
-        .modal-table td { border-bottom: 1px solid #eee; padding: 8px; }
+        .status-badge.small { padding: 1px 5px; font-size: 10px; margin-right: 3px; }
+        
+        .dataTables_wrapper .dataTables_length select, .dataTables_wrapper .dataTables_filter input { 
+            background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 2px; font-size: 12px;
+        }
+        .details-btn { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; }
+        
+        /* SweetAlert Dark Mode Override */
+        body.dark-mode .swal2-popup { background-color: #2d3748; color: #e2e8f0; }
+        body.dark-mode .swal2-title, body.dark-mode .swal2-content { color: #e2e8f0; }
+        
+        .modal-table { width: 100%; margin-top: 5px; border-collapse: collapse; font-size: 12px; color: inherit; }
+        .modal-table th { background: var(--header-bg); border-bottom: 1px solid var(--border-color); text-align: left; padding: 6px; }
+        .modal-table td { border-bottom: 1px solid var(--border-color); padding: 6px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Analysis Report (${timestampStr})</h1>
+            <h1>Analysis Report</h1>
             <div class="header-controls">
-                <button id="export-btn"><i data-feather="file-text"></i> Export to Excel</button>
-                <button onclick="document.body.classList.toggle('dark-mode')"><i data-feather="moon"></i></button>
+                <button id="export-btn"><i data-feather="file-text" style="width:12px; height:12px;"></i> Export</button>
+                <button id="theme-toggle" title="Toggle dark mode"><i data-feather="moon" style="width:14px; height:14px;"></i></button>
             </div>
         </div>
         <table id="analysisTable">
@@ -220,6 +250,36 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const resultsData = ${JSON.stringify(results)};
+            
+            // --- THEME INHERITANCE LOGIC ---
+            const body = document.body;
+            const toggleBtn = document.getElementById('theme-toggle');
+            
+            // 1. Check Iframe Parent
+            let parentIsDark = false;
+            try {
+                if (window.self !== window.top) {
+                    parentIsDark = window.parent.document.documentElement.classList.contains('dark');
+                }
+            } catch(e) { /* Cross-origin restricted */ }
+
+            // 2. Check Local Storage
+            const storedTheme = localStorage.getItem('theme');
+            
+            // 3. Apply (Parent takes priority on first load if no storage)
+            if (storedTheme === 'dark' || (!storedTheme && parentIsDark)) {
+                body.classList.add('dark-mode');
+                toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDark = body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                toggleBtn.innerHTML = isDark ? '<i data-feather="sun" style="width:14px; height:14px;"></i>' : '<i data-feather="moon" style="width:14px; height:14px;"></i>';
+                feather.replace();
+            });
+
             new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
 
             document.getElementById('export-btn').addEventListener('click', () => {
@@ -266,8 +326,8 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
                     \`<tr><td>\${i+1}</td><td>\${h.url}</td><td>\${h.status}</td><td>\${h.server}</td></tr>\`
                 ).join('');
                 Swal.fire({
-                    title: 'Redirect Chain', width: '800px',
-                    html: \`<p><strong>Start:</strong> \${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>\${chainHtml}</tbody></table>\`
+                    title: 'Redirect Chain', width: '600px', // Smaller modal
+                    html: \`<p style="word-break:break-all;font-size:12px"><strong>Start:</strong> \${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>\${chainHtml}</tbody></table>\`
                 });
             });
             feather.replace();
