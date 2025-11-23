@@ -42,9 +42,17 @@ interface HistoryEntry {
 // --- SERVER IDENTIFICATION ---
 const AKAMAI_IP_RANGES = ["23.192.0.0/11", "104.64.0.0/10", "184.24.0.0/13"];
 const ipCache = new Map<string, string>();
-const ServerType = { AKAMAI: 'Akamai', AEM: 'Apache (AEM)', UNKNOWN: 'Unknown' };
+const ServerType = { 
+    AKAMAI: 'Akamai (Edge)', 
+    AEM: 'Apache (AEM)', 
+    UNKNOWN: 'Unknown',
+    AKAMAI_STAGING: 'Akamai (Staging)'
+};
+
+// Icons for the report
 const serverIconMap: Record<string, string> = {
-    [ServerType.AKAMAI]: '<i data-feather="cloud" style="color: #007BFF;" title="Akamai"></i>',
+    [ServerType.AKAMAI]: '<i data-feather="cloud" style="color: #007BFF;" title="Akamai Edge"></i>',
+    [ServerType.AKAMAI_STAGING]: '<i data-feather="cloud-drizzle" style="color: #17a2b8;" title="Akamai Staging"></i>',
     [ServerType.AEM]: '<i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i>',
     [ServerType.UNKNOWN]: '<i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i>'
 };
@@ -66,41 +74,58 @@ function isAkamaiIp(ip: string | null): boolean {
     return AKAMAI_IP_RANGES.some(cidr => ipRangeCheck(ip, cidr));
 }
 
-// --- SERVER DETECTION LOGIC ---
+// --- ADVANCED SERVER DETECTION LOGIC ---
 async function getServerName(headers: Record<string, string>, url: string, statusCode: number): Promise<string> {
     const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
-    const xCache = lowerHeaders["x-cache"] || "";
     
-    // 1. AGGRESSIVE AKAMAI DETECTION
-    if (xCache.includes("TCP_HIT") || xCache.includes("TCP_MEM_HIT") || xCache.includes("TCP_REFRESH_HIT")) {
-        return ServerType.AKAMAI;
-    }
+    // Headers to analyze
+    const xCache = lowerHeaders["x-cache"] || "";
+    const serverHeader = lowerHeaders["server"]?.toLowerCase() || "";
+    const viaHeader = lowerHeaders["via"] || "";
+    const akamaiReqId = lowerHeaders["x-akamai-request-id"];
+    
+    // 1. CHECK: Is this specifically Akamai Staging?
+    if (lowerHeaders["x-akamai-staging"]) return ServerType.AKAMAI_STAGING;
 
-    if (lowerHeaders["x-akamai-request-id"] || lowerHeaders["x-akamai-staging"] || lowerHeaders["akamai-mon-ibit"]) {
-        if (!xCache.includes("TCP_MISS")) {
+    // 2. CHECK: Is it a Redirect? (301/302)
+    if (statusCode === 301 || statusCode === 302) {
+        
+        // SCENARIO A: Akamai Cache HIT (TCP_HIT, MEM_HIT)
+        // If Akamai served the redirect from cache, Akamai is the "Actor".
+        if (xCache.includes("HIT")) {
             return ServerType.AKAMAI;
+        }
+
+        // SCENARIO B: Akamai Cache MISS (TCP_MISS)
+        // If Akamai missed, it went to Origin. Origin returned the redirect.
+        // Therefore, the LOGIC came from AEM (Apache).
+        if (xCache.includes("MISS")) {
+            // Verify it actually went to an Apache/AEM origin
+            if (serverHeader.includes("apache") || lowerHeaders["x-dispatcher"]) {
+                return ServerType.AEM;
+            }
+            // If server header is hidden but we know it was a MISS, it's likely Origin logic
+            return ServerType.AEM; 
         }
     }
 
-    const serverValue = lowerHeaders["server"]?.toLowerCase() || "";
-    if (serverValue.includes("akamai") || serverValue.includes("ghost")) return ServerType.AKAMAI;
-    
-    // 2. ORIGIN (AEM) DETECTION
-    const hostname = new URL(url).hostname;
-    if (hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"))) {
-        if ("x-dispatcher" in lowerHeaders || "x-aem-instance" in lowerHeaders) return ServerType.AEM;
-        if ("cache-control" in lowerHeaders && !xCache) return ServerType.AEM;
+    // 3. CHECK: Explicit Server Headers
+    if (serverHeader.includes("akamai") || serverHeader.includes("ghost")) return ServerType.AKAMAI;
+    if (serverHeader.includes("apache") || serverHeader.includes("communique")) return ServerType.AEM;
+
+    // 4. CHECK: AEM-Specific Indicators (Dispatcher, etc.)
+    if (lowerHeaders["x-dispatcher"] || lowerHeaders["x-aem-instance"]) return ServerType.AEM;
+
+    // 5. CHECK: Infrastructure Headers
+    // If 'Via' says Akamai but we haven't returned yet, it's likely Akamai passing through content
+    if (viaHeader.toLowerCase().includes("akamai")) {
+        // If we are here, it wasn't a 301 MISS (AEM). It's likely a 200 OK passed through.
+        // We check IP to be sure.
+        const ip = await resolveIp(url);
+        if (isAkamaiIp(ip)) return ServerType.AKAMAI;
     }
 
-    if (serverValue.includes("apache")) return ServerType.AEM;
-
-    // 3. FALLBACKS
-    const serverTiming = lowerHeaders["server-timing"] || "";
-    if (serverTiming.includes("cdn-cache; desc=HIT") && (statusCode === 301 || statusCode === 302)) return ServerType.AKAMAI;
-
-    const ip = await resolveIp(url);
-    if (isAkamaiIp(ip) && !xCache.includes("TCP_MISS")) return ServerType.AKAMAI;
-
+    // 6. Fallback
     return ServerType.UNKNOWN;
 }
 
@@ -113,18 +138,23 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
         context = await browser.newContext({ 
             userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             extraHTTPHeaders: {
+                // Ask Akamai to show its debugging headers
                 "Pragma": "akamai-x-cache-on, akamai-x-get-cache-key, akamai-x-get-request-id, akamai-x-get-true-cache-key"
             }
         });
         
         const page = await context.newPage();
         page.on("response", async (response) => {
+            // Track every navigation request (the hops)
             if (response.request().isNavigationRequest()) {
                 const headers = await response.allHeaders();
                 const status = response.status();
+                const serverName = await getServerName(headers, response.url(), status);
+                
                 redirectChain.push({
-                    url: response.url(), status: status,
-                    server: await getServerName(headers, response.url(), status),
+                    url: response.url(), 
+                    status: status,
+                    server: serverName, 
                     timestamp: (Date.now() - startTime) / 1000
                 });
             }
@@ -134,19 +164,29 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
         
         const finalHop = redirectChain[redirectChain.length - 1];
         return {
-            originalURL: url, finalURL: page.url(), sourceServer: redirectChain[0]?.server || null,
-            targetServer: finalHop?.server || null, finalStatus: finalHop?.status || null,
-            redirectChain: redirectChain, totalTime: (Date.now() - startTime) / 1000,
+            originalURL: url, 
+            finalURL: page.url(), 
+            sourceServer: redirectChain[0]?.server || null,
+            targetServer: finalHop?.server || null, 
+            finalStatus: finalHop?.status || null,
+            redirectChain: redirectChain, 
+            totalTime: (Date.now() - startTime) / 1000,
         };
     } catch (e) {
         let errorMessage = "Error";
         if (e instanceof errors.TimeoutError) errorMessage = "Timeout";
         else if (e instanceof Error) errorMessage = e.message;
+        
         const finalHop = redirectChain.length > 0 ? redirectChain[redirectChain.length - 1] : null;
         return {
-            originalURL: url, finalURL: finalHop?.url || "N/A", sourceServer: redirectChain[0]?.server || null,
-            targetServer: finalHop?.server || null, finalStatus: finalHop?.status || null,
-            redirectChain: redirectChain, totalTime: (Date.now() - startTime) / 1000, error: errorMessage,
+            originalURL: url, 
+            finalURL: finalHop?.url || "N/A", 
+            sourceServer: redirectChain[0]?.server || null,
+            targetServer: finalHop?.server || null, 
+            finalStatus: finalHop?.status || null,
+            redirectChain: redirectChain, 
+            totalTime: (Date.now() - startTime) / 1000, 
+            error: errorMessage,
         };
     } finally {
         if (context) await context.close();
@@ -161,11 +201,13 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
         const targetIcon = result.error ? '<i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i>' : serverIconMap[result.targetServer || ServerType.UNKNOWN];
         const finalStatusBadge = result.error ? `<span class="status-badge error">${result.finalStatus || 'ERR'}</span>` : `<span class="status-badge success">${result.finalStatus || 'OK'}</span>`;
         
+        // Chain Visuals
         const chainBadges = result.redirectChain.map(h => {
             const statusClass = h.status >= 400 ? 'error' : (h.status >= 300 ? 'redirect' : 'success');
             return `<span class="status-badge small ${statusClass}">${h.status}</span>`;
         }).join('');
         
+        // Chain Tooltip
         const chainTooltip = result.redirectChain.map((h, i) => `Hop ${i + 1}: ${h.status} (${h.server})`).join(' &#013; ');
 
         tableRows += `
@@ -191,49 +233,28 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
     <style>
         :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #dee2e6; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); --link-color: #007bff; }
-        
-        body.dark-mode { 
-            --bg-color: #1a202c; --card-bg: #2d3748; --text-color: #e2e8f0; 
-            --border-color: #4a5568; --header-bg: #2d3748; --shadow-color: rgba(0,0,0,0.5); --link-color: #63b3ed; 
-        }
-        
+        body.dark-mode { --bg-color: #1a202c; --card-bg: #2d3748; --text-color: #e2e8f0; --border-color: #4a5568; --header-bg: #2d3748; --shadow-color: rgba(0,0,0,0.5); --link-color: #63b3ed; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 10px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s; font-size: 14px; }
         .container { max-width: 100%; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); margin-top: 50px; }
-        
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
         h1 { font-size: 1.2rem; margin: 0; font-weight: 600; } 
         .header-controls { display: flex; align-items: center; gap: 10px; }
-        
-        #export-btn { 
-            background-color: #28a745; color: white; padding: 5px 10px; 
-            border: none; border-radius: 4px; cursor: pointer; font-size: 12px; 
-            display: flex; align-items: center; gap: 5px; 
-        }
-        button#theme-toggle { 
-            background: none; border: none; cursor: pointer; color: var(--text-color); 
-            padding: 2px; display: flex; align-items: center; 
-        }
-        
+        #export-btn { background-color: #28a745; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        button#theme-toggle { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; display: flex; align-items: center; }
         table { width: 100% !important; border-collapse: collapse; }
         th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         .url-cell { display: flex; align-items: center; }
         .url-cell i.feather { margin-right: 8px; flex-shrink: 0; width: 14px; height: 14px; }
         td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
-        
         .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; color: white; font-weight: bold; font-size: 11px; }
         .status-badge.success { background-color: #28a745; }
         .status-badge.redirect { background-color: #ffc107; color: #333; }
         .status-badge.error { background-color: #dc3545; }
         .status-badge.small { padding: 1px 5px; font-size: 10px; margin-right: 3px; }
-        
-        .dataTables_wrapper .dataTables_length select, .dataTables_wrapper .dataTables_filter input { 
-            background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 2px; font-size: 12px;
-        }
+        .dataTables_wrapper .dataTables_length select, .dataTables_wrapper .dataTables_filter input { background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 2px; font-size: 12px; }
         .details-btn { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; }
-        
         body.dark-mode .swal2-popup { background-color: #2d3748; color: #e2e8f0; }
         body.dark-mode .swal2-title, body.dark-mode .swal2-content { color: #e2e8f0; }
-        
         .modal-table { width: 100%; margin-top: 5px; border-collapse: collapse; font-size: 12px; color: inherit; }
         .modal-table th { background: var(--header-bg); border-bottom: 1px solid var(--border-color); text-align: left; padding: 6px; }
         .modal-table td { border-bottom: 1px solid var(--border-color); padding: 6px; }
@@ -260,12 +281,7 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
             const toggleBtn = document.getElementById('theme-toggle');
             
             let parentIsDark = false;
-            try {
-                if (window.self !== window.top) {
-                    parentIsDark = window.parent.document.documentElement.classList.contains('dark');
-                }
-            } catch(e) { }
-
+            try { if (window.self !== window.top) parentIsDark = window.parent.document.documentElement.classList.contains('dark'); } catch(e) { }
             const storedTheme = localStorage.getItem('theme');
             if (storedTheme === 'dark' || (!storedTheme && parentIsDark)) {
                 body.classList.add('dark-mode');
@@ -275,13 +291,8 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
             window.addEventListener('message', (event) => {
                 if (event.data && event.data.type === 'theme-change') {
                     const isDark = event.data.theme === 'dark';
-                    if (isDark) {
-                        body.classList.add('dark-mode');
-                        toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
-                    } else {
-                        body.classList.remove('dark-mode');
-                        toggleBtn.innerHTML = '<i data-feather="moon" style="width:14px; height:14px;"></i>';
-                    }
+                    if (isDark) { body.classList.add('dark-mode'); toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>'; } 
+                    else { body.classList.remove('dark-mode'); toggleBtn.innerHTML = '<i data-feather="moon" style="width:14px; height:14px;"></i>'; }
                     localStorage.setItem('theme', event.data.theme);
                     feather.replace();
                 }
@@ -308,17 +319,14 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
                             'Total Time (s)': r.totalTime.toFixed(2),
                             'Error': r.error || ''
                         };
-
                         r.redirectChain.forEach((hop, i) => {
                             const prefix = \`Hop \${i + 1}\`;
                             row[\`\${prefix} URL\`] = hop.url;
                             row[\`\${prefix} Status\`] = hop.status;
                             row[\`\${prefix} Server\`] = hop.server;
                         });
-
                         return row;
                     });
-
                     const wb = XLSX.utils.book_new();
                     const ws = XLSX.utils.json_to_sheet(flatData);
                     XLSX.utils.book_append_sheet(wb, ws, 'Redirect Report');
