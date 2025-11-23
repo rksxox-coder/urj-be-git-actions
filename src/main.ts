@@ -144,7 +144,7 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
     }
 }
 
-// --- HTML REPORT GENERATION (Updated for Smaller UI) ---
+// --- HTML REPORT GENERATION ---
 function generateHtmlReport(results: AnalysisResult[], timestampStr: string): string {
     let tableRows = '';
     results.forEach((result, index) => {
@@ -189,14 +189,13 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
         }
         
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 10px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s; font-size: 14px; }
-        .container { max-width: 100%; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); }
+        /* Added margin-top to container to prevent overlap with parent button */
+        .container { max-width: 100%; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); margin-top: 50px; }
         
-        /* Smaller Header */
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
         h1 { font-size: 1.2rem; margin: 0; font-weight: 600; } 
         .header-controls { display: flex; align-items: center; gap: 10px; }
         
-        /* Smaller Buttons */
         #export-btn { 
             background-color: #28a745; color: white; padding: 5px 10px; 
             border: none; border-radius: 4px; cursor: pointer; font-size: 12px; 
@@ -224,7 +223,6 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
         }
         .details-btn { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; }
         
-        /* SweetAlert Dark Mode Override */
         body.dark-mode .swal2-popup { background-color: #2d3748; color: #e2e8f0; }
         body.dark-mode .swal2-title, body.dark-mode .swal2-content { color: #e2e8f0; }
         
@@ -250,27 +248,39 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const resultsData = ${JSON.stringify(results)};
-            
-            // --- THEME INHERITANCE LOGIC ---
             const body = document.body;
             const toggleBtn = document.getElementById('theme-toggle');
             
-            // 1. Check Iframe Parent
+            // --- THEME INHERITANCE ON LOAD ---
             let parentIsDark = false;
             try {
                 if (window.self !== window.top) {
                     parentIsDark = window.parent.document.documentElement.classList.contains('dark');
                 }
-            } catch(e) { /* Cross-origin restricted */ }
+            } catch(e) { }
 
-            // 2. Check Local Storage
             const storedTheme = localStorage.getItem('theme');
-            
-            // 3. Apply (Parent takes priority on first load if no storage)
             if (storedTheme === 'dark' || (!storedTheme && parentIsDark)) {
                 body.classList.add('dark-mode');
                 toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
             }
+
+            // --- NEW: LISTEN FOR DYNAMIC THEME CHANGES FROM PARENT ---
+            window.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'theme-change') {
+                    const isDark = event.data.theme === 'dark';
+                    if (isDark) {
+                        body.classList.add('dark-mode');
+                        toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
+                    } else {
+                        body.classList.remove('dark-mode');
+                        toggleBtn.innerHTML = '<i data-feather="moon" style="width:14px; height:14px;"></i>';
+                    }
+                    localStorage.setItem('theme', event.data.theme);
+                    feather.replace();
+                }
+            });
+            // ---------------------------------------------------------
 
             toggleBtn.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
@@ -326,7 +336,7 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
                     \`<tr><td>\${i+1}</td><td>\${h.url}</td><td>\${h.status}</td><td>\${h.server}</td></tr>\`
                 ).join('');
                 Swal.fire({
-                    title: 'Redirect Chain', width: '600px', // Smaller modal
+                    title: 'Redirect Chain', width: '600px',
                     html: \`<p style="word-break:break-all;font-size:12px"><strong>Start:</strong> \${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>\${chainHtml}</tbody></table>\`
                 });
             });
@@ -412,7 +422,6 @@ async function main() {
 
     // Add new entry to TOP of list
     history.unshift(historyEntry);
-    // Keep only last 50 reports to avoid massive file
     if (history.length > 50) history = history.slice(0, 50);
 
     await writeFile(HISTORY_FILE, JSON.stringify(history, null, 2));
