@@ -73,7 +73,7 @@ async function uploadToGitHub(content) {
     const body = {
         message: "Trigger Scan via Netlify",
         content: Buffer.from(uniqueContent).toString('base64'),
-        branch: "main",
+        branch: "master",
         sha: sha
     };
 
