@@ -40,18 +40,25 @@ interface HistoryEntry {
 }
 
 // --- SERVER IDENTIFICATION ---
-const AKAMAI_IP_RANGES = ["23.192.0.0/11", "104.64.0.0/10", "184.24.0.0/13"];
+// Expanded Akamai Ranges
+const AKAMAI_IP_RANGES = [
+    "23.192.0.0/11", "104.64.0.0/10", "184.24.0.0/13", 
+    "23.0.0.0/12", "23.32.0.0/11", "23.64.0.0/14", "96.0.0.0/11",
+    "2.16.0.0/13", "2.22.0.0/16", "184.50.0.0/15"
+];
 const ipCache = new Map<string, string>();
+
 const ServerType = { 
     AKAMAI: 'Akamai (Edge)', 
+    AKAMAI_TUNNEL: 'Akamai (Tunnel)',
     AEM: 'Apache (AEM)', 
     UNKNOWN: 'Unknown',
     AKAMAI_STAGING: 'Akamai (Staging)'
 };
 
-// Icons for the report
 const serverIconMap: Record<string, string> = {
     [ServerType.AKAMAI]: '<i data-feather="cloud" style="color: #007BFF;" title="Akamai Edge"></i>',
+    [ServerType.AKAMAI_TUNNEL]: '<i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i>',
     [ServerType.AKAMAI_STAGING]: '<i data-feather="cloud-drizzle" style="color: #17a2b8;" title="Akamai Staging"></i>',
     [ServerType.AEM]: '<i data-feather="feather" style="color: #c22121;" title="Apache (AEM)"></i>',
     [ServerType.UNKNOWN]: '<i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i>'
@@ -74,58 +81,56 @@ function isAkamaiIp(ip: string | null): boolean {
     return AKAMAI_IP_RANGES.some(cidr => ipRangeCheck(ip, cidr));
 }
 
-// --- ADVANCED SERVER DETECTION LOGIC ---
+// --- ADVANCED SERVER DETECTION LOGIC (v2.0) ---
 async function getServerName(headers: Record<string, string>, url: string, statusCode: number): Promise<string> {
     const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
     
-    // Headers to analyze
+    // Extract Signals
     const xCache = lowerHeaders["x-cache"] || "";
-    const serverHeader = lowerHeaders["server"]?.toLowerCase() || "";
-    const viaHeader = lowerHeaders["via"] || "";
-    const akamaiReqId = lowerHeaders["x-akamai-request-id"];
+    const server = lowerHeaders["server"]?.toLowerCase() || "";
+    const via = lowerHeaders["via"] || "";
+    const setCookie = lowerHeaders["set-cookie"] || "";
     
-    // 1. CHECK: Is this specifically Akamai Staging?
+    // Signal Flags
+    const isAkamaiHeader = lowerHeaders["x-akamai-request-id"] || lowerHeaders["x-check-cacheable"] || lowerHeaders["x-true-cache-key"];
+    const isAkamaiVia = via.toLowerCase().includes("akamai") || via.toLowerCase().includes("1.1 v"); // Generic Akamai via
+    const isAemCookie = setCookie.includes("cq-") || setCookie.includes("wcmmode");
+    const isAemHeader = lowerHeaders["x-dispatcher"] || lowerHeaders["x-aem-instance"];
+    
+    // 1. Staging Check
     if (lowerHeaders["x-akamai-staging"]) return ServerType.AKAMAI_STAGING;
 
-    // 2. CHECK: Is it a Redirect? (301/302)
-    if (statusCode === 301 || statusCode === 302) {
+    // 2. Explicit AEM Signals (Strongest Origin Signal)
+    if (isAemHeader || isAemCookie || server.includes("communique") || server.includes("apache")) {
+        // Even if Akamai touched it, if we see AEM internals, it implies Origin processing
+        return ServerType.AEM;
+    }
+
+    // 3. Redirect Logic (3xx)
+    if (statusCode >= 300 && statusCode < 400) {
+        if (xCache.includes("HIT") || xCache.includes("MEM")) return ServerType.AKAMAI; // Served from Edge Cache
+        if (xCache.includes("MISS")) return ServerType.AEM; // Fetched from Origin (AEM)
         
-        // SCENARIO A: Akamai Cache HIT (TCP_HIT, MEM_HIT)
-        // If Akamai served the redirect from cache, Akamai is the "Actor".
-        if (xCache.includes("HIT")) {
-            return ServerType.AKAMAI;
-        }
-
-        // SCENARIO B: Akamai Cache MISS (TCP_MISS)
-        // If Akamai missed, it went to Origin. Origin returned the redirect.
-        // Therefore, the LOGIC came from AEM (Apache).
-        if (xCache.includes("MISS")) {
-            // Verify it actually went to an Apache/AEM origin
-            if (serverHeader.includes("apache") || lowerHeaders["x-dispatcher"]) {
-                return ServerType.AEM;
-            }
-            // If server header is hidden but we know it was a MISS, it's likely Origin logic
-            return ServerType.AEM; 
-        }
+        // If no cache header, but server says AkamaiGHost -> Edge Logic
+        if (server.includes("akamai") || server.includes("ghost")) return ServerType.AKAMAI;
     }
 
-    // 3. CHECK: Explicit Server Headers
-    if (serverHeader.includes("akamai") || serverHeader.includes("ghost")) return ServerType.AKAMAI;
-    if (serverHeader.includes("apache") || serverHeader.includes("communique")) return ServerType.AEM;
-
-    // 4. CHECK: AEM-Specific Indicators (Dispatcher, etc.)
-    if (lowerHeaders["x-dispatcher"] || lowerHeaders["x-aem-instance"]) return ServerType.AEM;
-
-    // 5. CHECK: Infrastructure Headers
-    // If 'Via' says Akamai but we haven't returned yet, it's likely Akamai passing through content
-    if (viaHeader.toLowerCase().includes("akamai")) {
-        // If we are here, it wasn't a 301 MISS (AEM). It's likely a 200 OK passed through.
-        // We check IP to be sure.
-        const ip = await resolveIp(url);
-        if (isAkamaiIp(ip)) return ServerType.AKAMAI;
+    // 4. General Akamai Signals
+    if (isAkamaiHeader || isAkamaiVia || xCache) {
+        if (xCache.includes("HIT")) return ServerType.AKAMAI;
+        if (xCache.includes("MISS")) return ServerType.AEM; // Content came from origin
+        
+        // If we know it's Akamai but don't know if it hit/missed (e.g. dynamic content), mark as Tunnel
+        return ServerType.AKAMAI_TUNNEL;
     }
 
-    // 6. Fallback
+    // 5. IP Fallback
+    const ip = await resolveIp(url);
+    if (isAkamaiIp(ip)) {
+        // If it's on Akamai IP but gave NO headers, it's likely a "Tunnel" or "Shield"
+        return ServerType.AKAMAI_TUNNEL;
+    }
+
     return ServerType.UNKNOWN;
 }
 
@@ -138,14 +143,13 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
         context = await browser.newContext({ 
             userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             extraHTTPHeaders: {
-                // Ask Akamai to show its debugging headers
-                "Pragma": "akamai-x-cache-on, akamai-x-get-cache-key, akamai-x-get-request-id, akamai-x-get-true-cache-key"
+                // Inject ALL standard Akamai debug headers
+                "Pragma": "akamai-x-cache-on, akamai-x-get-cache-key, akamai-x-get-request-id, akamai-x-get-true-cache-key, akamai-x-check-cacheable, akamai-x-get-extracted-values"
             }
         });
         
         const page = await context.newPage();
         page.on("response", async (response) => {
-            // Track every navigation request (the hops)
             if (response.request().isNavigationRequest()) {
                 const headers = await response.allHeaders();
                 const status = response.status();
@@ -197,17 +201,15 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
 function generateHtmlReport(results: AnalysisResult[], timestampStr: string): string {
     let tableRows = '';
     results.forEach((result, index) => {
-        const sourceIcon = serverIconMap[result.sourceServer || ServerType.UNKNOWN];
-        const targetIcon = result.error ? '<i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i>' : serverIconMap[result.targetServer || ServerType.UNKNOWN];
+        const sourceIcon = serverIconMap[result.sourceServer || ServerType.UNKNOWN] || serverIconMap[ServerType.UNKNOWN];
+        const targetIcon = result.error ? '<i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i>' : (serverIconMap[result.targetServer || ServerType.UNKNOWN] || serverIconMap[ServerType.UNKNOWN]);
         const finalStatusBadge = result.error ? `<span class="status-badge error">${result.finalStatus || 'ERR'}</span>` : `<span class="status-badge success">${result.finalStatus || 'OK'}</span>`;
         
-        // Chain Visuals
         const chainBadges = result.redirectChain.map(h => {
             const statusClass = h.status >= 400 ? 'error' : (h.status >= 300 ? 'redirect' : 'success');
             return `<span class="status-badge small ${statusClass}">${h.status}</span>`;
         }).join('');
         
-        // Chain Tooltip
         const chainTooltip = result.redirectChain.map((h, i) => `Hop ${i + 1}: ${h.status} (${h.server})`).join(' &#013; ');
 
         tableRows += `
