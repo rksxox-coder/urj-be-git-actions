@@ -132,23 +132,32 @@
         // --- CONFIGURATION ---
         const OWNER = 'rksxox-coder'; 
         const REPO = 'urj-be-git-actions';
-        // WORKFLOW_FILE variable is no longer used for direct triggering but kept for reference if needed
         
         // --- AUTHENTICATION & UI LOGIC ---
         const loginModal = document.getElementById('loginModal');
         const appContent = document.getElementById('appContent');
         const userBadge = document.getElementById('userBadge');
         const themeToggle = document.getElementById('themeToggle');
+        const reportFrame = document.getElementById('reportFrame'); // Get reference early
         let CREDENTIALS = null;
 
         // Theme Init
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         }
+
+        // --- UPDATED THEME TOGGLE ---
         themeToggle.addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            localStorage.theme = newTheme;
+
+            // Send message to iframe if it's loaded
+            if (reportFrame && reportFrame.contentWindow) {
+                reportFrame.contentWindow.postMessage({ type: 'theme-change', theme: newTheme }, '*');
+            }
         });
+        // ---------------------------
 
         // Session Check
         if(sessionStorage.getItem('auth_user')) {
@@ -198,7 +207,7 @@
         const btnText = document.getElementById('btnText');
         const btnLoader = document.getElementById('btnLoader');
         const consoleLogs = document.getElementById('consoleLogs');
-        const reportFrame = document.getElementById('reportFrame');
+        
         const previewPlaceholder = document.getElementById('previewPlaceholder');
         const historySelect = document.getElementById('historySelect');
         const badge = document.getElementById('status-badge');
@@ -245,7 +254,6 @@
                     const doc = reportFrame.contentWindow.document;
                     doc.open(); doc.write(data.content); doc.close();
                     
-                    // FIX: Link to the Rendered GitHub Pages URL, not the Source Code
                     newTabLink.classList.remove('hidden');
                     newTabLink.href = `https://${OWNER}.github.io/${REPO}/${relativePath}`;
                 }
@@ -336,24 +344,20 @@
                         
                         // --- AUTO LOAD LOGIC ---
                         setTimeout(async () => {
-                            await fetchHistory(); // Refresh list
+                            await fetchHistory(); 
                             
-                            // Auto-select the second option (Index 1) because Index 0 is "Select Past Report"
-                            // The backend puts new reports at the TOP of the list.
                             if(historySelect.options.length > 1) {
                                 historySelect.selectedIndex = 1;
                                 const path = historySelect.value;
                                 log(`Auto-loading: ${path}`);
                                 loadReportFrame(path);
                             }
-                        }, 4000); // Wait 4s for file propagation
+                        }, 4000); 
                     } else {
                         log("Workflow Failed.", 'error');
                         badge.innerText = "FAILED";
                         badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-200 text-red-800";
                     }
-                } else {
-                    // Optional: update log with status if needed
                 }
             }, 4000);
         }
@@ -381,7 +385,6 @@
                 elapsedText.innerText = `Time: ${elapsed}s`;
             }, 1000);
 
-            // Formula: 45s Boot + 5s per URL
             const totalEstimated = 45 + (urlCount * 5);
             let remaining = totalEstimated;
             etaText.innerText = `ETA: ${remaining}s`;
