@@ -67,7 +67,7 @@ async function uploadToGitHub(content) {
     const body = {
         message: "Trigger Scan via Netlify",
         content: Buffer.from(uniqueContent).toString('base64'),
-        branch: "main", // <--- IMPORTANT: Verify this matches your repo's default branch!
+        branch: "main", // <--- FIXED: Changed 'master' to 'main'
         sha: sha 
     };
 
@@ -77,10 +77,8 @@ async function uploadToGitHub(content) {
         body: JSON.stringify(body)
     });
 
-    // --- IMPROVED ERROR LOGGING ---
     if (!putResp.ok) {
         const errText = await putResp.text();
-        console.error("GitHub Upload Error:", putResp.status, errText); // Check Netlify Function logs
         throw new Error(`GitHub Rejected Upload (${putResp.status}): ${errText}`);
     }
 
