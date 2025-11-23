@@ -1,3 +1,37 @@
+https://www.bmw.pl/pl/topics/offers-and-services/Uslugi_serwisowe_BMW/smart-video-communication.html
+https://www.bmw.pl/pl/topics/offers-and-services/Uslugi_serwisowe_BMW/szybki-serwis.html
+https://www.bmw.pl/pl/topics/offers-and-services/Uslugi_serwisowe_BMW/uslugi-informacje-ogolne.html
+https://www.bmw.pl/pl/topics/offers-and-services/warranty.html
+https://www.bmw.pl/pl/topics/pakiet-m-sport-iframe.html
+https://www.bmw.pl/pl/topics/preconfiguration/bmw-serii-4-cabrio-konfigurator.html
+https://www.bmw.pl/pl/topics/preconfiguration/bmw-serii-4-coupe-konfigurator.html
+https://www.bmw.pl/pl/topics/preconfiguration/bmw-serii-8-cabrio-konfigurator.html
+https://www.bmw.pl/pl/topics/preconfiguration/bmw-x4-konfigurator.html
+https://www.bmw.pl/pl/training-pool/umow-sie-do-serwisu-test.html
+https://www.bmw.pl/pl/campaigns/x1family.html
+https://www.bmw.pl/pl/topics/fascination-bmw/bmw-m-50-years-7-milestones.html
+https://www.bmw.pl/pl_PL/topics/offers-and-services/Uslugi_serwisowe_BMW/recycling.html
+https://www.bmw.pl/pl/all-models/m-series/xm/2022/bmw-xm-w-skrocie.html
+https://www.bmw.pl/pl/all-models/m-series/xm/2022/bmw-xm-dane-techniczne.html
+https://www.bmw.pl/pl/all-models/m-series/xm/2022/xm-prezentacja-osobista.html
+https://www.bmw.pl/pl_PL/all-models/m-series/bmw-z4-m40i/2019/bmw-z4-m40i-highlights.html
+https://www.bmw.pl/pl/all-models/m-series/bmw-z4-m40i/2019/Wyposazenie.html
+https://www.bmw.pl/pl/all-models/m-series/bmw-z4-m40i/2019/Dane-techniczne.html
+https://www.bmw.pl/pl/all-models/m-series/bmw-z4-m40i/2021/bmw-z4-w-skrocie.html
+https://www.bmw.pl/pl/all-models/m-series/bmw-z4-m40i/2021/bmw-z4-dane-techniczne.html
+https://www.bmw.pl/pl/all-models/m-series/bmw-z4-m40i/2022/bmw-z4-dane-techniczne.html
+https://www.bmw.pl/pl/all-models/seria-bmw-z/roadster/2021/bmw-z4-w-skrocie.html
+https://www.bmw.pl/pl/all-models/seria-bmw-z/roadster/2022/bmw-z4-w-skrocie.html
+https://www.bmw.pl/pl/all-models/seria-bmw-z/roadster/bmw-z4-dane-techniczne.html
+https://www.bmw.pl/pl/topics/offers-and-services/bmw-connected-drive/bmw-connected-drive-przeglad.html
+https://www.bmw.pl/pl/topics/offers-and-services/digital-services-and-connectivity/bmw-software-update-new.html
+https://www.bmw.pl/pl/topics/fascination-bmw/efficient-dynamics/oznaczenie-opon-bmw.html
+https://www.bmw.pl/pl_PL/topics/fascination-bmw/efficient-dynamics/bmw-tyre-energy-label.html
+https://www.bmw.pl/pl_PL/all-models/2-series/coupe/2021/bmw-2-series-coupe-highlights.html
+https://www.bmw.pl/pl/all-models/2-series/coupe/2021/bmw-serii-2-coupe-w-skrocie.html
+https://www.bmw.pl/pl/all-models/2-series/coupe/bmw-serii-2-coupe-dane-techniczne.html
+https://www.bmw.pl/pl/all-models/2-series/coupe/2019/bmw-serii-2-coupe-inspiracja.html
+https://www.bmw.pl/pl/all-models/2-series/coupe/2019/bmw-serii-2-coupe-informacje.html
 https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-protection-vehicles.html
 https://www.bmw.pl/pl_PL/topics/offers-and-services/bmw-special-sales/bmw-protection-vehicles/bmw-7-protection-g73-highlights.html
 https://www.bmw.pl/pl/topics/offers-and-services/bmw-special-sales/bmw-special-sales-overview.html
@@ -25,5 +59,12 @@ https://www.bmw.pl/pl/all-models/m-series/m5-sedan/2021/bmw-serii-5-limuzyna-m-d
 https://www.bmw.pl/pl/all-models/m-series/m5-sedan/2021/bmw-serii-5-limuzyna-m-kredyt-i-leasing.html
 https://www.bmw.pl/pl_PL/all-models/m-series/m5-sedan/2021/bmw-5-series-sedan-m-automobiles-overview.html
 https://www.bmw.pl/pl/topics/fascination-bmw/electromobility/wsparcie-ladowania-bmw-wallbox-gen-2.html
+https://www.bmw.pl/pl/topics/fascination-bmw/electromobility/bmw-charging-support-wallbox-gen-3.html
+https://www.bmw.pl/pl/topics/fascination-bmw/electromobility2020-new/bmw-charging-support-wallbox-gen-4.html
+https://www.bmw.pl/pl_PL/topics/fascination-bmw/electromobility2020-new/bmw-charging-support-wallbox-gen-4.html
+https://www.bmw.pl/pl/topics/fascination-bmw/electromobility/wsparcie-ladowania-szybka-ladowarka-uniwersalna.html
+https://www.bmw.pl/pl/all-models/m-series/xm/2023/bmw-xm-w-skrocie.html
+https://www.bmw.pl/pl/search-results.html
+https://www.bmw.pl/pl/all-models/bmw-i/i7/2022/bmw-i7-limuzyna-najwazniejsze-cechy.html
 
-# Trigger ID: 1763877075597
+# Trigger ID: 1763877484130
