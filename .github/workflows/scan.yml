@@ -1,12 +1,13 @@
 name: Redirect Analysis Tool
 
 on:
+  # --- FIX 1: Listen for the File Upload ---
+  push:
+    paths:
+      - 'urls.txt'
+  
+  # Keep this so you can still test manually if needed
   workflow_dispatch:
-    inputs:
-      url_list:
-        description: 'Paste URLs here (one per line)'
-        required: true
-        default: 'https://www.bmw.com'
 
 permissions:
   contents: write
@@ -29,10 +30,9 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install chromium
 
-      - name: Create URL Input File
-        # This takes the input from the API and saves it to a file
-        run: |
-          echo "${{ github.event.inputs.url_list }}" > urls.txt
+      # --- FIX 2: Removed "Create URL Input File" Step ---
+      # Why? Because the Netlify Backend already created 'urls.txt' for us!
+      # If we kept this step, it would overwrite your URLs with nothing.
 
       - name: Run Analysis Script
         run: npx ts-node src/main.ts
