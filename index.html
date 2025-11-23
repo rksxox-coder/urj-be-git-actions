@@ -129,6 +129,11 @@
     </div>
 
     <script>
+        // --- CONFIGURATION ---
+        const OWNER = 'rksxox-coder'; 
+        const REPO = 'urj-be-git-actions';
+        // WORKFLOW_FILE variable is no longer used for direct triggering but kept for reference if needed
+        
         // --- AUTHENTICATION & UI LOGIC ---
         const loginModal = document.getElementById('loginModal');
         const appContent = document.getElementById('appContent');
@@ -240,15 +245,14 @@
                     const doc = reportFrame.contentWindow.document;
                     doc.open(); doc.write(data.content); doc.close();
                     
-                    // Since we proxy through Netlify, we don't expose the raw GitHub link directly
-                    // But we can construct a public link if needed (Assuming GitHub Pages is active)
-                    // For now, we hide the button or point to repo root as fallback
+                    // FIX: Use variable OWNER and REPO instead of process.env
                     newTabLink.classList.remove('hidden');
-                    // Note: This link requires public repo or authenticated browser session. 
-                    // If private, user views inside iframe only.
-                    newTabLink.href = `https://github.com/${process.env.GH_USER || 'rksxox-coder'}/urj-be-git-actions/blob/main/${relativePath}`;
+                    newTabLink.href = `https://github.com/${OWNER}/${REPO}/blob/main/${relativePath}`;
                 }
-            } catch(e) { log("Error loading report", 'error'); }
+            } catch(e) { 
+                log("Error loading report content", 'error');
+                console.error(e);
+            }
         }
 
         // --- WORKFLOW TRIGGER ---
