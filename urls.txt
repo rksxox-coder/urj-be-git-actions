@@ -42,4 +42,4 @@ https://www.bmw.pl/pl/topics/offers-and-services/service-workshop/My-BMW-Service
 https://www.bmw.pl/pl/service-portal/bmw-proactive-care.html
 https://www.bmw.pl/pl/topics/offers-and-services/service-workshop/bmw-service-inclusive.html
 
-# Trigger ID: 1763923553477
+# Trigger ID: 1763923889349
