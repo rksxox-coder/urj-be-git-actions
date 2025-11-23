@@ -66,56 +66,43 @@ function isAkamaiIp(ip: string | null): boolean {
     return AKAMAI_IP_RANGES.some(cidr => ipRangeCheck(ip, cidr));
 }
 
-// --- ENHANCED AKAMAI DETECTION LOGIC ---ed it from origin
+// --- SERVER DETECTION LOGIC ---
+async function getServerName(headers: Record<string, string>, url: string, statusCode: number): Promise<string> {
+    const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
+    const xCache = lowerHeaders["x-cache"] || "";
+    
+    // 1. AGGRESSIVE AKAMAI DETECTION
     if (xCache.includes("TCP_HIT") || xCache.includes("TCP_MEM_HIT") || xCache.includes("TCP_REFRESH_HIT")) {
         return ServerType.AKAMAI;
     }
 
-    // B. Check Akamai-Specific Debug Headers
-    // If these exist, Akamai processed the request, even if it passed it to Origin.
     if (lowerHeaders["x-akamai-request-id"] || lowerHeaders["x-akamai-staging"] || lowerHeaders["akamai-mon-ibit"]) {
-        // If status is a redirect (3xx), and Akamai touched it, we usually credit Akamai
-        // UNLESS X-Cache explicitly says MISS, which means Akamai fetched the redirect from Origin.
         if (!xCache.includes("TCP_MISS")) {
             return ServerType.AKAMAI;
         }
     }
 
-    // C. Check Server Header (Standard)
     const serverValue = lowerHeaders["server"]?.toLowerCase() || "";
     if (serverValue.includes("akamai") || serverValue.includes("ghost")) return ServerType.AKAMAI;
     
-    // --- 2. ORIGIN (AEM) DETECTION ---
-    
+    // 2. ORIGIN (AEM) DETECTION
     const hostname = new URL(url).hostname;
     if (hostname && (hostname.toLowerCase().includes("bmw") || hostname.toLowerCase().includes("mini"))) {
         if ("x-dispatcher" in lowerHeaders || "x-aem-instance" in lowerHeaders) return ServerType.AEM;
-        // Fallback: If it's BMW/Mini and NO Akamai cache hit, assume AEM
         if ("cache-control" in lowerHeaders && !xCache) return ServerType.AEM;
     }
 
     if (serverValue.includes("apache")) return ServerType.AEM;
 
-    // --- 3. FALLBACKS ---
-    
+    // 3. FALLBACKS
     const serverTiming = lowerHeaders["server-timing"] || "";
-    if (serverTiming.includes("cdn-cache; desc=HIT")) return ServerType.AKAMAI;
+    if (serverTiming.includes("cdn-cache; desc=HIT") && (statusCode === 301 || statusCode === 302)) return ServerType.AKAMAI;
 
     const ip = await resolveIp(url);
     if (isAkamaiIp(ip) && !xCache.includes("TCP_MISS")) return ServerType.AKAMAI;
 
     return ServerType.UNKNOWN;
 }
-async function getServerName(headers: Record<string, string>, url: string, statusCode: number): Promise<string> {
-    const lowerHeaders = Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v]));
-    
-    // --- 1. AGGRESSIVE AKAMAI DETECTION ---
-    
-    // A. Check X-Cache Headers (The most reliable method)
-    const xCache = lowerHeaders["x-cache"] || "";
-    // TCP_HIT: Content was in Akamai cache
-    // TCP_MEM_HIT: Content was in Akamai memory
-    
 
 // --- CORE ANALYSIS LOGIC ---
 async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<AnalysisResult> {
@@ -211,7 +198,6 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
         }
         
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 10px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s; font-size: 14px; }
-        /* Added margin-top to container to prevent overlap with parent button */
         .container { max-width: 100%; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); margin-top: 50px; }
         
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
@@ -273,7 +259,6 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
             const body = document.body;
             const toggleBtn = document.getElementById('theme-toggle');
             
-            // --- THEME INHERITANCE ON LOAD ---
             let parentIsDark = false;
             try {
                 if (window.self !== window.top) {
@@ -287,7 +272,6 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
                 toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
             }
 
-            // Listen for theme changes from parent
             window.addEventListener('message', (event) => {
                 if (event.data && event.data.type === 'theme-change') {
                     const isDark = event.data.theme === 'dark';
@@ -313,7 +297,6 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
 
             new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
 
-            // --- UPDATED EXPORT LOGIC (SINGLE SHEET FLATTENED) ---
             document.getElementById('export-btn').addEventListener('click', () => {
                 try {
                     const flatData = resultsData.map(r => {
