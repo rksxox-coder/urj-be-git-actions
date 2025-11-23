@@ -3,7 +3,6 @@ name: Redirect Analysis Tool
 on:
   # --- FIX 1: Listen for the File Upload ---
   push:
-    paths:
       - 'urls.txt'
   
   # Keep this so you can still test manually if needed
