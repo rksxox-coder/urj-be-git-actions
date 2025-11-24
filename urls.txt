@@ -1,7 +1,2 @@
-https://www.bmw.ch/de/fastlane/companies-and-keycustomers/company.html
-https://www.bmw.ch/de/fastlane/companies-and-keycustomers/authorities.html
-https://www.bmw.ch/fr/fastlane/companies-and-keycustomers/company.html
-https://www.bmw.ch/fr/fastlane/companies-and-keycustomers/authorities.html
-https://www.bmw.ch/fr/fastlane/companies-and-keycustomers/contact.html
-
-# Trigger ID: 1763963400186
+https://www.facebook.com
+# Trigger ID: 1763963580805
