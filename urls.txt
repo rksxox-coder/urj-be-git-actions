@@ -1,2 +1,6 @@
 https://www.facebook.com
-# Trigger ID: 1763963580805
+https://www.x.com
+https://www.google.com
+https://www.meta.com
+https://www.youtube.com
+# Trigger ID: 1763963648342
