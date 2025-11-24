@@ -1,6 +1,24 @@
-https://www.facebook.com
-https://www.x.com
-https://www.google.com
-https://www.meta.com
-https://www.youtube.com
-# Trigger ID: 1763963648342
+https://www.bmw.es/es/topics/mundo-bmw/empresas-autonomos/financiacion.html
+
+https://www.bmw.es/es/dn
+
+https://www.bmw.es/es/coches-bmw/m/m4-coupe/2022/caracteristicas.html
+
+https://www.bmw.es/es/coches-bmw/x/iX3/2021/caracteristicas.html
+
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller/servicios-de-mantenimiento.html
+
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/asistencia-carretera-BMW.html
+
+https://www.bmw.es/es/topics/accesorios-servicios/campanas-tecnicas.html
+
+https://www.bmw.es/es/footer/footer-section/glosario-bmw/sistema-hifi-professional.html
+
+https://www.bmw.es/es/footer/footer-section/glosario-bmw/radio-web.html
+
+https://www.bmw.es/es/campanas/bmw-premium-selection-coches-real-madrid.html
+
+https://www.bmw.es/es/all-models/x-series/X7/datos-tecnicos-bmw-X7.html
+
+https://www.bmw.es/es/coches-bmw.html%20motos
+# Trigger ID: 1763972146347
