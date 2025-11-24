@@ -1,22 +1,19 @@
-https://www.bmw.dk/da/alle-modeller/m-serie/x7-m60i/2022.html
-https://www.bmw.dk/da/alle-modeller/m-serie/x7-m60i/2022/overblik.html
-https://www.bmw.dk/da/alle-modeller/m-serie/x7-m60i/2022/tekniske-specifikationer.html
-https://www.bmw.dk/da_DK/all-models/m-series/x7-m60i/2022/bmw-x7-m-automobiles-highlight.html
-https://www.bmw.dk/da_DK/all-models/m-series/x7-m60i/2022/bmw-x7-m-automobiles-technical-data.html
-https://www.bmw.dk/da/alle_modeller/m-serie/x7-m60i/2022/overblik.html
-https://www.bmw.dk/da/alle_modeller/m-serie/x7-m60i/2022/tekniske-specifikationer.html
-https://www.bmw.no/no/alle-modeller/m-serie/x7-m60i/2022.html
-https://www.bmw.no/no/alle-modeller/m-serie/x7-m60i/2022/oversikt.html
-https://www.bmw.no/no/alle-modeller/m-serie/x7-m60i/2022/tekniske-data.html
-https://www.bmw.no/no_NO/all-models/m-series/x7-m60i/2022.html
-https://www.bmw.no/no_NO/all-models/m-series/x7-m60i/2022/bmw-x7-m-automobiles-highlight.html
-https://www.bmw.no/no_NO/all-models/m-series/x7-m60i/2022/bmw-x7-m-automobiles-technical-data.html
-https://www.bmw.no/no/all-models/m-serie/x7-m60i/2022/oversikt.html
-https://www.bmw.no/no/all-models/m-serie/x7-m60i/2022/tekniske-data.html
-https://www.bmw.se/sv/alla-modeller/m-serie/x7-m60i/2022.html
-https://www.bmw.se/sv/alla-modeller/m-serie/x7-m60i/2022/tekniska-data.html
-https://www.bmw.se/sv_SE/all-models/m-series/x7-m60i/2022.html
-https://www.bmw.se/sv_SE/all-models/m-series/x7-m60i/2022/bmw-x7-m-automobiles-highlight.html
-https://www.bmw.se/sv_SE/all-models/m-series/x7-m60i/2022/bmw-x7-m-automobiles-technical-data.html
+https://www.bmw.ch/fr/bmw-nouvelles-voitures/x/x6/showroom/bmw-x6-apercu.html
+https://www.bmw.ch/fr/bmw-nouvelles-voitures/x/x6/x6-2023-g06-technical-data.html
+https://www.bmw.ch/fr/bmw-nouvelles-voitures/x/x6/showroom.html
+https://www.bmw.ch/fr/bmw-nouvelles-voitures/x/x6.html
+https://www.bmw.ch/fr_CH/all-models/x-series/X6/2023/bmw-x6-overview.html
+https://www.bmw.ch/fr_CH/all-models/x-series/X6/2023/bmw-x6-technical-data.html
+https://www.bmw.ch/fr_CH/all-models/x-series/X6/2023.html
+https://www.bmw.ch/fr_CH/all-models/x-series/X6.html
+https://www.bmw.ch/it/bmw-auto-nuove/x/x6/showroom/panoramica-bmw-x6.html
+https://www.bmw.ch/it/bmw-auto-nuove/x/x6/x6-2023-g06-technical-data.html
+https://www.bmw.ch/it_CH/all-models/x-series/X6/2023/bmw-x6-overview.html
+https://www.bmw.ch/it_CH/all-models/x-series/X6/x6-2023-g06-technical-datai.html
+https://www.bmw.ch/it/bmw-auto-nuove/x/x6/showroom.html
+https://www.bmw.ch/it_CH/all-models/x-series/X6/2023.html
+https://www.bmw.ch/it_CH/all-models/x-series/X6.html
+https://www.bmw.ch/fr/bmw-nouvelles-voitures/x/X6/showroom/bmw-x6-apercu.html
+https://www.bmw.ch/fr/bmw-nouvelles-voitures/x/X6/x6-2023-g06-technical-data.html
 
-# Trigger ID: 1763993667302
+# Trigger ID: 1763994914388
