@@ -25,10 +25,6 @@ https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-
 https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-accessory/catalod_dl/MPP_X5X5M_2024_01_v01.pdf.asset.1703484956175.pdf
 https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-accessory/catalod_dl/MPP_X6X6M_2024_01_v01.pdf.asset.1703484952349.pdf
 https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-accessory/catalod_dl/MPP_X6_LCI_2024_01_v01.pdf.asset.1703484953537.pdf
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=5265&adptg_lid=4
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=5265&adptg_lid=13
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=5265&adptg_lid=14
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6844&adptg_lid=1
 https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-accessory/lifestyle/BMW_MMsp_2024_Apr_WEB_v02.pdf.asset.1713849992416.pdf
 https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-accessory/lifestyle/BMW_MMsp_2024Oct_V3_WEB.pdf.asset.1728522155087.pdf
 http://www.bmw-i.jp
@@ -59,33 +55,14 @@ https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-
 https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-accessory/lifestyle/BMW_Golf_Callaway_202409_v01.pdf.asset.1724838913765.pdf
 https://www.bmw.co.jp/content/dam/bmw/marketJP/bmw_co_jp/pdf/topics/service-and-accessory/catalog02/M8_Coupe_Com_acc_202401_v1.PDF.asset.1704772149047.PDF
 https://bmw-newx3.jp/mission
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=5265&adptg_lid=5
 http://www.bmw-new7.jp
 http://news.bmw.co.jp
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6969&adptg_lid=1
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6897&adptg_lid=1
 https://facebook.com/BMWGROUPTokyoBay
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6965&adptg_lid=1
 http://survey-bmw.jp/csa
 http://thankyou.yourbmw.jp
 http://survey-bmw.jp/csc
 http://survey-bmw.jp/csf
 http://thankyou.mini-life.jp
 http://survey-bmw.jp/cst
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=4859&adptg_lid=1
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=5265&adptg_lid=8
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=9
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=3
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=2
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=15
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=14
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=11
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=5
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=12
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=8
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=7
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=4
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=1
-http://r.advg.jp/adptg_count/r?adptg_aid=1642&adptg_mid=6970&adptg_lid=13
 
-# Trigger ID: 1764132369877
+# Trigger ID: 1764133210310
