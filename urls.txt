@@ -1,12 +1,12 @@
-https://www.bmwmyanmar.com/en/index.html
-https://www.bmw.nc/fr/index.html
-https://www.bmw.lk/en/topics/offers-and-services/original-bmw-accessories/bmw-wheels-tyres.html
-https://www.bmwmyanmar.com/en/topics/offers-and-services/original-bmw-accessories/bmw-wheels-tyres.html
-https://www.bmw.nc/fr/all-models/m-series/xm/2023/bmw-xm-apercu.html
-https://www.bmw.nc/fr/all-models/m-series/xm/2023/bmw-xm-caracteristiques-techniques.html
-https://www.bmw.lk/en/index.html
-https://www.bmw.lk/en/index.html
-https://www.bmwmyanmar.com/en/index.html
-https://www.bmw-tahiti.com/fr/index.html
+https://www.bmwmyanmar.com/en/publicPools/search-results/search-results.html
+https://www.bmw.nc/fr/publicPools/search-results/search-results.html
+https://www.bmw.lk/en/topics/offers-and-services/original-bmw-accessories/bmw-wheels-tyres_2022.html
+https://www.bmwmyanmar.com/en/topics/offers-and-services/original-bmw-accessories/bmw-wheels-tyres_2022.html
+https://www.bmw.nc/fr/all-models/m-series/xm/2022/bmw-xm-apercu.html
+https://www.bmw.nc/fr/all-models/m-series/xm/2022/bmw-xm-caracteristiques-techniques.html
+https://www.bmw.lk/en/topics/offers-and-services/original-bmw-accessories/accessories-configurator.html
+https://www.bmw.lk/en/topics/offers-and-services/accessories-pages/bmw-accessory-showroom.html
+https://www.bmwmyanmar.com/en/topics/offers-and-services/original-bmw-accessories/accessories-configurator.html
+https://www.bmw-tahiti.com/fr/topics/offers-and-services/original-bmw-accessories/accessories-configurator.html
 
-# Trigger ID: 1764234680909
+# Trigger ID: 1764234753165
