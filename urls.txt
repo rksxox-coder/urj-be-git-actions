@@ -1,2 +1,10 @@
-https://www.mini.nl/nl_NL/home/service-en-accessoires/onderhoud-en-reperatie/schadeherstel.html
-# Trigger ID: 1764851140395
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman.html
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/interior.html
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/exterior.html
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/driving-experience.html
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/space-versatility.html
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/digital-experience.html
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/dimensions.html
+https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/customisation.html
+
+# Trigger ID: 1764856736701
