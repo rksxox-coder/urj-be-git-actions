@@ -1,10 +1,14 @@
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman.html
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/interior.html
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/exterior.html
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/driving-experience.html
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/space-versatility.html
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/digital-experience.html
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/dimensions.html
-https://www.mini.com.mo/en_MO/home/range/new-mini-countryman/customisation.html
+https://www.bmw.ua/uk/all-models/x-series/X4/2021/bmw-X4-highlights.html
 
-# Trigger ID: 1764856736701
+https://www.bmw.ua/uk/all-models/x-series/X4/2021/bmw-X4-technical-data.html
+
+https://www.bmw.ua/uk/all-models/x-series/X4/2021.html
+
+https://www.bmw.ua/uk_UA/all-models/x-series/X4/2021.html
+
+https://www.bmw.ua/uk/all-models/m-series/x4-m/2021.html
+
+https://www.bmw.ua/uk/all-models/m-series/x4-m/2021/bmw-x4m-automobiles-overview.html
+
+https://www.bmw.ua/uk_UA/all-models/m-series/x4-m/2021.html
+# Trigger ID: 1764858916414
