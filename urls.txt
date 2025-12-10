@@ -1,12 +1,4 @@
-https://www.bmw.lu/de/all-models/x-series/X1/bmw-X1-technische-daten.html
-https://www.bmw.lu/fr/all-models/x-series/X1/bmw-x1-caracteristiques-techniques.html
-https://www.bmw.lu/de/all-models/x-series/X1/2022/bmw-X1-technische-daten.html
-https://www.bmw.lu/fr/all-models/x-series/X1/2022/bmw-x1-caracteristiques-techniques.html
-https://www.bmw.lu/fr/all-models/x-series/X1/2022/bmw-x1-technical-data.html
-https://www.bmw.lu/de/all-models/x-series/X1/bmw-x1-technical-data.html
-https://www.bmw.lu/fr_LU/all-models/x-series-backup/X1/2021/bmw-x1-technical-data.html
-https://www.bmw.lu/fr_LU/all-models/x-series-backup/X1/2022/bmw-x1-technical-data.html
-https://www.bmw.lu/fr/all-models/x-series-backup/X1/2021/caracteristiques-techniques-de-la-bmw-x1.html
-https://www.bmw.lu/fr/all-models/x-series-backup/X1/2022/bmw-x1-caracteristiques-techniques.html
+https://www.bmw.lu/de/stocklocator.html
 
-# Trigger ID: 1765286274717
+https://www.bmw.lu/de/shop/ls/dp/physical-goods/901160
+# Trigger ID: 1765340327062
