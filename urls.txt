@@ -1,4 +1,3 @@
-https://www.bmw.lu/de/stocklocator.html
-
-https://www.bmw.lu/de/shop/ls/dp/physical-goods/901160
-# Trigger ID: 1765340327062
+https://www.bmw.no/no/alle-modeller/m-serie/x7-m60i/2022/tekniske-data.html
+https://www.bmw.no/no/all-models/m-serie/x7-m60i/2022/oversikt.html
+# Trigger ID: 1765343954476
