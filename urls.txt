@@ -1,12 +1,8 @@
-https://www.bmw.pt/pt/all-models/bmw-serie-5-visao-geral.html
-https://www.bmw.pt/pt_PT/all-models/5-series.html
-https://www.bmw.pt/pt/all-models/7-series.html
-https://www.bmw.pt/pt_PT/all-models/7-series.html
-https://www.bmw.pt/pt/all-models/x-series.html
-https://www.bmw.pt/pt_PT/all-models/x-series.html
-https://www.bmw.pt/pt/all-models/bmw-i.html
-https://www.bmw.pt/pt_PT/all-models/i-series.html
-https://www.bmw.pt/pt/all-models/berlinas-bmw-visao-geral.html
-https://www.bmw.pt/pt_PT/all-models/category-sedan.html
+https://www.bmw.lu/de/topics/offers-and-services/bmw-digital-services-and-connectivity/bmw-connected-drive-digital-premium-uebersicht.html
 
-# Trigger ID: 1765433939148
+https://www.bmw.lu/de/all-models/2-series/grantourer/2020/bmw-2-series-gran-tourer-highlights.html
+
+https://www.bmw.lu/fr/all-models/2-series/grantourer/2020/bmw-2-series-gran-tourer-highlights.html
+
+https://www.bmw.lu/fr/topics/offers-and-services/bmw-digital-services-and-connectivity/apercu-mises-a-niveau-bmw-connected-drive.html
+# Trigger ID: 1765441132817
