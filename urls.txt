@@ -1,3 +1,12 @@
-https://www.bmw.no/no/alle-modeller/m-serie/x7-m60i/2022/tekniske-data.html
-https://www.bmw.no/no/all-models/m-serie/x7-m60i/2022/oversikt.html
-# Trigger ID: 1765343954476
+https://www.bmw.pt/pt/all-models/bmw-serie-5-visao-geral.html
+https://www.bmw.pt/pt_PT/all-models/5-series.html
+https://www.bmw.pt/pt/all-models/7-series.html
+https://www.bmw.pt/pt_PT/all-models/7-series.html
+https://www.bmw.pt/pt/all-models/x-series.html
+https://www.bmw.pt/pt_PT/all-models/x-series.html
+https://www.bmw.pt/pt/all-models/bmw-i.html
+https://www.bmw.pt/pt_PT/all-models/i-series.html
+https://www.bmw.pt/pt/all-models/berlinas-bmw-visao-geral.html
+https://www.bmw.pt/pt_PT/all-models/category-sedan.html
+
+# Trigger ID: 1765433939148
