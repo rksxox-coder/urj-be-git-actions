@@ -1,2 +1,6 @@
-https://www.bmw.no/no/all-models/m-serie/x7-m60i/2022/oversikt.html
-# Trigger ID: 1765441592883
+https://www.bmw.at/raeder
+https://www.bmw.at/reifen
+http://www.bmw.at/mpp
+https://www.bmw.at/mperformance
+
+# Trigger ID: 1765442619661
