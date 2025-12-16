@@ -1,34 +1,14 @@
-https://www.bmw.com.ar/es/topics/fascination-bmw/efficient-dynamics/overview.html
-https://www.bmw.com.ar/es/coche-electrico/hibrido-enchufable.html
-https://www.bmw.com.ar/es/topics/fascination-bmw/bmw-individual.html
-https://www.bmw.com.ar/es/topics/fascination-bmw/bmw-financial-services/seguros.html
-https://www.bmw.com.ar/es/fastlane/used-cars/premium-selection.html
-https://www.bmw.com.ar/es/more-bmw/parts-and-accessoires/bmw-accessories-hub.html
-https://www.bmw.com.ar/es/service-portal.html#service-inclusive
-https://www.bmw.com.ar/es/digital-services/bmw-digital-key.html
-https://www.bmw.com.ar/es/digital-services/bmw-idrive.html
-https://www.bmw.com.ar/es/all-models/4-series/coupe/2020/vision-general-bmw-serie4-coupe.html
-https://www.bmw.com.ar/es/all-models/x-series/X3/2021/presentacion.html
-https://www.bmw.com.mo/en/index.html
-https://www.bmw.com.mo/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html
-https://www.bmw.com.mo/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan-technical-data.html
-https://www.bmw.com.mo/en/all-models/bmw-i/ix/bmw-ix.html
-https://www.bmw.com.mo/en/all-models/bmw-i/ix/bmw-ix-technical-data.html
-https://www.bmw.com.mo/en/all-models/i-series/i4/bmw-i4-gran-coupe.html
-https://www.bmw.com.mo/en/all-models/bmw-i-series/ix1/bmw-ix1.html
-https://www.bmw.com.mo/en/all-models/x-series/ix3/bmw-ix3.html
-https://www.bmw.com.mo/en/all-models/x-series/ix3/bmw-ix3-technical-data.html
-https://www.bmw.com.mo/en/all-models/bmw-i.html
-https://www.bmw.com.mo/en/all-models/m-series/ix-m70/bmw-ix-m70.html
-https://www.bmw.com.mo/en/all-models/m-series/ix-m70/bmw-ix-m70-technical-data.html
-https://www.bmw.com.mo/en/all-models/m-series/bmw-3-series-m-models/bmw-m3-touring.html
-https://www.bmw.com.mo/en/all-models/m-series/m3-series/m3-series-touring-2024-g81-technical-data.html
-https://www.bmw.com.mo/en/all-models/m-series/bmw-4-series-m-models/bmw-m4-coupe.html
-https://www.bmw.com.mo/en/all-models/m-series/bmw-4-series-m-models/bmw-m4-coupe-technical-data.html
-https://www.bmw.com.mo/en/all-models/x-series/x1/bmw-x1.html
-https://www.bmw.com.mo/en/all-models/x-series/x1/bmw-x1-technical-data.html
-https://www.bmw.com.mo/en/more-bmw/neue-klasse.html
-https://www.bmw.com.mo/en/service-portal/bmw-proactive-care.html
-https://www.bmw.com.mo/en/more-bmw/concept-cars/bmw-ix5-hydrogen.html
+https://www.bmw.com/en-au/models/x-series/x2-suv/2022/x2.html
+https://www.bmw.com/en-au/shop/ls/cart
+https://www.bmw.com/en-au/models/bmw-i/i4-gran-coupe/showroom/bmw-i4-technical-data.html
+https://www.bmw.com/en-au/discover/driving-experience.html
+https://www.bmw.com/en-au/models/m-series/x7m-suv/bmw-x7-m60i.html
+https://www.bmw.com/en_AU/discover/events/your-melbourne.html
+https://www.bmw.com/en-au/models/m-series/x5m-suv/bmw-x5-m-models.html
+https://www.bmw.com/en-au/models/m-series/x5m-suv/showroom/x5m.html
+https://store.bmw.com.au
+https://www.bmw.com/en-au/models/bmw-i/i4-gran-coupe/bmw-i4-gran-coupe-technical-data.html
+https://www.bmw.com/en-au/models/m-series/x5m-suv/bmw-x5m-technical-data.html
+https://www.bmw.com/en-au/models/m-series/x7m-suv/showroom/x7m.html
 
-# Trigger ID: 1765769820359
+# Trigger ID: 1765881862138
