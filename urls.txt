@@ -1,14 +1,4 @@
-https://www.bmw.com/en-au/models/x-series/x2-suv/2022/x2.html
-https://www.bmw.com/en-au/shop/ls/cart
-https://www.bmw.com/en-au/models/bmw-i/i4-gran-coupe/showroom/bmw-i4-technical-data.html
-https://www.bmw.com/en-au/discover/driving-experience.html
-https://www.bmw.com/en-au/models/m-series/x7m-suv/bmw-x7-m60i.html
-https://www.bmw.com/en_AU/discover/events/your-melbourne.html
-https://www.bmw.com/en-au/models/m-series/x5m-suv/bmw-x5-m-models.html
-https://www.bmw.com/en-au/models/m-series/x5m-suv/showroom/x5m.html
-https://store.bmw.com.au
-https://www.bmw.com/en-au/models/bmw-i/i4-gran-coupe/bmw-i4-gran-coupe-technical-data.html
-https://www.bmw.com/en-au/models/m-series/x5m-suv/bmw-x5m-technical-data.html
-https://www.bmw.com/en-au/models/m-series/x7m-suv/showroom/x7m.html
-
-# Trigger ID: 1765881862138
+https://www.bmw.pt/pt/all-models/7-series.html
+https://www.bmw.pt/pt/all-models/bmw-i.html
+https://www.bmw.pt/pt/all-models/berlinas-bmw-visao-geral.html
+# Trigger ID: 1766059738905
