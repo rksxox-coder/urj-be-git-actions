@@ -1,4 +1,2 @@
-https://www.bmw.pt/pt/all-models/7-series.html
-https://www.bmw.pt/pt/all-models/bmw-i.html
-https://www.bmw.pt/pt/all-models/berlinas-bmw-visao-geral.html
-# Trigger ID: 1766059738905
+https://www.bmw.es/es/all-models/m-series/bmw-i5-m60/i5-m60-2023-g60bev1.html
+# Trigger ID: 1766415561023
