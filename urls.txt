@@ -1,33 +1,8 @@
-https://www.bmw.co.za/en/all-models/1-series/5-door/20170.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/2019.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/bmw-1-series-inspire.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/2017.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/2023.html
-https://www.bmw.co.za/en/all-models/1-series/5-door.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/2023/bmw-1-series-overview.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/showroom/bmw-1-series-technical-data.html
-https://www.bmw.co.za/en/all-models/1-series/5-door-mperformance.html
-https://www.bmw.co.za/en/all-models/1-series/5-door-mperformance/2021.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/showroom/bmw-1-series-offers.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/showroom.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/2019/bmw-1-series-inform.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/showroom/bmw-1-series-overview.html
-https://www.bmw.co.za/en/all-models/1-series/5-door/showroom/bmw-1-series-offer.html
-https://www.bmw.co.za/en_ZA/all-models/1-series/5-door-128ti.html
-https://www.bmw.co.za/en_ZA/all-models/1-series/5-door/2019/bmw-1-series-128ti.html
-https://www.bmw.co.za/en_ZA/all-models/1-series/5-door/2019/bmw-1-series-technical-data.html
-https://www.bmw.co.za/en_ZA/all-models/1-series/5-door/2019/bmw-1-series-hatch-offers.html
-https://www.bmw.co.za/en_ZA/all-models/1-series/5-door/2019/price-brochure.html
-https://www.bmw.co.za/en/all-models/2-series/gran-coupe/2021/bmw-2-series-gran-coupe-offers.html
-https://www.bmw.co.za/en/all-models/2-series/gran-coupe/2021/bmw-2-series-gc-offers.html
-https://www.bmw.co.za/en/all-models/2-series/gran-coupe/2021/bmw-2-series-gran-coupe-overview.html
-https://www.bmw.co.za/en/all-models/2-series/gran-coupe/2021/bmw-2-series-gran-coupe-technical-data.html
-https://www.bmw.co.za/en/all-models/2-series/gran-coupe/2021/bmw-3-series-sedan-offers.html
-https://www.bmw.co.za/en_ZA/all-models/2-series/2-series-gran-coupe/2021.html
-https://www.bmw.co.za/en_ZA/all-models/2-series/2-series-gran-coupe/2021/bmw-2-series-gran-coupe-offers.html
-https://www.bmw.co.za/en_ZA/all-models/2-series/2-series-gran-coupe/2021/bmw-2-series-gc-offers.html
-https://www.bmw.co.za/en_ZA/all-models/2-series/2-series-gran-coupe/2021/bmw-2-series-gran-coupe-overview.html
-https://www.bmw.co.za/en_ZA/all-models/2-series/2-series-gran-coupe/2021/bmw-2-series-gran-coupe-technical-data.html
-https://www.bmw.co.za/en_ZA/all-models/2-series/2-series-gran-coupe/2021/bmw-2-series-grand-coupe-offers.html
+https://www.bmw.co.jp/ja/publicPools/body-type-navigation-helper.html
+https://www.bmw.co.jp/ja/publicPools/reports.html
 
-# Trigger ID: 1766550023547
+https://www.bmw.co.jp/ja_JP/publicPools/reports.html
+https://www.bmw.co.jp/ja/_shortcuts/_top.html
+https://www.bmw.co.jp/ja/_shortcuts/dealer_qr.html
+https://www.bmw.co.jp/ja/publicPools/reports.html
+# Trigger ID: 1766551666551
