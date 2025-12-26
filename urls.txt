@@ -1,21 +1,7 @@
-https://www.bmw.lu/fr/all-models/x-series.html
-https://www.bmw.lu/fr/all-models/bmw-serie-5-apercuu.html
-https://www.bmw.lu/fr/all-models/7-series.html
-https://www.bmw.lu/fr/all-models/berlines-bmw-apercu.html
-https://www.bmw.lu/fr/all-models/berlines-bmw-apercu.html
-https://www.bmw.lu/de/all-models/bmw-i.html
-https://www.bmw.lu/de/all-models/bmw-i.html
-https://www.bmw.lu/de/all-models/i-series.html
-https://www.bmw.lu/de/all-models/i-series.html
-https://www.bmw.lu/de_LU/all-models/i-series.html
-https://www.bmw.lu/de_LU/all-models/i-series.html
-https://www.bmw.lu/de/all-models/x-series.html
-https://www.bmw.lu/de/all-models/x-series.html
-https://www.bmw.lu/de/all-models/7-series.html
-https://www.bmw.lu/de/all-models/7-series.html
-https://www.bmw.lu/de/all-models/bmw-5er-reihe-ueberblick.html
-https://www.bmw.lu/de/all-models/bmw-5er-reihe-ueberblick.html
-https://www.bmw.lu/de/all-models/5-series.html
-https://www.bmw.lu/de/all-models/5-series.html
-
-# Trigger ID: 1766747247111
+https://www.bmw.es/es/footer/footer-section/glosario-bmw/asistente-en-retenciones.html
+https://www.bmw.es/es/footer/footer-section/glosario-bmw/portal-clientes-my-bmw-connecteddrive.html
+https://www.bmw.es/es/footer/footer-section/glosario-bmw/services.html
+https://www.bmw.es/es/footer/footer-section/glosario-bmw/servicio-asistente-personal.html
+https://www.bmw.es/es/footer/footer-section/glosario/faros-bmw.html
+https://www.bmw.es/es/footer/footer-section/glosario/filtro-particulas-diesel.html
+# Trigger ID: 1766748413541
