@@ -1,7 +1,12 @@
-https://www.bmw.es/es/footer/footer-section/glosario-bmw/asistente-en-retenciones.html
-https://www.bmw.es/es/footer/footer-section/glosario-bmw/portal-clientes-my-bmw-connecteddrive.html
-https://www.bmw.es/es/footer/footer-section/glosario-bmw/services.html
-https://www.bmw.es/es/footer/footer-section/glosario-bmw/servicio-asistente-personal.html
-https://www.bmw.es/es/footer/footer-section/glosario/faros-bmw.html
-https://www.bmw.es/es/footer/footer-section/glosario/filtro-particulas-diesel.html
-# Trigger ID: 1766748413541
+https://www.bmw.lu/de_LU/topics/offers-and-services/personal-services/redirect-external-page-appointment.html
+https://www.bmw.lu/fr/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
+https://www.bmw.lu/fr/all-models/m-series/m2-coupe/2022/bmw-serie-2-coupe-apercu.html
+https://www.bmw.lu/de/stocklocator.html
+https://www.bmw.lu/de/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
+https://www.bmw.lu/de/topics/offers-and-services/personal-services/redirect-external-page-appointment.html
+https://www.bmw.lu/fr_LU/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
+https://www.bmw.lu/fr_LU/all-models/m-series/m2-coupe/2022/bmw-serie-2-coupe-apercu.html
+https://www.bmw.lu/de_LU/stocklocator.html
+https://www.bmw.lu/de_LU/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
+
+# Trigger ID: 1766751658869
