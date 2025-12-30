@@ -1,12 +1,23 @@
-https://www.bmw.lu/de_LU/topics/offers-and-services/personal-services/redirect-external-page-appointment.html
-https://www.bmw.lu/fr/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
-https://www.bmw.lu/fr/all-models/m-series/m2-coupe/2022/bmw-serie-2-coupe-apercu.html
-https://www.bmw.lu/de/stocklocator.html
-https://www.bmw.lu/de/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
-https://www.bmw.lu/de/topics/offers-and-services/personal-services/redirect-external-page-appointment.html
-https://www.bmw.lu/fr_LU/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
-https://www.bmw.lu/fr_LU/all-models/m-series/m2-coupe/2022/bmw-serie-2-coupe-apercu.html
-https://www.bmw.lu/de_LU/stocklocator.html
-https://www.bmw.lu/de_LU/topics/offers-and-services/bmw-service-inclusive-program/bmw-service-inclusive.html
+https://www.bmw.ca/en/all-models/phev/745le.html
 
-# Trigger ID: 1766751658869
+https://www.bmw.ca/en/all-models/phev/745le/2021-PHEV/7-series-phev-overview.html
+
+https://www.bmw.ca/en/all-models/phev/745le/2019.html
+
+https://www.bmw.ca/en/all-models/phev/745le/2021-PHEV.html
+
+https://www.bmw.ca/en_CA/all-models/phev/745le.html
+
+https://www.bmw.ca/en_CA/all-models/phev/745le/2021-PHEV/7-series-phev-overview.html
+
+https://www.bmw.ca/en_CA/all-models/phev/745le/2019.html
+
+https://www.bmw.ca/en_CA/all-models/phev/745le/2021-PHEV.html
+
+https://www.bmw.ca/en/all-models/phev/X5/2021-PHEV/x5-phev-overview.html
+https://www.bmw.ca/en/all-models/8-series/alpina.html
+
+https://www.bmw.ca/en/all-models/8-series/alpina/2022.html
+
+https://www.bmw.ca/en/all-models/x-series/X31/2017PHEV.html
+# Trigger ID: 1767078360513
