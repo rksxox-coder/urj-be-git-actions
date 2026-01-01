@@ -1,23 +1,2 @@
-https://www.bmw.ca/en/all-models/phev/745le.html
-
-https://www.bmw.ca/en/all-models/phev/745le/2021-PHEV/7-series-phev-overview.html
-
-https://www.bmw.ca/en/all-models/phev/745le/2019.html
-
-https://www.bmw.ca/en/all-models/phev/745le/2021-PHEV.html
-
-https://www.bmw.ca/en_CA/all-models/phev/745le.html
-
-https://www.bmw.ca/en_CA/all-models/phev/745le/2021-PHEV/7-series-phev-overview.html
-
-https://www.bmw.ca/en_CA/all-models/phev/745le/2019.html
-
-https://www.bmw.ca/en_CA/all-models/phev/745le/2021-PHEV.html
-
-https://www.bmw.ca/en/all-models/phev/X5/2021-PHEV/x5-phev-overview.html
-https://www.bmw.ca/en/all-models/8-series/alpina.html
-
-https://www.bmw.ca/en/all-models/8-series/alpina/2022.html
-
-https://www.bmw.ca/en/all-models/x-series/X31/2017PHEV.html
-# Trigger ID: 1767078360513
+www.google.com
+# Trigger ID: 1767277365586
