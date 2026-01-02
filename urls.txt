@@ -1,2 +1,10 @@
-www.google.com
-# Trigger ID: 1767277365586
+https://www.bmw.fi/fi/footer/s%C3%A4hk%C3%B6iset-palvelut/sovellukset.html
+
+https://www.bmw.fi/fi/shop/ls/dp/physical-goods/903023
+
+https://www.bmw.fi/fi/hinnasto
+
+https://www.bmw.fi/fi/shop/ls/dp/physical-goods/901628
+
+
+# Trigger ID: 1767339555958
