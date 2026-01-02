@@ -1,6 +1,4 @@
-https://www.bmw.es/es/campanas/bmw-x5-xDrive50e-xLine-hibrido-enchufable.html
-https://www.bmw.es/es/campanas/bmw-x1-xDrive25e-hibrido-enchufable.html
-https://www.bmw.es/es_ES/campanas/bmw-x5-xDrive50e-xLine-hibrido-enchufable.html
-https://www.bmw.es/es_ES/campanas/bmw-x1-xDrive25e-hibrido-enchufable.html
+https://www.bmw.es/es/more-bmw/bmw-special-sales/bmw-sonderschutzfahrzeuge.html
 
-# Trigger ID: 1767343462411
+https://www.bmw.es/es/more-bmw/bmw-special-sales/bmw-einsatzfahrzeuge.html
+# Trigger ID: 1767343578808
