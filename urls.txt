@@ -1,4 +1,9 @@
-https://www.bmw.es/es/more-bmw/bmw-special-sales/bmw-sonderschutzfahrzeuge.html
-
-https://www.bmw.es/es/more-bmw/bmw-special-sales/bmw-einsatzfahrzeuge.html
-# Trigger ID: 1767343578808
+https://www.bmw.es/es/topics/accesorios-servicios/promocion-reparacion-carroceria.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/blue-performance.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/nuevo-programa.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/piezas-intercambio.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/servicio-mantenimiento.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller/pagina-principal-supercalculadora.html
+https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/actualizacion-remota-de-software-24-07.html
+# Trigger ID: 1767343767082
