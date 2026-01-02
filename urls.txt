@@ -1,17 +1,6 @@
-https://www.bmw.es/es/informacion/promociones/accesorios/calculadora-mantenimiento.html
-https://www.bmw.es/es/topics/accesorios-servicios/accesorios.html
-https://www.bmw.es/es/topics/accesorios-servicios/accesorios/bmw-m-performance.html
-https://www.bmw.es/es/topics/accesorios-servicios/accesorios-m-performance.html
-https://www.bmw.es/es/topics/accesorios-servicios/my-bmw.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/asistencia-carretera-BMW.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/buscador-de-neumaticos.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller/servicios-de-mantenimiento.html
-https://www.bmw.es/es/topics/ofertas-servicios/accesorios-originales-bmw.html
-https://www.bmw.es/es/topics/ofertas-servicios/accesorios-originales-bmw/llantas-neumaticos-bmw.html
-https://www.bmw.es/es/topics/ofertas-servicios/accesorios-originales-bmw/accesorios-bmw-primavera-verano.html
-https://www.bmw.es/es/topics/ofertas-servicios/service-workshop.html
-https://www.bmw.es/es/topics/ofertas-servicios/service-workshop/asistencia-carretera-bmw.html
-https://www.bmw.es/es/topics/ofertas-servicios/service-workshop/bmw-service-mantenimiento-proactive-care-resumen.html
-https://www.bmw.es/es/topics/propietarios/cita-previa.html
+https://www.bmw.es/es/campanas/bmw-x5-xDrive50e-xLine-hibrido-enchufable.html
+https://www.bmw.es/es/campanas/bmw-x1-xDrive25e-hibrido-enchufable.html
+https://www.bmw.es/es_ES/campanas/bmw-x5-xDrive50e-xLine-hibrido-enchufable.html
+https://www.bmw.es/es_ES/campanas/bmw-x1-xDrive25e-hibrido-enchufable.html
 
-# Trigger ID: 1767343318919
+# Trigger ID: 1767343462411
