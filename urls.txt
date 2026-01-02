@@ -1,9 +1,17 @@
-https://www.bmw.es/es/topics/accesorios-servicios/promocion-reparacion-carroceria.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service.html
+https://www.bmw.es/es/informacion/promociones/accesorios.html
+https://www.bmw.es/es/topics/accesorios-servicios/accesorios.html
+https://www.bmw.es/es/topics/accesorios-servicios/accesorios/bmw-m-performance.html
+https://www.bmw.es/es/topics/accesorios-servicios/accesorios-m-performance.html
+https://www.bmw.es/es/topics/accesorios-servicios/my-bmw.html
 https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/blue-performance.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/nuevo-programa.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/piezas-intercambio.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/servicio-mantenimiento.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller/pagina-principal-supercalculadora.html
-https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/actualizacion-remota-de-software-24-07.html
-# Trigger ID: 1767343767082
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/buscador-de-neumaticos.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller.html
+https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller/servicios-de-mantenimiento.html
+https://www.bmw.es/es_ES/topics/offers-and-services/original-bmw-accessories1/bmw-autumn-winter-accessories-2021.html
+https://www.bmw.es/es/topics/ofertas-servicios/accesorios-originales-bmw.html
+https://www.bmw.es/es/topics/ofertas-servicios/service-workshop.html
+https://www.bmw.es/es/topics/ofertas-servicios/service-workshop/asistencia-carretera-bmw.html
+https://www.bmw.es/es/topics/ofertas-servicios/service-workshop/bmw-service-mantenimiento-proactive-care-resumen.html
+https://www.bmw.es/es/topics/propietarios/cita-previa.html
+
+# Trigger ID: 1767350565233
