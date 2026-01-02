@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report 1/2/2026, 11:29:57 AM</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <style>
+        :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #dee2e6; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); --link-color: #007bff; }
+        body.dark-mode { --bg-color: #1a202c; --card-bg: #2d3748; --text-color: #e2e8f0; --border-color: #4a5568; --header-bg: #2d3748; --shadow-color: rgba(0,0,0,0.5); --link-color: #63b3ed; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 10px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s; font-size: 14px; }
+        .container { max-width: 100%; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); margin-top: 50px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+        h1 { font-size: 1.2rem; margin: 0; font-weight: 600; } 
+        .header-controls { display: flex; align-items: center; gap: 10px; }
+        #export-btn { background-color: #28a745; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        button#theme-toggle { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; display: flex; align-items: center; }
+        table { width: 100% !important; border-collapse: collapse; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .url-cell { display: flex; align-items: center; }
+        .url-cell i.feather { margin-right: 8px; flex-shrink: 0; width: 14px; height: 14px; }
+        td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; color: white; font-weight: bold; font-size: 11px; }
+        .status-badge.success { background-color: #28a745; }
+        .status-badge.redirect { background-color: #ffc107; color: #333; }
+        .status-badge.error { background-color: #dc3545; }
+        .status-badge.small { padding: 1px 5px; font-size: 10px; margin-right: 3px; }
+        .dataTables_wrapper .dataTables_length select, .dataTables_wrapper .dataTables_filter input { background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 2px; font-size: 12px; }
+        .details-btn { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; }
+        body.dark-mode .swal2-popup { background-color: #2d3748; color: #e2e8f0; }
+        body.dark-mode .swal2-title, body.dark-mode .swal2-content { color: #e2e8f0; }
+        .modal-table { width: 100%; margin-top: 5px; border-collapse: collapse; font-size: 12px; color: inherit; }
+        .modal-table th { background: var(--header-bg); border-bottom: 1px solid var(--border-color); text-align: left; padding: 6px; }
+        .modal-table td { border-bottom: 1px solid var(--border-color); padding: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Analysis Report</h1>
+            <div class="header-controls">
+                <button id="export-btn"><i data-feather="file-text" style="width:12px; height:12px;"></i> Export</button>
+                <button id="theme-toggle" title="Toggle dark mode"><i data-feather="moon" style="width:14px; height:14px;"></i></button>
+            </div>
+        </div>
+        <table id="analysisTable">
+            <thead><tr><th>Source URL</th><th>Target URL</th><th>Status</th><th>Chain</th><th>Details</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/m-series/x4-m/2019.html" target="_blank">https://www.bmw.com.my/en/all-models/m-series/x4-m/2019.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models.html?bmwM=yes" target="_blank">https://www.bmw.com.my/en/all-models.html?bmwM=yes</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="0"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/m-series/xm/2022/bmw-xm-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/m-series/xm/2022/bmw-xm-technical-data.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm-technical-data.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="1"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/phev/xm/2022.html" target="_blank">https://www.bmw.com.my/en/all-models/phev/xm/2022.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html" target="_blank">https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="2"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/phev/X5.html" target="_blank">https://www.bmw.com.my/en/all-models/phev/X5.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html#plug-in-hybrid" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html#plug-in-hybrid</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="3"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid.html" target="_blank">https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html" target="_blank">https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="4"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/phev/7-series/2021.html" target="_blank">https://www.bmw.com.my/en/all-models/phev/7-series/2021.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/7-series/7-series-sedan/bmw-7-series-sedan.html#plug-in-hybrid" target="_blank">https://www.bmw.com.my/en/all-models/7-series/7-series-sedan/bmw-7-series-sedan.html#plug-in-hybrid</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="5"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2019.html" target="_blank">https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2019.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html" target="_blank">https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="6"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2022.html" target="_blank">https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2022.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html" target="_blank">https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="7"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/phev/xm.html" target="_blank">https://www.bmw.com.my/en/all-models/phev/xm.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html" target="_blank">https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="8"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en_MY/all-models/protection-vehicle/the-x5-protection/2024.html" target="_blank">https://www.bmw.com.my/en_MY/all-models/protection-vehicle/the-x5-protection/2024.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models.html" target="_blank">https://www.bmw.com.my/en/all-models.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="9"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/protection-vehicle/the-x5-protection.html" target="_blank">https://www.bmw.com.my/en/all-models/protection-vehicle/the-x5-protection.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models.html" target="_blank">https://www.bmw.com.my/en/all-models.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="10"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-models-equipment.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-models-equipment.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="11"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/2021.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/2021.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="12"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-technical-data.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="13"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed-confirmation.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed-confirmation.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="14"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/2019.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/2019.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="15"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/2021/bmw-X4-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/2021/bmw-X4-technical-data.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="16"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021/bmw-x5-technical-data.html" target="_blank">https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021/bmw-x5-technical-data.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5-technical-data.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="17"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021.html" target="_blank">https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="18"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="19"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/2025.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/2025.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="20"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/2018.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/2018.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="21"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/X5/2021/bmw-x5-highlights.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/X5/2021/bmw-x5-highlights.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="22"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en_MY/all-models/x-series/x7/2025.html" target="_blank">https://www.bmw.com.my/en_MY/all-models/x-series/x7/2025.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="23"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-x7-highlights.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-x7-highlights.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="24"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-X7-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-X7-technical-data.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7-technical-data.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7-technical-data.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="25"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x5/2025.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x5/2025.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="26"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/2021.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/2021.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html" target="_blank">https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="27"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/topics/discover/bmw-vision-inext.html" target="_blank">https://www.bmw.com.my/en/topics/discover/bmw-vision-inext.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/more-bmw/neue-klasse.html" target="_blank">https://www.bmw.com.my/en/more-bmw/neue-klasse.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="28"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/configurator-old.html" target="_blank">https://www.bmw.com.my/en/configurator-old.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/configurator.html" target="_blank">https://www.bmw.com.my/en/configurator.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="29"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en_MY/topics/fascination-bmw/bmw-concept-vehicle.html" target="_blank">https://www.bmw.com.my/en_MY/topics/fascination-bmw/bmw-concept-vehicle.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/more-bmw/neue-klasse.html" target="_blank">https://www.bmw.com.my/en/more-bmw/neue-klasse.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="30"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/topics/bmw-owners/bmw-aftersales-services/bmw-roadside-assistance.html" target="_blank">https://www.bmw.com.my/en/topics/bmw-owners/bmw-aftersales-services/bmw-roadside-assistance.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://www.bmw.com.my/en/service-portal.html#roadside-assistance" target="_blank">https://www.bmw.com.my/en/service-portal.html#roadside-assistance</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Unknown) &#013; Hop 2: 200 (Unknown)"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="31"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr></tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsData = [{"originalURL":"https://www.bmw.com.my/en/all-models/m-series/x4-m/2019.html","finalURL":"https://www.bmw.com.my/en/all-models.html?bmwM=yes","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/m-series/x4-m/2019.html","status":301,"server":"Unknown","timestamp":0.59},{"url":"https://www.bmw.com.my/en/all-models.html?bmwM=yes","status":200,"server":"Unknown","timestamp":1.204}],"totalTime":1.545},{"originalURL":"https://www.bmw.com.my/en/all-models/m-series/xm/2022/bmw-xm-technical-data.html","finalURL":"https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm-technical-data.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/m-series/xm/2022/bmw-xm-technical-data.html","status":301,"server":"Unknown","timestamp":0.589},{"url":"https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm-technical-data.html","status":200,"server":"Unknown","timestamp":0.92}],"totalTime":1.352},{"originalURL":"https://www.bmw.com.my/en/all-models/phev/xm/2022.html","finalURL":"https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/phev/xm/2022.html","status":301,"server":"Unknown","timestamp":0.635},{"url":"https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html","status":200,"server":"Unknown","timestamp":1.654}],"totalTime":2.042},{"originalURL":"https://www.bmw.com.my/en/all-models/phev/X5.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html#plug-in-hybrid","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/phev/X5.html","status":301,"server":"Unknown","timestamp":0.59},{"url":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html","status":200,"server":"Unknown","timestamp":0.809}],"totalTime":1.369},{"originalURL":"https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid.html","finalURL":"https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid.html","status":301,"server":"Unknown","timestamp":0.635},{"url":"https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html","status":200,"server":"Unknown","timestamp":1.442}],"totalTime":1.914},{"originalURL":"https://www.bmw.com.my/en/all-models/phev/7-series/2021.html","finalURL":"https://www.bmw.com.my/en/all-models/7-series/7-series-sedan/bmw-7-series-sedan.html#plug-in-hybrid","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/phev/7-series/2021.html","status":301,"server":"Unknown","timestamp":0.243},{"url":"https://www.bmw.com.my/en/all-models/7-series/7-series-sedan/bmw-7-series-sedan.html","status":200,"server":"Unknown","timestamp":0.592}],"totalTime":1.491},{"originalURL":"https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2019.html","finalURL":"https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2019.html","status":301,"server":"Unknown","timestamp":0.226},{"url":"https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html","status":200,"server":"Unknown","timestamp":0.789}],"totalTime":1.454},{"originalURL":"https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2022.html","finalURL":"https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/phev/BMW-330e-Sedan-Plug-in-Hybrid/2022.html","status":301,"server":"Unknown","timestamp":0.272},{"url":"https://www.bmw.com.my/en/all-models/3-series/bmw-3-series-sedan/bmw-3-series-sedan.html","status":200,"server":"Unknown","timestamp":0.605}],"totalTime":1.345},{"originalURL":"https://www.bmw.com.my/en/all-models/phev/xm.html","finalURL":"https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/phev/xm.html","status":301,"server":"Unknown","timestamp":0.229},{"url":"https://www.bmw.com.my/en/all-models/m-series/xm/bmw-xm.html","status":200,"server":"Unknown","timestamp":0.636}],"totalTime":1.545},{"originalURL":"https://www.bmw.com.my/en_MY/all-models/protection-vehicle/the-x5-protection/2024.html","finalURL":"https://www.bmw.com.my/en/all-models.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en_MY/all-models/protection-vehicle/the-x5-protection/2024.html","status":301,"server":"Unknown","timestamp":0.26},{"url":"https://www.bmw.com.my/en/all-models.html","status":200,"server":"Unknown","timestamp":0.525}],"totalTime":0.914},{"originalURL":"https://www.bmw.com.my/en/all-models/protection-vehicle/the-x5-protection.html","finalURL":"https://www.bmw.com.my/en/all-models.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/protection-vehicle/the-x5-protection.html","status":301,"server":"Unknown","timestamp":0.215},{"url":"https://www.bmw.com.my/en/all-models.html","status":200,"server":"Unknown","timestamp":1.193}],"totalTime":1.585},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-models-equipment.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-models-equipment.html","status":301,"server":"Unknown","timestamp":0.261},{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","status":200,"server":"Unknown","timestamp":0.674}],"totalTime":0.926},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/2021.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/2021.html","status":301,"server":"Unknown","timestamp":0.214},{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","status":200,"server":"Unknown","timestamp":0.474}],"totalTime":0.812},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-technical-data.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/2019/bmw-x4-technical-data.html","status":301,"server":"Unknown","timestamp":0.353},{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html","status":200,"server":"Unknown","timestamp":0.634}],"totalTime":1.311},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed-confirmation.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed-confirmation.html","status":301,"server":"Unknown","timestamp":0.304},{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","status":200,"server":"Unknown","timestamp":0.558}],"totalTime":1.462},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/2019.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/2019.html","status":301,"server":"Unknown","timestamp":0.281},{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","status":200,"server":"Unknown","timestamp":0.701}],"totalTime":1.154},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/2021/bmw-X4-technical-data.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/2021/bmw-X4-technical-data.html","status":301,"server":"Unknown","timestamp":0.212},{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-technical-data.html","status":200,"server":"Unknown","timestamp":0.415}],"totalTime":1.036},{"originalURL":"https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021/bmw-x5-technical-data.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5-technical-data.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021/bmw-x5-technical-data.html","status":301,"server":"Unknown","timestamp":0.313},{"url":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5-technical-data.html","status":200,"server":"Unknown","timestamp":0.98}],"totalTime":1.532},{"originalURL":"https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en_MY/all-models/x-series/X5/2021.html","status":301,"server":"Unknown","timestamp":0.301},{"url":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html","status":200,"server":"Unknown","timestamp":0.753}],"totalTime":1.288},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/2021/keep-me-informed.html","status":301,"server":"Unknown","timestamp":0.277},{"url":"https://www.bmw.com.my/en/all-models/x-series/X4/bmw-X4-highlights.html","status":200,"server":"Unknown","timestamp":0.606}],"totalTime":1.035},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/2025.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/2025.html","status":301,"server":"Unknown","timestamp":0.317},{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","status":200,"server":"Unknown","timestamp":0.773}],"totalTime":1.263},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/2018.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/2018.html","status":301,"server":"Unknown","timestamp":0.291},{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","status":200,"server":"Unknown","timestamp":0.871}],"totalTime":1.523},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/X5/2021/bmw-x5-highlights.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/X5/2021/bmw-x5-highlights.html","status":301,"server":"Unknown","timestamp":0.267},{"url":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html","status":200,"server":"Unknown","timestamp":0.563}],"totalTime":1.065},{"originalURL":"https://www.bmw.com.my/en_MY/all-models/x-series/x7/2025.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en_MY/all-models/x-series/x7/2025.html","status":301,"server":"Unknown","timestamp":0.265},{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","status":200,"server":"Unknown","timestamp":0.69}],"totalTime":1.218},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-x7-highlights.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-x7-highlights.html","status":301,"server":"Unknown","timestamp":0.128},{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","status":200,"server":"Unknown","timestamp":0.5}],"totalTime":0.958},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-X7-technical-data.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7-technical-data.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/2021/bmw-X7-technical-data.html","status":301,"server":"Unknown","timestamp":0.251},{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7-technical-data.html","status":200,"server":"Unknown","timestamp":0.767}],"totalTime":1.342},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/x5/2025.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/x5/2025.html","status":301,"server":"Unknown","timestamp":0.118},{"url":"https://www.bmw.com.my/en/all-models/x-series/x5/bmw-x5.html","status":200,"server":"Unknown","timestamp":0.784}],"totalTime":1.52},{"originalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/2021.html","finalURL":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/2021.html","status":301,"server":"Unknown","timestamp":0.296},{"url":"https://www.bmw.com.my/en/all-models/x-series/x7/bmw-x7.html","status":200,"server":"Unknown","timestamp":0.855}],"totalTime":1.408},{"originalURL":"https://www.bmw.com.my/en/topics/discover/bmw-vision-inext.html","finalURL":"https://www.bmw.com.my/en/more-bmw/neue-klasse.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/topics/discover/bmw-vision-inext.html","status":301,"server":"Unknown","timestamp":0.266},{"url":"https://www.bmw.com.my/en/more-bmw/neue-klasse.html","status":200,"server":"Unknown","timestamp":0.652}],"totalTime":1.187},{"originalURL":"https://www.bmw.com.my/en/configurator-old.html","finalURL":"https://www.bmw.com.my/en/configurator.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/configurator-old.html","status":301,"server":"Unknown","timestamp":0.19},{"url":"https://www.bmw.com.my/en/configurator.html","status":200,"server":"Unknown","timestamp":0.969}],"totalTime":1.284},{"originalURL":"https://www.bmw.com.my/en_MY/topics/fascination-bmw/bmw-concept-vehicle.html","finalURL":"https://www.bmw.com.my/en/more-bmw/neue-klasse.html","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en_MY/topics/fascination-bmw/bmw-concept-vehicle.html","status":301,"server":"Unknown","timestamp":0.303},{"url":"https://www.bmw.com.my/en/more-bmw/neue-klasse.html","status":200,"server":"Unknown","timestamp":0.466}],"totalTime":1.153},{"originalURL":"https://www.bmw.com.my/en/topics/bmw-owners/bmw-aftersales-services/bmw-roadside-assistance.html","finalURL":"https://www.bmw.com.my/en/service-portal.html#roadside-assistance","sourceServer":"Unknown","targetServer":"Unknown","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/topics/bmw-owners/bmw-aftersales-services/bmw-roadside-assistance.html","status":301,"server":"Unknown","timestamp":0.415},{"url":"https://www.bmw.com.my/en/service-portal.html","status":200,"server":"Unknown","timestamp":0.713}],"totalTime":0.971}];
+            const body = document.body;
+            const toggleBtn = document.getElementById('theme-toggle');
+            
+            let parentIsDark = false;
+            try { if (window.self !== window.top) parentIsDark = window.parent.document.documentElement.classList.contains('dark'); } catch(e) { }
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme === 'dark' || (!storedTheme && parentIsDark)) {
+                body.classList.add('dark-mode');
+                toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
+            }
+
+            window.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'theme-change') {
+                    const isDark = event.data.theme === 'dark';
+                    if (isDark) { body.classList.add('dark-mode'); toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>'; } 
+                    else { body.classList.remove('dark-mode'); toggleBtn.innerHTML = '<i data-feather="moon" style="width:14px; height:14px;"></i>'; }
+                    localStorage.setItem('theme', event.data.theme);
+                    feather.replace();
+                }
+            });
+
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDark = body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                toggleBtn.innerHTML = isDark ? '<i data-feather="sun" style="width:14px; height:14px;"></i>' : '<i data-feather="moon" style="width:14px; height:14px;"></i>';
+                feather.replace();
+            });
+
+            new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
+
+            document.getElementById('export-btn').addEventListener('click', () => {
+                try {
+                    const flatData = resultsData.map(r => {
+                        const row = {
+                            'Original URL': r.originalURL,
+                            'Final URL': r.finalURL,
+                            'Hop Count': r.redirectChain.length,
+                            'Final Target Status': r.finalStatus,
+                            'Total Time (s)': r.totalTime.toFixed(2),
+                            'Error': r.error || ''
+                        };
+                        r.redirectChain.forEach((hop, i) => {
+                            const prefix = `Hop ${i + 1}`;
+                            row[`${prefix} URL`] = hop.url;
+                            row[`${prefix} Status`] = hop.status;
+                            row[`${prefix} Server`] = hop.server;
+                        });
+                        return row;
+                    });
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(flatData);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Redirect Report');
+                    XLSX.writeFile(wb, 'Redirect_Analysis.xlsx');
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Export Error', 'Failed to generate Excel file.', 'error');
+                }
+            });
+
+            document.querySelector('tbody').addEventListener('click', (e) => {
+                const btn = e.target.closest('.details-btn');
+                if (!btn) return;
+                const idx = btn.dataset.index;
+                const data = resultsData[idx];
+                const chainHtml = data.redirectChain.map((h, i) => 
+                    `<tr><td>${i+1}</td><td>${h.url}</td><td>${h.status}</td><td>${h.server}</td></tr>`
+                ).join('');
+                Swal.fire({
+                    title: 'Redirect Chain', width: '600px',
+                    html: `<p style="word-break:break-all;font-size:12px"><strong>Start:</strong> ${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>${chainHtml}</tbody></table>`
+                });
+            });
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
