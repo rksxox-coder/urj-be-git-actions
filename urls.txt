@@ -1,17 +1,25 @@
-https://www.bmw.es/es/informacion/promociones/accesorios.html
-https://www.bmw.es/es/topics/accesorios-servicios/accesorios.html
-https://www.bmw.es/es/topics/accesorios-servicios/accesorios/bmw-m-performance.html
-https://www.bmw.es/es/topics/accesorios-servicios/accesorios-m-performance.html
-https://www.bmw.es/es/topics/accesorios-servicios/my-bmw.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/blue-performance.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/buscador-de-neumaticos.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller.html
-https://www.bmw.es/es/topics/accesorios-servicios/bmw-service/taller/servicios-de-mantenimiento.html
-https://www.bmw.es/es_ES/topics/offers-and-services/original-bmw-accessories1/bmw-autumn-winter-accessories-2021.html
-https://www.bmw.es/es/topics/ofertas-servicios/accesorios-originales-bmw.html
-https://www.bmw.es/es/topics/ofertas-servicios/service-workshop.html
-https://www.bmw.es/es/topics/ofertas-servicios/service-workshop/asistencia-carretera-bmw.html
-https://www.bmw.es/es/topics/ofertas-servicios/service-workshop/bmw-service-mantenimiento-proactive-care-resumen.html
-https://www.bmw.es/es/topics/propietarios/cita-previa.html
+https://www.bmw.pt/pt_PT/topics/fascination-bmw/bmw-concept-vehicle.html
+https://www.bmw.pt/pt_PT/topics/fascination-bmw/bmw-concept-vehicle/campanha-bmw-xm.html
+https://www.bmw.pt/pt/topics/offers-and-services/bmw-compatible-apps/musica-e-entretenimento.html
+https://www.bmw.pt/pt/topics/fascination-bmw/bmw-concept-vehicle.html
+https://www.bmw.pt/pt/fastlane/financial-services/visao-geral.html
+https://www.bmw.pt/pt_PT/fastlane/campanhas-bmw/concept-cars-vision-neue-klasse.html
+https://www.bmw.pt/pt/footer/sitemap.html
+https://www.bmw.pt/pt/topics/offers-and-services/bmw-apps/aplicacao-catalogos-e-manuais-instrucoes.html
+https://www.bmw.pt/pt/footer/footer-section/contacto/dealers.html
+https://www.bmw.pt/pt/topics/offers-and-services/personal-services/reparacao-e-cuidados.html
+https://www.bmw.pt/pt/fastlane/financial-services/portal-do-cliente.html
+https://www.bmw.pt/pt/footer/footer-section/contacto/models.html
+https://www.bmw.pt/pt/topics/campanhas/campanha-novo-bmw-i4.html
+https://www.bmw.pt/pt/fastlane/campanhas-bmw/bmw-serie-2-active-tourer-phev.html
+https://www.bmw.pt/pt/all-models/Serie-2/grantourer/2020/bmw-2-series-gran-tourer-models-equipment.html
+https://www.bmw.pt/pt/fastlane/campanhas-bmw/kmi-novo-bmw-serie-5-phev.html
+https://www.bmw.pt/pt/topics/offers-and-services/bmw-apps/bmwm-e-motorsport.html
+https://www.bmw.pt/pt/fastlane/campanhas-bmw/kmi-novo-bmw-i5.html
+https://www.bmw.pt/pt/footer/footer-section/contacto/cic.html
+https://www.bmw.pt/pt/fastlane/campanhas-bmw/concept-cars-vision-neue-klasse.html
+https://www.bmw.pt/pt/all-models/Serie-2/grantourer/2020/bmw-2-series-gran-tourer-technical-data.html
+https://www.bmw.pt/pt/all-models/Serie-2/grantourer/2020.html
+https://www.bmw.pt/pt/topics/offers-and-services/bmw-digital-services-and-connectivity.html
 
-# Trigger ID: 1767350565233
+# Trigger ID: 1767352033960
