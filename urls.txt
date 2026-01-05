@@ -1,26 +1,6 @@
-https://www.bmw.com.mo/en/all-models/bmw-i.html
-https://www.bmw.com.mo/en/all-models/2-series.html
-https://www.bmw.com.mo/en/all-models/z-series.html
-https://www.bmw.com.mo/en/all-models/5-series.html
-https://www.bmw.com.mo/en/all-models/x-series.html
-https://www.bmw.com.mo/en/all-models/3-series.html
-https://www.bmw.com.mo/en/all-models/m-series.html
-https://www.bmw.com.mo/en/all-models/1-series.html
-https://www.bmw.com.mo/en/all-models/7-series.html
-https://www.bmw.com.mo/en/all-models/4-series.html
-https://www.bmw.com.mo/en/all-models/8-series.html
-https://www.bmw.com.mo/en/all-models/6-series.html
-https://www.bmw.com.mo/en_MO/all-models/bmw-i.html
-https://www.bmw.com.mo/en_MO/all-models/2-series.html
-https://www.bmw.com.mo/en_MO/all-models/z-series.html
-https://www.bmw.com.mo/en_MO/all-models/5-series.html
-https://www.bmw.com.mo/en_MO/all-models/x-series.html
-https://www.bmw.com.mo/en_MO/all-models/3-series.html
-https://www.bmw.com.mo/en_MO/all-models/m-series.html
-https://www.bmw.com.mo/en_MO/all-models/1-series.html
-https://www.bmw.com.mo/en_MO/all-models/7-series.html
-https://www.bmw.com.mo/en_MO/all-models/4-series.html
-https://www.bmw.com.mo/en_MO/all-models/8-series.html
-https://www.bmw.com.mo/en_MO/all-models/6-series.html
+https://www.bmw.co.jp/ja/publicPools/body-type-navigation-helper.html
 
-# Trigger ID: 1767353625992
+https://www.bmw.co.jp/ja_JP/publicPools/reports.html
+https://www.bmw.co.jp/ja/_shortcuts/_top.html
+https://www.bmw.co.jp/ja/_shortcuts/dealer_qr.html
+# Trigger ID: 1767590773883
