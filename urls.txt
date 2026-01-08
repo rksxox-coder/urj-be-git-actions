@@ -1,18 +1,2 @@
-https://www.bmw.co.za/en/all-models/5-series-new.html
-https://www.bmw.co.za/en_ZA/all-models/5-series-new.html
-https://www.bmw.co.za/en/topics/fascination-bmw/connected-drive/bmw-connected-drive-upgrades-overview.html
-https://www.bmw.co.za/en_ZA/topics/fascination-bmw/connected-drive/bmw-connected-drive-upgrades-overview.html
-https://www.bmw.co.za/en/topics/fascination-bmw/connected-drive/intelligent-personal-assistant.html
-https://www.bmw.co.za/en_ZA/topics/fascination-bmw/connected-drive/intelligent-personal-assistant.html
-https://www.bmw.co.za/en/topics/fascination-bmw/connected-drive.html
-https://www.bmw.co.za/en_ZA/topics/fascination-bmw/connected-drive.html
-https://www.bmw.co.za/en/all-models/brochures/download-brochure/brochure-download.html
-https://www.bmw.co.za/en/all-models/brochures/download-brochure.html
-https://www.bmw.co.za/en_ZA/all-models/brochures/download-brochure/brochure-download.html
-https://www.bmw.co.za/en_ZA/all-models/brochures/download-brochure.html
-https://www.bmw.co.za/en/topics/fascination-bmw/bmw-design/bmw-vision-m-next.html
-https://www.bmw.co.za/en_ZA/topics/fascination-bmw/bmw-design/bmw-vision-m-next.html
-https://www.bmw.co.za/en/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
-https://www.bmw.co.za/en_ZA/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
-
-# Trigger ID: 1767764850705
+https://www.bmw.no/no/all-models/m-serie/x7-m60i/2022/oversikt.html
+# Trigger ID: 1767855097795
