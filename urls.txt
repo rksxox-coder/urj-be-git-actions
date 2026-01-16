@@ -1,3 +1,8 @@
-https://www.bmw.com.mt/en_MT/topics/offers-and-services/used-automobiles/premium-selection/offers.html
-https://www.bmw.com.mt/en_MT/topics/offers-and-services/bmw-special-sales/bmw-protection-vehicles.html
-# Trigger ID: 1768395732503
+https://www.bmw.fi/fi/footer/s%C3%A4hk%C3%B6iset-palvelut/sovellukset.html
+
+https://www.bmw.fi/fi/shop/ls/dp/physical-goods/903023
+
+https://www.bmw.fi/fi/hinnasto
+
+https://www.bmw.fi/fi/shop/ls/dp/physical-goods/901628
+# Trigger ID: 1768548843775
