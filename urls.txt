@@ -1,6 +1,19 @@
-https://www.bmw.se/sv/avdelning/aterforsaljare/m-bilar-group/borlange.html
+https://configure.bmw.de/de_DE/configure/U10E/71GN
+https://configure.bmw.co.uk/en_GB/configure/U10E/71GN
+https://configure.bmw.ie/en_IE/configure/U10E/71GN
+https://configure.bmw.it/it_IT/configure/U10E/71GN
+https://configure.bmw.fr/fr_FR/configure/U10E/71GN
+https://configure.bmw.be/fr_BE/configure/U10E/71GN
+https://configure.bmw.lu/fr_LU/configure/U10E/71GN
+https://configure.bmw.nl/nl_NL/configure/U10E/71GN
+https://configure.bmw.es/es_ES/configure/U10E/71GN
+https://configure.bmw.pt/pt_PT/configure/U10E/71GN
+https://configure.bmw.at/de_AT/configure/U10E/71GN
+https://configure.bmw.ch/de_CH/configure/U10E/71GN
+https://configure.bmw.no/no_NO/configure/U10E/71GN
+https://configure.bmw.se/sv_SE/configure/U10E/71GN
+https://configure.bmw.dk/da_DK/configure/U10E/71GN
+https://configure.bmw.fi/fi_FI/configure/U10E/71GN
+https://configure.bmw.pl/pl_PL/configure/U10E/71GN
 
-https://www.bmw.se/sv/avdelning/service-tjanster-och-tillbehor/bmw-tillbehor._19-m-performance-l%C3%A4ttmetallf%C3%A4lgar-y-eker-942-m-jet-black-matt-komplett-hjulsats.html
-
-
-# Trigger ID: 1769501765252
+# Trigger ID: 1769576098837
