@@ -14,6 +14,6 @@ https://configure.bmw.no/no_NO/configure/U10E/71GN
 https://configure.bmw.se/sv_SE/configure/U10E/71GN
 https://configure.bmw.dk/da_DK/configure/U10E/71GN
 https://configure.bmw.fi/fi_FI/configure/U10E/71GN
-https://configure.bmw.pl/pl_PL/configure/U10E/71GN
+https://configure.bmw.pl/pl_PL/configure/U10E/73GN
 
-# Trigger ID: 1769576098837
+# Trigger ID: 1769576548298
