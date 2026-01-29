@@ -1,19 +1,26 @@
-https://configure.bmw.de/de_DE/configure/U10E/81GN
-https://configure.bmw.co.uk/en_GB/configure/U10E/81GN
-https://configure.bmw.ie/en_IE/configure/U10E/81GN
-https://configure.bmw.it/it_IT/configure/U10E/81GN
-https://configure.bmw.fr/fr_FR/configure/U10E/81GN
-https://configure.bmw.be/fr_BE/configure/U10E/81GN
-https://configure.bmw.lu/fr_LU/configure/U10E/81GN
-https://configure.bmw.nl/nl_NL/configure/U10E/81GN
-https://configure.bmw.es/es_ES/configure/U10E/81GN
-https://configure.bmw.pt/pt_PT/configure/U10E/81GN
-https://configure.bmw.at/de_AT/configure/U10E/81GN
-https://configure.bmw.ch/de_CH/configure/U10E/81GN
-https://configure.bmw.no/no_NO/configure/U10E/81GN
-https://configure.bmw.se/sv_SE/configure/U10E/81GN
-https://configure.bmw.dk/da_DK/configure/U10E/81GN
-https://configure.bmw.fi/fi_FI/configure/U10E/81GN
-https://configure.bmw.pl/pl_PL/configure/U10E/81GN
+https://www.bmw.dk/da/alle_modeller/m-serie/x6-m.html
+https://www.bmw.dk/da/alle_modeller/m-serie/x6-m/2023.html
+https://www.bmw.dk/da/alle_modeller/m-serie/x6-m/2023/overblik.html
+https://www.bmw.dk/da/alle-modeller/m-serie/x6-m/tekniske-specifikationer.html
+https://www.bmw.dk/da_DK/all-models/m-series/x6-m/2023.html
+https://www.bmw.dk/da_DK/all-models/m-series/x6-m/2023/bmw-x6-m-automobiles-technical-data.html
+https://www.bmw.dk/da_DK/all-models/m-series/x6-m/x6-m-2023-f96-technical-data.html
+https://www.bmw.fi/fi/mallisto/m-mallit/x6-m/2023.html
+https://www.bmw.fi/fi/mallisto/m-mallit/x6-m/2023/tekniset-tiedot.html
+https://www.bmw.fi/fi_FI/all-models/m-series/x6-m/2023/bmw-x6-m-automobiles-technical-data.html
+https://www.bmw.fi/fi_FI/all-models/m-series/x6-m/x6-m-2023-f96-technical-data.html
+https://www.bmw.no/no/all-models/m-serie/x6-m.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/2023.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/2023/oversikt.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/2023/tekniske-data.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/tekniske-data.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023/oversikt.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023/tekniske-data.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/tekniske-data.html
+https://www.bmw.se/sv/alla-modeller/m-serie/x6-m.html
+https://www.bmw.se/sv/alla-modeller/m-serie/x6-m/2023/tekniska-data.html
+https://www.bmw.se/sv_SE/all-models/m-series/x6-m.html
 
-# Trigger ID: 1769577118302
+# Trigger ID: 1769672737131
