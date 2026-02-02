@@ -1,26 +1,7 @@
-https://www.bmw.dk/da/alle_modeller/m-serie/x6-m.html
-https://www.bmw.dk/da/alle_modeller/m-serie/x6-m/2023.html
-https://www.bmw.dk/da/alle_modeller/m-serie/x6-m/2023/overblik.html
-https://www.bmw.dk/da/alle-modeller/m-serie/x6-m/tekniske-specifikationer.html
-https://www.bmw.dk/da_DK/all-models/m-series/x6-m/2023.html
-https://www.bmw.dk/da_DK/all-models/m-series/x6-m/2023/bmw-x6-m-automobiles-technical-data.html
-https://www.bmw.dk/da_DK/all-models/m-series/x6-m/x6-m-2023-f96-technical-data.html
-https://www.bmw.fi/fi/mallisto/m-mallit/x6-m/2023.html
-https://www.bmw.fi/fi/mallisto/m-mallit/x6-m/2023/tekniset-tiedot.html
-https://www.bmw.fi/fi_FI/all-models/m-series/x6-m/2023/bmw-x6-m-automobiles-technical-data.html
-https://www.bmw.fi/fi_FI/all-models/m-series/x6-m/x6-m-2023-f96-technical-data.html
-https://www.bmw.no/no/all-models/m-serie/x6-m.html
-https://www.bmw.no/no/all-models/m-serie/x6-m/2023.html
-https://www.bmw.no/no/all-models/m-serie/x6-m/2023/oversikt.html
-https://www.bmw.no/no/all-models/m-serie/x6-m/2023/tekniske-data.html
-https://www.bmw.no/no/all-models/m-serie/x6-m/tekniske-data.html
-https://www.bmw.no/no/alle-modeller/m-serie/x6-m.html
-https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023.html
-https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023/oversikt.html
-https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023/tekniske-data.html
-https://www.bmw.no/no/alle-modeller/m-serie/x6-m/tekniske-data.html
-https://www.bmw.se/sv/alla-modeller/m-serie/x6-m.html
-https://www.bmw.se/sv/alla-modeller/m-serie/x6-m/2023/tekniska-data.html
-https://www.bmw.se/sv_SE/all-models/m-series/x6-m.html
-
-# Trigger ID: 1769672737131
+https://www.bmw.co.za/en/schedule-page-test.html
+https://www.bmw.co.za/en/all-models/m-series/m8-coupe/showroom/bmw-m8-coupe-overview.html
+https://www.bmw.co.za/en/all-models/3-series/sedan/2022/bmw-3-series-sedan-overview.html
+https://www.bmw.co.za/en/all-models/m-series/m8-coupe/2022/bmw-8-series-coupe-m-automobiles-overview.html
+https://www.bmw.co.za/en/topics/offers-and-services/service-workshop/my-bmw-service-hub.html
+https://www.bmw.co.za/en/forms/demo/bmw-1-series-demo.html
+# Trigger ID: 1770014541288
