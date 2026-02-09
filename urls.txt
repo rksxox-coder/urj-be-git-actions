@@ -1,2 +1,23 @@
-https://www.bmw.lu/de/all-models/2-series/grantourer/2020/bmw-2-series-gran-tourer-highlights.html
-# Trigger ID: 1770289592227
+https://www.bmw.com.my/en/shop/ls/cart
+https://www.bmw.in/en/all-models/x-series/X3/2018/at-a-glance.html
+https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-x1-overview.html#technical-data
+https://www.bmw.com.sg/en_SG/electric-cars/plug-in-hybrid.html
+https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2025.html
+https://www.bmw.in/en/topics/bmw-insights/magazine/bmw-golf-cup-india-series.html
+http://www.bmwautoexpo.in
+http://www.bmwmygolfcup.com/default.html
+https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Models_Dropdown&utm_content=Access_by_BMW
+https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html
+https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-X1.html
+http://www.bmw-experiencetour.in
+https://acscat.bmw.com/internet_bmw/COM/en/entry.jsp
+https://shop.bmw.com.my
+http://www.malaysia.bmw.com.my/drivertraining
+https://master-prod2.bmwgroup.net/en/footer/publications-links/bmw-websites.html
+https://master-prod2.bmwgroup.net/en/footer/companies-business-customers/bmw-market/about-us.html
+https://master-prod2.bmwgroup.net/en/footer/publications-links/newsletter.html
+https://mybmw.bmw.co.id/cars/series
+https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Financial_Services_Overview&utm_content=Subscription
+https://www.bmw.in/en/all-models/x-series/x3/2025/bmw-x3.html
+
+# Trigger ID: 1770639164711
