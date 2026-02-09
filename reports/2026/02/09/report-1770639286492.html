@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Report 2/9/2026, 12:14:46 PM</title>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <style>
+        :root { --bg-color: #f4f6f9; --card-bg: #fff; --text-color: #333; --border-color: #dee2e6; --header-bg: #f8f9fa; --shadow-color: rgba(0,0,0,0.1); --link-color: #007bff; }
+        body.dark-mode { --bg-color: #1a202c; --card-bg: #2d3748; --text-color: #e2e8f0; --border-color: #4a5568; --header-bg: #2d3748; --shadow-color: rgba(0,0,0,0.5); --link-color: #63b3ed; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 10px; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s; font-size: 14px; }
+        .container { max-width: 100%; margin: auto; background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow-color); margin-top: 50px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border-color); }
+        h1 { font-size: 1.2rem; margin: 0; font-weight: 600; } 
+        .header-controls { display: flex; align-items: center; gap: 10px; }
+        #export-btn { background-color: #28a745; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
+        button#theme-toggle { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; display: flex; align-items: center; }
+        table { width: 100% !important; border-collapse: collapse; }
+        th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .url-cell { display: flex; align-items: center; }
+        .url-cell i.feather { margin-right: 8px; flex-shrink: 0; width: 14px; height: 14px; }
+        td a { color: var(--link-color); text-decoration: none; font-size: 0.9em; word-break: break-all; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; color: white; font-weight: bold; font-size: 11px; }
+        .status-badge.success { background-color: #28a745; }
+        .status-badge.redirect { background-color: #ffc107; color: #333; }
+        .status-badge.error { background-color: #dc3545; }
+        .status-badge.small { padding: 1px 5px; font-size: 10px; margin-right: 3px; }
+        .dataTables_wrapper .dataTables_length select, .dataTables_wrapper .dataTables_filter input { background-color: var(--card-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 2px; font-size: 12px; }
+        .details-btn { background: none; border: none; cursor: pointer; color: var(--text-color); padding: 2px; }
+        body.dark-mode .swal2-popup { background-color: #2d3748; color: #e2e8f0; }
+        body.dark-mode .swal2-title, body.dark-mode .swal2-content { color: #e2e8f0; }
+        .modal-table { width: 100%; margin-top: 5px; border-collapse: collapse; font-size: 12px; color: inherit; }
+        .modal-table th { background: var(--header-bg); border-bottom: 1px solid var(--border-color); text-align: left; padding: 6px; }
+        .modal-table td { border-bottom: 1px solid var(--border-color); padding: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Analysis Report</h1>
+            <div class="header-controls">
+                <button id="export-btn"><i data-feather="file-text" style="width:12px; height:12px;"></i> Export</button>
+                <button id="theme-toggle" title="Toggle dark mode"><i data-feather="moon" style="width:14px; height:14px;"></i></button>
+            </div>
+        </div>
+        <table id="analysisTable">
+            <thead><tr><th>Source URL</th><th>Target URL</th><th>Status</th><th>Chain</th><th>Details</th></tr></thead>
+            <tbody>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.com.my/en/shop/ls/cart" target="_blank">https://www.bmw.com.my/en/shop/ls/cart</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.com.my/en/shop/ls/cart/digital-services" target="_blank">https://www.bmw.com.my/en/shop/ls/cart/digital-services</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 307 (Akamai (Tunnel)) &#013; Hop 2: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">307</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="0"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/X3/2018/at-a-glance.html" target="_blank">https://www.bmw.in/en/all-models/x-series/X3/2018/at-a-glance.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html" target="_blank">https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 301 (Akamai (Tunnel)) &#013; Hop 3: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="1"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-x1-overview.html#technical-data" target="_blank">https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-x1-overview.html#technical-data</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html#technical-data" target="_blank">https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html#technical-data</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="2"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.com.sg/en_SG/electric-cars/plug-in-hybrid.html" target="_blank">https://www.bmw.com.sg/en_SG/electric-cars/plug-in-hybrid.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.com.sg/en/index.html" target="_blank">https://www.bmw.com.sg/en/index.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="3"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2025.html" target="_blank">https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2025.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2026.html" target="_blank">https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2026.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="4"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/topics/bmw-insights/magazine/bmw-golf-cup-india-series.html" target="_blank">https://www.bmw.in/en/topics/bmw-insights/magazine/bmw-golf-cup-india-series.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/topics/Fascination-BMW/magazine/bmw-golf-cup-tournament-series.html" target="_blank">https://www.bmw.in/en/topics/Fascination-BMW/magazine/bmw-golf-cup-tournament-series.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="5"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="http://www.bmwautoexpo.in" target="_blank">http://www.bmwautoexpo.in</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="6"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="http://www.bmwmygolfcup.com/default.html" target="_blank">http://www.bmwmygolfcup.com/default.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="7"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Models_Dropdown&utm_content=Access_by_BMW" target="_blank">https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Models_Dropdown&utm_content=Access_by_BMW</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="8"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html" target="_blank">https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html" target="_blank">https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html</a></div></td>
+                <td><span class="status-badge error">301</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 301 (Akamai (Tunnel)) &#013; Hop 3: 301 (Akamai (Tunnel)) &#013; Hop 4: 301 (Akamai (Tunnel)) &#013; Hop 5: 301 (Akamai (Tunnel)) &#013; Hop 6: 301 (Akamai (Tunnel)) &#013; Hop 7: 301 (Akamai (Tunnel)) &#013; Hop 8: 301 (Akamai (Tunnel)) &#013; Hop 9: 301 (Akamai (Tunnel)) &#013; Hop 10: 301 (Akamai (Tunnel)) &#013; Hop 11: 301 (Akamai (Tunnel)) &#013; Hop 12: 301 (Akamai (Tunnel)) &#013; Hop 13: 301 (Akamai (Tunnel)) &#013; Hop 14: 301 (Akamai (Tunnel)) &#013; Hop 15: 301 (Akamai (Tunnel)) &#013; Hop 16: 301 (Akamai (Tunnel)) &#013; Hop 17: 301 (Akamai (Tunnel)) &#013; Hop 18: 301 (Akamai (Tunnel)) &#013; Hop 19: 301 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span><span class="status-badge small redirect">301</span></td>
+                <td><button class="details-btn" data-index="9"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-X1.html" target="_blank">https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-X1.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html" target="_blank">https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="10"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="http://www.bmw-experiencetour.in" target="_blank">http://www.bmw-experiencetour.in</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="11"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://acscat.bmw.com/internet_bmw/COM/en/entry.jsp" target="_blank">https://acscat.bmw.com/internet_bmw/COM/en/entry.jsp</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="12"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://shop.bmw.com.my" target="_blank">https://shop.bmw.com.my</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="13"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="http://www.malaysia.bmw.com.my/drivertraining" target="_blank">http://www.malaysia.bmw.com.my/drivertraining</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="14"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://master-prod2.bmwgroup.net/en/footer/publications-links/bmw-websites.html" target="_blank">https://master-prod2.bmwgroup.net/en/footer/publications-links/bmw-websites.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="15"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://master-prod2.bmwgroup.net/en/footer/companies-business-customers/bmw-market/about-us.html" target="_blank">https://master-prod2.bmwgroup.net/en/footer/companies-business-customers/bmw-market/about-us.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="16"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://master-prod2.bmwgroup.net/en/footer/publications-links/newsletter.html" target="_blank">https://master-prod2.bmwgroup.net/en/footer/publications-links/newsletter.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="17"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://mybmw.bmw.co.id/cars/series" target="_blank">https://mybmw.bmw.co.id/cars/series</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="18"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="server" style="color: #6c757d;" title="Unknown Server"></i> <a href="https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Financial_Services_Overview&utm_content=Subscription" target="_blank">https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Financial_Services_Overview&utm_content=Subscription</a></div></td>
+                <td><div class="url-cell"><i data-feather="alert-triangle" style="color: #dc3545;" title="Error"></i> <a href="N/A" target="_blank">N/A</a></div></td>
+                <td><span class="status-badge error">ERR</span></td>
+                <td class="chain-cell" title="">N/A</td>
+                <td><button class="details-btn" data-index="19"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr>
+            <tr>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/x3/2025/bmw-x3.html" target="_blank">https://www.bmw.in/en/all-models/x-series/x3/2025/bmw-x3.html</a></div></td>
+                <td><div class="url-cell"><i data-feather="cloud-lightning" style="color: #6610f2;" title="Akamai Tunnel"></i> <a href="https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html" target="_blank">https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html</a></div></td>
+                <td><span class="status-badge success">200</span></td>
+                <td class="chain-cell" title="Hop 1: 301 (Akamai (Tunnel)) &#013; Hop 2: 200 (Akamai (Tunnel))"><span class="status-badge small redirect">301</span><span class="status-badge small success">200</span></td>
+                <td><button class="details-btn" data-index="20"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
+            </tr></tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resultsData = [{"originalURL":"https://www.bmw.com.my/en/shop/ls/cart","finalURL":"https://www.bmw.com.my/en/shop/ls/cart/digital-services","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/shop/ls/cart","status":307,"server":"Akamai (Tunnel)","timestamp":0.876},{"url":"https://www.bmw.com.my/en/shop/ls/cart/digital-services","status":200,"server":"Akamai (Tunnel)","timestamp":1.956}],"totalTime":2.189},{"originalURL":"https://www.bmw.in/en/all-models/x-series/X3/2018/at-a-glance.html","finalURL":"https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.in/en/all-models/x-series/X3/2018/at-a-glance.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.303},{"url":"https://www.bmw.in/en/all-models/x-series/x3/2025/bmw-x3.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.312},{"url":"https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html","status":200,"server":"Akamai (Tunnel)","timestamp":0.47}],"totalTime":1.023},{"originalURL":"https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-x1-overview.html#technical-data","finalURL":"https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html#technical-data","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-x1-overview.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.302},{"url":"https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html","status":200,"server":"Akamai (Tunnel)","timestamp":0.425}],"totalTime":0.822},{"originalURL":"https://www.bmw.com.sg/en_SG/electric-cars/plug-in-hybrid.html","finalURL":"https://www.bmw.com.sg/en/index.html","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.sg/en_SG/electric-cars/plug-in-hybrid.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.776},{"url":"https://www.bmw.com.sg/en/index.html","status":200,"server":"Akamai (Tunnel)","timestamp":1.249}],"totalTime":1.543},{"originalURL":"https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2025.html","finalURL":"https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2026.html","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2025.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.45},{"url":"https://www.bmw.com.my/en/more-bmw/bmw-exclusive-offers/drive-ahead-with-joy-2026.html","status":200,"server":"Akamai (Tunnel)","timestamp":0.719}],"totalTime":1.021},{"originalURL":"https://www.bmw.in/en/topics/bmw-insights/magazine/bmw-golf-cup-india-series.html","finalURL":"https://www.bmw.in/en/topics/Fascination-BMW/magazine/bmw-golf-cup-tournament-series.html","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.in/en/topics/bmw-insights/magazine/bmw-golf-cup-india-series.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.246},{"url":"https://www.bmw.in/en/topics/Fascination-BMW/magazine/bmw-golf-cup-tournament-series.html","status":200,"server":"Akamai (Tunnel)","timestamp":0.441}],"totalTime":0.687},{"originalURL":"http://www.bmwautoexpo.in","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.124,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at http://www.bmwautoexpo.in/\nCall log:\n  - navigating to \"http://www.bmwautoexpo.in/\", waiting until \"domcontentloaded\"\n"},{"originalURL":"http://www.bmwmygolfcup.com/default.html","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.097,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at http://www.bmwmygolfcup.com/default.html\nCall log:\n  - navigating to \"http://www.bmwmygolfcup.com/default.html\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Models_Dropdown&utm_content=Access_by_BMW","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":45.088,"error":"Timeout"},{"originalURL":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","finalURL":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":301,"redirectChain":[{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.122},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.124},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.133},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.134},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.134},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.134},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.135},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.142},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.149},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.149},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.154},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.154},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.157},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.158},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.158},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.158},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.158},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.158},{"url":"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.159}],"totalTime":0.157,"error":"page.goto: net::ERR_TOO_MANY_REDIRECTS at https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html\nCall log:\n  - navigating to \"https://www.bmw.in/en_IN/fastlane/bmw-financial-services-new/faqs.html\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-X1.html","finalURL":"https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.in/en/all-models/x-series/X1/2022/bmw-X1.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.914},{"url":"https://www.bmw.in/en/all-models/x-series/X1/bmw-x1-overview.html","status":200,"server":"Akamai (Tunnel)","timestamp":1.544}],"totalTime":2.073},{"originalURL":"http://www.bmw-experiencetour.in","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.13,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at http://www.bmw-experiencetour.in/\nCall log:\n  - navigating to \"http://www.bmw-experiencetour.in/\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://acscat.bmw.com/internet_bmw/COM/en/entry.jsp","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.284,"error":"page.goto: net::ERR_CONNECTION_REFUSED at https://acscat.bmw.com/internet_bmw/COM/en/entry.jsp\nCall log:\n  - navigating to \"https://acscat.bmw.com/internet_bmw/COM/en/entry.jsp\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://shop.bmw.com.my","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.391,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at https://shop.bmw.com.my/\nCall log:\n  - navigating to \"https://shop.bmw.com.my/\", waiting until \"domcontentloaded\"\n"},{"originalURL":"http://www.malaysia.bmw.com.my/drivertraining","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.237,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at http://www.malaysia.bmw.com.my/drivertraining\nCall log:\n  - navigating to \"http://www.malaysia.bmw.com.my/drivertraining\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://master-prod2.bmwgroup.net/en/footer/publications-links/bmw-websites.html","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.096,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at https://master-prod2.bmwgroup.net/en/footer/publications-links/bmw-websites.html\nCall log:\n  - navigating to \"https://master-prod2.bmwgroup.net/en/footer/publications-links/bmw-websites.html\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://master-prod2.bmwgroup.net/en/footer/companies-business-customers/bmw-market/about-us.html","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.134,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at https://master-prod2.bmwgroup.net/en/footer/companies-business-customers/bmw-market/about-us.html\nCall log:\n  - navigating to \"https://master-prod2.bmwgroup.net/en/footer/companies-business-customers/bmw-market/about-us.html\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://master-prod2.bmwgroup.net/en/footer/publications-links/newsletter.html","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.137,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at https://master-prod2.bmwgroup.net/en/footer/publications-links/newsletter.html\nCall log:\n  - navigating to \"https://master-prod2.bmwgroup.net/en/footer/publications-links/newsletter.html\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://mybmw.bmw.co.id/cars/series","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":0.15,"error":"page.goto: net::ERR_NAME_NOT_RESOLVED at https://mybmw.bmw.co.id/cars/series\nCall log:\n  - navigating to \"https://mybmw.bmw.co.id/cars/series\", waiting until \"domcontentloaded\"\n"},{"originalURL":"https://accessbybmw.com.sg/#/subscriptions/home?utm_source=NSC-SG&utm_medium=Referral&utm_campaign=Financial_Services_Overview&utm_content=Subscription","finalURL":"N/A","sourceServer":null,"targetServer":null,"finalStatus":null,"redirectChain":[],"totalTime":45.072,"error":"Timeout"},{"originalURL":"https://www.bmw.in/en/all-models/x-series/x3/2025/bmw-x3.html","finalURL":"https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html","sourceServer":"Akamai (Tunnel)","targetServer":"Akamai (Tunnel)","finalStatus":200,"redirectChain":[{"url":"https://www.bmw.in/en/all-models/x-series/x3/2025/bmw-x3.html","status":301,"server":"Akamai (Tunnel)","timestamp":0.234},{"url":"https://www.bmw.in/en/all-models/x-series/x3/bmw-x3.html","status":200,"server":"Akamai (Tunnel)","timestamp":0.667}],"totalTime":1.03}];
+            const body = document.body;
+            const toggleBtn = document.getElementById('theme-toggle');
+            
+            let parentIsDark = false;
+            try { if (window.self !== window.top) parentIsDark = window.parent.document.documentElement.classList.contains('dark'); } catch(e) { }
+            const storedTheme = localStorage.getItem('theme');
+            if (storedTheme === 'dark' || (!storedTheme && parentIsDark)) {
+                body.classList.add('dark-mode');
+                toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>';
+            }
+
+            window.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'theme-change') {
+                    const isDark = event.data.theme === 'dark';
+                    if (isDark) { body.classList.add('dark-mode'); toggleBtn.innerHTML = '<i data-feather="sun" style="width:14px; height:14px;"></i>'; } 
+                    else { body.classList.remove('dark-mode'); toggleBtn.innerHTML = '<i data-feather="moon" style="width:14px; height:14px;"></i>'; }
+                    localStorage.setItem('theme', event.data.theme);
+                    feather.replace();
+                }
+            });
+
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                const isDark = body.classList.contains('dark-mode');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                toggleBtn.innerHTML = isDark ? '<i data-feather="sun" style="width:14px; height:14px;"></i>' : '<i data-feather="moon" style="width:14px; height:14px;"></i>';
+                feather.replace();
+            });
+
+            new DataTable('#analysisTable', { layout: { topStart: 'pageLength', topEnd: 'search', bottomStart: 'info', bottomEnd: 'paging' }, "drawCallback": () => feather.replace() });
+
+            document.getElementById('export-btn').addEventListener('click', () => {
+                try {
+                    const flatData = resultsData.map(r => {
+                        const row = {
+                            'Original URL': r.originalURL,
+                            'Final URL': r.finalURL,
+                            'Hop Count': r.redirectChain.length,
+                            'Final Target Status': r.finalStatus,
+                            'Total Time (s)': r.totalTime.toFixed(2),
+                            'Error': r.error || ''
+                        };
+                        r.redirectChain.forEach((hop, i) => {
+                            const prefix = `Hop ${i + 1}`;
+                            row[`${prefix} URL`] = hop.url;
+                            row[`${prefix} Status`] = hop.status;
+                            row[`${prefix} Server`] = hop.server;
+                        });
+                        return row;
+                    });
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(flatData);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Redirect Report');
+                    XLSX.writeFile(wb, 'Redirect_Analysis.xlsx');
+                } catch (err) {
+                    console.error(err);
+                    Swal.fire('Export Error', 'Failed to generate Excel file.', 'error');
+                }
+            });
+
+            document.querySelector('tbody').addEventListener('click', (e) => {
+                const btn = e.target.closest('.details-btn');
+                if (!btn) return;
+                const idx = btn.dataset.index;
+                const data = resultsData[idx];
+                const chainHtml = data.redirectChain.map((h, i) => 
+                    `<tr><td>${i+1}</td><td>${h.url}</td><td>${h.status}</td><td>${h.server}</td></tr>`
+                ).join('');
+                Swal.fire({
+                    title: 'Redirect Chain', width: '600px',
+                    html: `<p style="word-break:break-all;font-size:12px"><strong>Start:</strong> ${data.originalURL}</p><table class="modal-table"><thead><tr><th>#</th><th>URL</th><th>St</th><th>Srv</th></tr></thead><tbody>${chainHtml}</tbody></table>`
+                });
+            });
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
