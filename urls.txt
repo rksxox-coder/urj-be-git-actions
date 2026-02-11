@@ -1,15 +1,16 @@
-http://www.bmwmygolfcup.com/default.html
-http://www.bmw.com/bmwstories/in/en/index.html
-https://bmwindia.co.in/corporate/offers
-http://www.bmw-experiencetour.in
-http://www.bmwgroup.com/com/en/responsibility/index.html
-https://acscat.bmw.com/internet_bmw/COM/en/entry.jsp
-http://www.bmw.com/bmwstories/my/en
-https://getquote.allianz.com.my/motor-online/get-info?utm_source=BMWCRE
-https://master-prod2.bmwgroup.net/en/footer/publications-links/bmw-websites.html
-https://master-prod2.bmwgroup.net/en/footer/companies-business-customers/bmw-market/about-us.html
-https://master-prod2.bmwgroup.net/en/footer/publications-links/newsletter.html
-https://mybmw.bmw-asia.com
-https://www.pml.com.sg/latestoffers
+https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019/bmw-x6-m-automobiles-technical-data.html
+https://www.bmwhk.com/zh/all-models/m-series/x6-m.html
+https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019/bmw-x6-m-automobiles-highlights.html
+https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019.html
+https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019/bmw-x6-m-automobiles-models-equipment.html
+https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019/bmw-x6-m-technical-data.html
+https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m.html
+https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019/bmw-x6-m-inspire.html
+https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019.html
+https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019/bmw-x6-m-inform.html
+https://www.bmwhk.com/zh/all-models/m-series/xm.html
+https://www.bmwhk.com/zh/all-models/m-series/xm/2022/bmw-xm-technical-data.html
+https://www.bmwhk.com/zh/all-models/m-series/xm/2022/bmw-xm-overview.html
+https://www.bmwhk.com/zh/all-models/m-series/xm/2022.html
 
-# Trigger ID: 1770645319658
+# Trigger ID: 1770820653906
