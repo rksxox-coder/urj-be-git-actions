@@ -1,16 +1,2 @@
-https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019/bmw-x6-m-automobiles-technical-data.html
-https://www.bmwhk.com/zh/all-models/m-series/x6-m.html
-https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019/bmw-x6-m-automobiles-highlights.html
-https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019.html
-https://www.bmwhk.com/zh/all-models/m-series/x6-m/2019/bmw-x6-m-automobiles-models-equipment.html
-https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019/bmw-x6-m-technical-data.html
-https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m.html
-https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019/bmw-x6-m-inspire.html
-https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019.html
-https://www.bmwhk.com/zh_HK/all-models/m-series/x6-m/2019/bmw-x6-m-inform.html
-https://www.bmwhk.com/zh/all-models/m-series/xm.html
-https://www.bmwhk.com/zh/all-models/m-series/xm/2022/bmw-xm-technical-data.html
-https://www.bmwhk.com/zh/all-models/m-series/xm/2022/bmw-xm-overview.html
-https://www.bmwhk.com/zh/all-models/m-series/xm/2022.html
-
-# Trigger ID: 1770820653906
+https://www.bmw.lu/de/all-models/2-series/grantourer/2020/bmw-2-series-gran-tourer-highlights.html
+# Trigger ID: 1770874825815
