@@ -1,10 +1,5 @@
-https://www.bmw.no/no_NO/topics/services/digital-services/bmw-proactive-care-----bmw-no.html
-https://www.bmw.no/no/topics/tjenester/service/bmw-garanti.html
-https://www.bmw.no/no_NO/footer/contact/contact.html
-https://www.bmw.no/no/topics/offers-and-services/bmw-tilbehor.html
-https://www.bmw.no/no/publicPools/search-results/search-results.html
-https://www.bmw.no/no/footer/kjop/kataloger.html
-https://www.bmw.no/no/topics/tjenester/tilbehor/bmw-hoest-vinter-tillbehoer.html
-https://www.bmw.no/no/electromobility/bmw-phev.html
-
-# Trigger ID: 1772551260814
+https://www.bmw.co.za/en/all-models/x-series/X4/showroom/bmw-X4-highlights.html
+https://www.bmw.co.za/en/all-models/m-series/xm/showroom/bmw-xm-overview.html
+https://www.bmw.co.za/en/all-models/3-series/sedan/2022/bmw-3-series-sedan-overview.html
+https://www.bmw.co.za/en/all-models/m-series/m8-coupe/showroom/bmw-m8-coupe-overview.html
+# Trigger ID: 1772628855400
