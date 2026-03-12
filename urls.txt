@@ -1,17 +1,6 @@
-https://www.bmw.ca/en/topics/offers-and-services/financial-services/bmw-leasing.html
-https://www.bmw.ca/en_CA/topics/offers-and-services/financial-services-2020/bmw-leasing.html
-https://www.bmw.ca/fr/topics/offers-and-services/financial-services/bmw-leasing.html
-https://www.bmw.ca/fr_CA/topics/offers-and-services/bmw-financial-services/bmw-leasing.html
-https://www.bmw.ca/en/topics/offers-and-services/financial-services/bmw-loan.html
-https://www.bmw.ca/en_CA/topics/offers-and-services/financial-services-2020/bmw-loan.html
-https://www.bmw.ca/fr/topics/offers-and-services/financial-services/bmw-loan.html
-https://www.bmw.ca/fr_CA/topics/offers-and-services/bmw-financial-services/bmw-loan.html
-https://www.bmw.ca/en/topics/owners/financial-services/theroadahead.html
-https://www.bmw.ca/en/topics/owners/financial-services/theroadahead/evaluator.html
-https://www.bmw.ca/en/topics/owners/financial-services/theroadahead/excess-wear.html
-https://www.bmw.ca/en/topics/owners/financial-services/theroadahead/standard-wear.html
-https://www.bmw.ca/en/topics/owners/financial-services/theroadahead/new-lineup.html
-https://www.bmw.ca/fr/topics/owners/financial-services/theroadahead.html
-https://www.bmw.ca/fr/topics/owners/financial-services/theroadahead/evaluator.html
+https://www.bmw.co.za/en/topics/fascination-bmw/bmw-design/bmw-vision-m-next.html
+https://www.bmw.co.za/en_ZA/topics/fascination-bmw/bmw-design/bmw-vision-m-next.html
+https://www.bmw.co.za/en/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
+https://www.bmw.co.za/en_ZA/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
 
-# Trigger ID: 1772714685413
+# Trigger ID: 1773303654952
