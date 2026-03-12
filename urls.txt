@@ -1,6 +1,4 @@
-https://www.bmw.co.za/en/topics/fascination-bmw/bmw-design/bmw-vision-m-next.html
-https://www.bmw.co.za/en_ZA/topics/fascination-bmw/bmw-design/bmw-vision-m-next.html
-https://www.bmw.co.za/en/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
-https://www.bmw.co.za/en_ZA/topics/fascination-bmw/bmw-concept-vehicle/bmw-vision-ivisiondee-2023.html
-
-# Trigger ID: 1773303654952
+https://www.bmw.co.za/en/all-models/x-series/X4/showroom/bmw-X4-highlights.html
+https://www.bmw.co.za/en/all-models/m-series/xm/showroom/bmw-xm-overview.html
+https://www.bmw.co.za/en/all-models/3-series/sedan/2022/bmw-3-series-sedan-overview.html
+# Trigger ID: 1773304602378
