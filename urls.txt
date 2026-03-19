@@ -1,2 +1,3 @@
-https://www.bmw.lu/de/topics/offers-and-services/assistance/bmw-road-assist.html
-# Trigger ID: 1773407824983
+https://www.bmw.co.za/en/more-bmw/neue-klasse.html
+https://www.bmw.co.za/en_ZA/more-bmw/neue-klasse-family.html
+# Trigger ID: 1773904982992
