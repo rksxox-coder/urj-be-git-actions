@@ -1,3 +1,4 @@
-https://www.bmw.co.za/en/more-bmw/neue-klasse.html
-https://www.bmw.co.za/en_ZA/more-bmw/neue-klasse-family.html
-# Trigger ID: 1773907656620
+https://www.bmw.fi/fi/more-bmw/neue-klasse-family.html
+https://www.bmw.fi/fi_FI/more-bmw/neue-klasse-family.html
+https://www.bmw.fi/neue-klasse-hub
+# Trigger ID: 1774247935954
