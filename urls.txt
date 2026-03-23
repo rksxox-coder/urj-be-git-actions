@@ -1,2 +1,5 @@
-	https://www.bmw.ro/service4+
-# Trigger ID: 1774279164599
+https://www.bmw.fi/fi/more-bmw/neue-klasse-family.html
+https://www.bmw.fi/fi_FI/more-bmw/neue-klasse-family.html
+https://www.bmw.fi/neue-klasse-hub
+
+# Trigger ID: 1774279429169
