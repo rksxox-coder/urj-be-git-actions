@@ -1,7 +1,2 @@
-https://www.bmw.se/sv/alla-modeller/m-serie/z4-m40i/bmw-z4-m40i-roadster.html
-https://www.bmw.se/sv/alla-modeller/m-serie/z4-m40i/bmw-z4-m40i-teknisk-data.html
-https://www.bmw.se/sv_SE/all-models/m-series/z4-m40i/bmw-z4-m40i-roadster-2025-g29.html
-https://www.bmw.se/sv_SE/all-models/m-series/z4-m40i/bmw-z4-m40i-2025-g29-technical-data.html
-https://www.bmw.se/sv/alla-modeller/m-serie/z4-m40i.html
-https://www.bmw.se/sv_SE/all-models/m-series/z4-m40i.html
-# Trigger ID: 1774352014371
+https://www.bmw.lu/de/more-bmw/neue-klasse.html
+# Trigger ID: 1774441822697
