@@ -1,8 +1,5 @@
-https://www.bmw.ca/en/more-bmw/neue-klasse.html
-https://www.bmw.ca/en_CA/more-bmw/neue-klasse-family.html
-https://www.bmw.ca/fr/plus-de-bmw/neue-klasse.html
-https://www.bmw.ca/fr_CA/more-bmw/neue-klasse-family.html
+
 https://www.bmw.ca/en/bmw-insurances.html
 https://www.bmw.ca/fr/bmw-assurance.html
 https://www.bmw.ca/en_CA/all-models/bmw-i/i5/2023/bmw-i5-series-sedan-landingpage.html
-# Trigger ID: 1774594103210
+# Trigger ID: 1774594267558
