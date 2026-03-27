@@ -1,3 +1,8 @@
+https://www.bmw.ca/en/more-bmw/neue-klasse.html
+https://www.bmw.ca/en_CA/more-bmw/neue-klasse-family.html
+https://www.bmw.ca/fr/plus-de-bmw/neue-klasse.html
+https://www.bmw.ca/fr_CA/more-bmw/neue-klasse-family.html
 https://www.bmw.ca/en/bmw-insurances.html
+https://www.bmw.ca/fr/bmw-assurance.html
 
-# Trigger ID: 1774447714706
+# Trigger ID: 1774593981222
