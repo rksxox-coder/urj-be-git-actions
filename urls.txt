@@ -1,3 +1,2 @@
-https://www.bmw.nl/nl/electric-cars/bmw-wallbox-gen-2.html
-
-# Trigger ID: 1775299701278
+[{"ruleName":"LV31032026_001","matchURL":"https://www.bmw.lv/lv/all-models/z-series/z4-roadster/bmw-z4-roadster.html","result.redirectURL":"https://www.bmw.lv/lv/all-models.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"LV31032026_002","matchURL":"https://www.bmw.lv/lv/all-models/mparskats/z4-m40i/bmw-z4-roadster.html","result.redirectURL":"https://www.bmw.lv/lv/all-models.html","result.statusCode":301,"Check Status":"✅ OK"}]
+# Trigger ID: 1775311883311
