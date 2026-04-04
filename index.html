@@ -314,14 +314,19 @@
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
                     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const json = XLSX.utils.sheet_to_json(worksheet);
+
+                    const rawJson = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    const json = rawJson.filter(row => {
+                        return row.matchURL && row.matchURL.toString().trim() !== '';
+                    });
 
                     // Check User Limit
                     if(json.length > USER_LIMIT) {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Limit Exceeded',
-                            text: `Your file has ${json.length} rules. Your current limit is ${USER_LIMIT}.`,
+                            text: `Your file has ${json.length} valid rules. Your current limit is ${USER_LIMIT}.`,
                             background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#fff',
                             color: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333'
                         });
@@ -330,7 +335,6 @@
                     }
 
                     parsedValidationData = json;
-                    
                     // Lock the UI into "Validation Mode"
                     urlInput.disabled = true;
                     urlInput.value = `📊 [FILE UPLOADED: ${file.name}]\n\nLoaded ${json.length} validation rules.\n\nRequired columns detected.\nClick 'Start Analysis' to begin Validation Mode.\n\n(Refresh page to switch back to text input)`;
