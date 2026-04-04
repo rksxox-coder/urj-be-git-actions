@@ -377,11 +377,7 @@ runBtn.addEventListener('click', async () => {
             // Note: Depending on your serverless function, you may need to pass the mode.
             // If your API just takes a string, we pass the JSON stringified text.
             const resp = await callApi('upload', payloadContent);
-            
-            log("Authenticating & Uploading...");
-            
-            const resp = await callApi('upload', urls);
-            
+    
             if(resp.error) {
                 log(resp.error, 'error');
                 alert(resp.error);
