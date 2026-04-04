@@ -64,7 +64,8 @@ exports.handler = async (event, context) => {
 // --- HELPER FUNCTIONS ---
 
 async function uploadToGitHub(content) {
-    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/urls.txt`;
+    // Cache buster included in the URL
+    const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/urls.txt?t=${Date.now()}`;
     
     // 1. Get SHA
     let sha = null;
@@ -74,7 +75,10 @@ async function uploadToGitHub(content) {
             const data = await getResp.json();
             sha = data.sha;
         }
-    } catch (e) {}
+    } catch (e) {
+        // This catch block was likely missing!
+        console.error("Failed to fetch SHA:", e);
+    }
 
     // 2. FORCE UNIQUE CONTENT
     const uniqueContent = content + `\n# Trigger ID: ${Date.now()}`;
@@ -82,7 +86,7 @@ async function uploadToGitHub(content) {
     const body = {
         message: "Trigger Scan via Netlify",
         content: Buffer.from(uniqueContent).toString('base64'),
-        branch: "main", // <--- FIXED: Changed 'master' to 'main'
+        branch: "main", 
         sha: sha 
     };
 
