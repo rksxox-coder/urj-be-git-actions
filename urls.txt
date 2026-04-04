@@ -1,5 +1,3 @@
-
-https://www.bmw.ca/en/bmw-insurances.html
-https://www.bmw.ca/fr/bmw-assurance.html
-https://www.bmw.ca/en_CA/all-models/bmw-i/i5/2023/bmw-i5-series-sedan-landingpage.html
-# Trigger ID: 1774594267558
+bmw.de
+https://www.bmw.de
+# Trigger ID: 1775294277182
