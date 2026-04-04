@@ -180,11 +180,9 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string, expected?: 
         // --- NEW VALIDATION LOGIC ---
         let isMatch = undefined;
         if (expected && expected.expectedTarget) {
-            const actualClean = page.url().replace(/\/$/, "");
-            const expectedClean = expected.expectedTarget.replace(/\/$/, "");
-            const targetMatches = actualClean === expectedClean;
-            const statusMatches = expected.expectedStatus ? (finalHop?.status === expected.expectedStatus) : true;
-            isMatch = targetMatches && statusMatches;
+            const actualClean = page.url().trim().toLowerCase().replace(/\/$/, "").replace(/^https?:\/\//, "");
+            const expectedClean = expected.expectedTarget.trim().toLowerCase().replace(/\/$/, "").replace(/^https?:\/\//, "");
+            isMatch = actualClean === expectedClean;
         }
 
         return {
