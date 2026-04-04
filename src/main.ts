@@ -20,6 +20,12 @@ interface Hop {
     timestamp: number;
 }
 
+interface ExpectedRedirect {
+    ruleName?: string;
+    expectedTarget?: string;
+    expectedStatus?: number;
+}
+
 interface AnalysisResult {
     originalURL: string;
     finalURL: string | null;
@@ -29,6 +35,9 @@ interface AnalysisResult {
     redirectChain: Hop[];
     totalTime: number;
     error?: string;
+    expectedTarget?: string;
+    expectedStatus?: number;
+    isMatch?: boolean;
 }
 
 interface HistoryEntry {
@@ -135,7 +144,8 @@ async function getServerName(headers: Record<string, string>, url: string, statu
 }
 
 // --- CORE ANALYSIS LOGIC ---
-async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<AnalysisResult> {
+// --- CORE ANALYSIS LOGIC ---
+async function fetchUrlWithPlaywright(browser: Browser, url: string, expected?: ExpectedRedirect): Promise<AnalysisResult> {
     let context;
     const startTime = Date.now();
     const redirectChain: Hop[] = [];
@@ -143,7 +153,6 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
         context = await browser.newContext({ 
             userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             extraHTTPHeaders: {
-                // Inject ALL standard Akamai debug headers
                 "Pragma": "akamai-x-cache-on, akamai-x-get-cache-key, akamai-x-get-request-id, akamai-x-get-true-cache-key, akamai-x-check-cacheable, akamai-x-get-extracted-values"
             }
         });
@@ -167,6 +176,17 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
         await page.goto(url, { timeout: 45000, waitUntil: "domcontentloaded" });
         
         const finalHop = redirectChain[redirectChain.length - 1];
+        
+        // --- NEW VALIDATION LOGIC ---
+        let isMatch = undefined;
+        if (expected && expected.expectedTarget) {
+            const actualClean = page.url().replace(/\/$/, "");
+            const expectedClean = expected.expectedTarget.replace(/\/$/, "");
+            const targetMatches = actualClean === expectedClean;
+            const statusMatches = expected.expectedStatus ? (finalHop?.status === expected.expectedStatus) : true;
+            isMatch = targetMatches && statusMatches;
+        }
+
         return {
             originalURL: url, 
             finalURL: page.url(), 
@@ -175,6 +195,9 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
             finalStatus: finalHop?.status || null,
             redirectChain: redirectChain, 
             totalTime: (Date.now() - startTime) / 1000,
+            expectedTarget: expected?.expectedTarget,
+            expectedStatus: expected?.expectedStatus,
+            isMatch: isMatch
         };
     } catch (e) {
         let errorMessage = "Error";
@@ -191,12 +214,17 @@ async function fetchUrlWithPlaywright(browser: Browser, url: string): Promise<An
             redirectChain: redirectChain, 
             totalTime: (Date.now() - startTime) / 1000, 
             error: errorMessage,
+            expectedTarget: expected?.expectedTarget,
+            expectedStatus: expected?.expectedStatus,
+            isMatch: expected ? false : undefined // If expected existed but it failed, it's a mismatch
         };
     } finally {
         if (context) await context.close();
     }
 }
 
+
+// --- HTML REPORT GENERATION ---
 // --- HTML REPORT GENERATION ---
 function generateHtmlReport(results: AnalysisResult[], timestampStr: string): string {
     let tableRows = '';
@@ -212,12 +240,23 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
         
         const chainTooltip = result.redirectChain.map((h, i) => `Hop ${i + 1}: ${h.status} (${h.server})`).join(' &#013; ');
 
+        // --- NEW VALIDATION BADGE LOGIC ---
+        let validationBadge = '<span style="color: #6c757d; font-size: 11px;">Standard</span>';
+        if (result.isMatch === true) {
+            validationBadge = '<span class="status-badge success" style="display:flex; align-items:center; gap:3px;"><i data-feather="check-circle" style="width:12px; height:12px;"></i> Match</span>';
+        } else if (result.isMatch === false) {
+            validationBadge = `<div style="font-size: 11px; color: #dc3545; font-weight: bold; border: 1px solid #dc3545; border-radius: 4px; padding: 2px 4px; background: rgba(220, 53, 69, 0.1);">
+                Mismatch<br><span style="font-size: 9px; font-weight: normal; color: #6c757d;">Expected:<br><a href="${result.expectedTarget}" target="_blank" style="color:#007bff; text-decoration:underline;">${result.expectedTarget}</a></span>
+            </div>`;
+        }
+
         tableRows += `
             <tr>
                 <td><div class="url-cell">${sourceIcon} <a href="${result.originalURL}" target="_blank">${result.originalURL}</a></div></td>
                 <td><div class="url-cell">${targetIcon} <a href="${result.finalURL}" target="_blank">${result.finalURL}</a></div></td>
                 <td>${finalStatusBadge}</td>
                 <td class="chain-cell" title="${chainTooltip}">${chainBadges || 'N/A'}</td>
+                <td>${validationBadge}</td>
                 <td><button class="details-btn" data-index="${index}"><i data-feather="eye" style="width:14px; height:14px;"></i></button></td>
             </tr>`;
     });
@@ -272,7 +311,7 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
             </div>
         </div>
         <table id="analysisTable">
-            <thead><tr><th>Source URL</th><th>Target URL</th><th>Status</th><th>Chain</th><th>Details</th></tr></thead>
+            <thead><tr><th>Source URL</th><th>Target URL</th><th>Status</th><th>Chain</th><th>Validation</th><th>Details</th></tr></thead>
             <tbody>${tableRows}</tbody>
         </table>
     </div>
@@ -363,18 +402,41 @@ function generateHtmlReport(results: AnalysisResult[], timestampStr: string): st
 async function main() {
     console.log("Starting Analysis...");
     
-    let urls: string[] = [];
+    let inputTasks: { url: string, expected?: ExpectedRedirect }[] = [];
     
     try {
         const fileContent = await readFile('urls.txt', 'utf-8');
-        urls = fileContent.split('\n').map(u => u.trim()).filter(u => u && validator.isURL(u));
+        // Strip out the trigger ID appended by Netlify
+        const cleanContent = fileContent.split('\n# Trigger ID:')[0].trim();
+
+        try {
+            // TRY PARSING AS JSON (VALIDATION MODE)
+            const jsonData = JSON.parse(cleanContent);
+            console.log(`Detected Validation Mode: ${jsonData.length} rules.`);
+            
+            inputTasks = jsonData.map((row: any) => ({
+                url: row.matchURL || row['Match URL'],
+                expected: {
+                    ruleName: row.ruleName || 'N/A',
+                    expectedTarget: row['result.redirectURL'] || row.redirectURL || row['Redirect URL'],
+                    expectedStatus: parseInt(row['result.statusCode'] || row.statusCode || row['Status Code'], 10)
+                }
+            })).filter((task: any) => task.url && validator.isURL(task.url));
+
+        } catch (e) {
+            // FALLBACK TO TEXT (STANDARD MODE)
+            console.log("Detected Standard Mode (Plain Text).");
+            const rawUrls = cleanContent.split('\n').map(u => u.trim()).filter(u => u && validator.isURL(u));
+            inputTasks = rawUrls.map(url => ({ url }));
+        }
     } catch (e) {
         console.log("urls.txt not found, checking CLI args...");
         const allArgs = process.argv.slice(2);
-        urls = allArgs.join(' ').split(/\s+/).map(u => u.trim()).filter(u => u && validator.isURL(u));
+        const rawUrls = allArgs.join(' ').split(/\s+/).map(u => u.trim()).filter(u => u && validator.isURL(u));
+        inputTasks = rawUrls.map(url => ({ url }));
     }
 
-    if (urls.length === 0) {
+    if (inputTasks.length === 0) {
         console.error("No valid URLs found.");
         process.exit(1);
     }
@@ -382,19 +444,20 @@ async function main() {
     const browser = await chromium.launch({ headless: true });
     const allResults: AnalysisResult[] = [];
 
-    for (let i = 0; i < urls.length; i += BATCH_SIZE) {
-        const batch = urls.slice(i, i + BATCH_SIZE);
-        const batchPromises = batch.map(url => fetchUrlWithPlaywright(browser, url));
+    for (let i = 0; i < inputTasks.length; i += BATCH_SIZE) {
+        const batch = inputTasks.slice(i, i + BATCH_SIZE);
+        // PASS THE EXPECTED DATA HERE
+        const batchPromises = batch.map(task => fetchUrlWithPlaywright(browser, task.url, task.expected));
         const batchResults = await Promise.all(batchPromises);
         allResults.push(...batchResults);
 
-        if (i + BATCH_SIZE < urls.length) {
+        if (i + BATCH_SIZE < inputTasks.length) {
             await new Promise(resolve => setTimeout(resolve, DELAY_MS));
         }
     }
     await browser.close();
-
-    // 3. Generate Dynamic Path
+    
+// 3. Generate Dynamic Path
     const now = new Date();
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, '0');
