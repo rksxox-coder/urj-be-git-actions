@@ -22,10 +22,25 @@ exports.handler = async (event, context) => {
 
     try {
         if (action === 'upload') {
-            const urls = payload.split('\n').filter(u => u.trim());
-            if (urls.length > user.limit) {
-                return { statusCode: 403, body: JSON.stringify({ error: `Limit Exceeded: ${urls.length}/${user.limit}` }) };
+            let itemCount = 0;
+            
+            // Try parsing as JSON (Validation Mode)
+            try {
+                const parsedPayload = JSON.parse(payload);
+                if (Array.isArray(parsedPayload)) {
+                    itemCount = parsedPayload.length;
+                }
+            } catch (e) {
+                // If JSON.parse fails, it's a standard text list (Standard Mode)
+                itemCount = payload.split('\n').filter(u => u.trim()).length;
             }
+
+            if (itemCount > user.limit) {
+                return { statusCode: 403, body: JSON.stringify({ error: `Limit Exceeded: ${itemCount}/${user.limit}` }) };
+            }
+            
+            return await uploadToGitHub(payload);
+        }
             return await uploadToGitHub(payload);
         } 
         else if (action === 'get_latest_run') {
