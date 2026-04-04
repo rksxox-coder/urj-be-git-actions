@@ -480,7 +480,7 @@ async function main() {
         date: new Date().toLocaleString(),
         timestamp: timestamp,
         path: fullPath, 
-        urlCount: urls.length
+        urlCount: inputTasks.length
     };
 
     let history: HistoryEntry[] = [];
