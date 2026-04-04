@@ -21,6 +21,8 @@
             }
         }
     </script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
         .log-window::-webkit-scrollbar { width: 6px; }
@@ -99,11 +101,16 @@
                 <!-- Left Panel: Controls -->
                 <div class="lg:col-span-1 flex flex-col gap-5 px-1 min-w-[300px]">
                     <div class="flex-grow flex flex-col">
-                        <!-- NEW: Live Link Counter -->
-                        <label class="block font-semibold text-sm mb-2 text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                            <span>Enter Redirect URLs</span>
-                            <span id="linkCounter" class="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded transition-all">0 links</span>
-                        </label>
+                        <!-- NEW: Live Link Counter --><div class="flex items-center justify-between mb-2">
+                            <label class="font-semibold text-sm text-slate-700 dark:text-slate-300">Enter URLs or Upload Excel</label>
+                            <div class="flex items-center gap-2">
+                                <label for="excelInput" class="cursor-pointer text-xs font-bold text-slate-700 bg-slate-200 hover:bg-slate-300 dark:text-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 px-2.5 py-1 rounded-md transition-colors flex items-center gap-1 shadow-sm">
+                                    <i data-feather="upload" width="12"></i> .xlsx
+                                </label>
+                                <input type="file" id="excelInput" accept=".xlsx, .xls, .csv" class="hidden">
+                                <span id="linkCounter" class="text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded transition-all">0 links</span>
+                            </div>
+                        </div>
                         <textarea id="urlInput" class="w-full flex-grow p-4 border border-slate-300 dark:border-slate-700 rounded-xl bg-slate-50 dark:bg-slate-950 dark:text-slate-200 font-mono text-sm leading-relaxed focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none shadow-inner placeholder-slate-400 dark:placeholder-slate-600" placeholder="https://www.example.com&#10;https://www.test.com"></textarea>
                     </div>
 
@@ -293,10 +300,70 @@
             }
         }
 
-        runBtn.addEventListener('click', async () => {
-            const urls = document.getElementById('urlInput').value;
-            if(!urls.trim()) return log("No URLs provided", 'error');
-            const urlCount = urls.split('\n').filter(u => u.trim()).length;
+        // --- EXCEL PARSING LOGIC ---
+        let parsedValidationData = null;
+        const USER_LIMIT = 500; // Set your limit here
+
+        document.getElementById('excelInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const json = XLSX.utils.sheet_to_json(worksheet);
+
+                    // Check User Limit
+                    if(json.length > USER_LIMIT) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Limit Exceeded',
+                            text: `Your file has ${json.length} rules. Your current limit is ${USER_LIMIT}.`,
+                            background: document.documentElement.classList.contains('dark') ? '#1e293b' : '#fff',
+                            color: document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#333'
+                        });
+                        document.getElementById('excelInput').value = ""; // Reset file
+                        return;
+                    }
+
+                    parsedValidationData = json;
+                    
+                    // Lock the UI into "Validation Mode"
+                    urlInput.disabled = true;
+                    urlInput.value = `📊 [FILE UPLOADED: ${file.name}]\n\nLoaded ${json.length} validation rules.\n\nRequired columns detected.\nClick 'Start Analysis' to begin Validation Mode.\n\n(Refresh page to switch back to text input)`;
+                    urlInput.classList.add('bg-blue-50/50', 'text-blue-700', 'dark:bg-blue-900/20', 'dark:text-blue-300');
+                    linkCounter.innerText = `${json.length} rules`;
+                    
+                    log(`Excel parsed: ${json.length} validation rules loaded.`, 'success');
+
+                } catch(err) {
+                    log("Failed to parse Excel file", 'error');
+                    Swal.fire('Error', 'Could not read the Excel file. Ensure it is not corrupted.', 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+runBtn.addEventListener('click', async () => {
+            let payloadContent = "";
+            let isValidationMode = false;
+            let urlCount = 0;
+
+            if (parsedValidationData) {
+                // EXCEL MODE
+                payloadContent = JSON.stringify(parsedValidationData);
+                isValidationMode = true;
+                urlCount = parsedValidationData.length;
+                if (urlCount === 0) return log("Excel file contains no data rows", 'error');
+            } else {
+                // TEXT MODE
+                payloadContent = document.getElementById('urlInput').value;
+                if (!payloadContent.trim()) return log("No URLs provided", 'error');
+                urlCount = payloadContent.split('\n').filter(u => u.trim()).length;
+            }
 
             runBtn.disabled = true;
             btnText.innerText = "Uploading...";
@@ -304,6 +371,12 @@
             reportFrame.src = "about:blank";
             reportFrame.classList.add('hidden');
             previewPlaceholder.classList.remove('hidden');
+            
+            log(`Authenticating & Uploading (${isValidationMode ? 'Validation Mode' : 'Standard Mode'})...`);
+            
+            // Note: Depending on your serverless function, you may need to pass the mode.
+            // If your API just takes a string, we pass the JSON stringified text.
+            const resp = await callApi('upload', payloadContent);
             
             log("Authenticating & Uploading...");
             
