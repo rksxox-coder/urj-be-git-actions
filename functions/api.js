@@ -24,14 +24,12 @@ exports.handler = async (event, context) => {
         if (action === 'upload') {
             let itemCount = 0;
             
-            // Try parsing as JSON (Validation Mode)
             try {
                 const parsedPayload = JSON.parse(payload);
                 if (Array.isArray(parsedPayload)) {
                     itemCount = parsedPayload.length;
                 }
             } catch (e) {
-                // If JSON.parse fails, it's a standard text list (Standard Mode)
                 itemCount = payload.split('\n').filter(u => u.trim()).length;
             }
 
@@ -39,8 +37,6 @@ exports.handler = async (event, context) => {
                 return { statusCode: 403, body: JSON.stringify({ error: `Limit Exceeded: ${itemCount}/${user.limit}` }) };
             }
             
-            return await uploadToGitHub(payload);
-        }
             return await uploadToGitHub(payload);
         } 
         else if (action === 'get_latest_run') {
@@ -64,10 +60,8 @@ exports.handler = async (event, context) => {
 // --- HELPER FUNCTIONS ---
 
 async function uploadToGitHub(content) {
-    // Cache buster included in the URL
     const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/urls.txt?t=${Date.now()}`;
     
-    // 1. Get SHA
     let sha = null;
     try {
         const getResp = await fetch(url, { headers: { 'Authorization': `token ${GH_TOKEN}` } });
@@ -76,11 +70,9 @@ async function uploadToGitHub(content) {
             sha = data.sha;
         }
     } catch (e) {
-        // This catch block was likely missing!
         console.error("Failed to fetch SHA:", e);
     }
 
-    // 2. FORCE UNIQUE CONTENT
     const uniqueContent = content + `\n# Trigger ID: ${Date.now()}`;
 
     const body = {
@@ -105,7 +97,7 @@ async function uploadToGitHub(content) {
 }
 
 async function getLatestRun() {
-    const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?event=push&per_page=1`, { 
+    const runsResp = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}/actions/runs?event=push&per_page=1&t=${Date.now()}`, { 
         headers: { 'Authorization': `token ${GH_TOKEN}` } 
     });
     
