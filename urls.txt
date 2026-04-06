@@ -1,2 +1,2 @@
-https://www.bmw.lu/de/all-models/2-series/grantourer/2020/bmw-2-series-gran-tourer-highlights.html
-# Trigger ID: 1775456395741
+[{"ruleName":"MU26032026_001","matchURL":"https://www.bmw.mu/en_MU/more-bmw/neue-klasse-family.html","result.redirectURL":"https://www.bmw.mu/en/all-models/3-series/sedan/bmw-i3-sedan.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"MU26032026_002","matchURL":"https://www.bmw.mu/en/more-bmw/neue-klasse.html","result.redirectURL":"https://www.bmw.mu/en/all-models/3-series/sedan/bmw-i3-sedan.html","result.statusCode":301,"Check Status":"✅ OK"}]
+# Trigger ID: 1775462056795
