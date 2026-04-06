@@ -1,2 +1,2 @@
 [{"ruleName":"AU_02032026_000","matchURL":"https://www.bmw.com.au/en/offers-and-services/financial-services/bmw-full-circle.html","result.redirectURL":"https://www.bmw.com.au/en/bmw-financial-services/full-circle.html","result.statusCode":301,"Final Status":"✅ OK","Column1":"","Column2":"","Column3":"","Column4":"","Column5":"","Column6":"","Column7":""}]
-# Trigger ID: 1775447219859
+# Trigger ID: 1775447271930
