@@ -1,2 +1,4 @@
-	https://www.bmw.co.jp/ja/topics/brand-and-technology/corporate_sales/corporate_sales.html	https://www.bmw.co.jp/ja/topics/corporate_sales/introduction.html	https://www.bmw.co.jp/ja/topics/brand-and-technology/corporate_sales/for_doctor.html	https://www.bmw.co.jp/ja/topics/corporate_sales/introduction.html	https://www.bmw.co.jp/ja/topics/brand-and-technology/corporate_sales/introduction.html		
-# Trigger ID: 1776323256382
+https://www.bmw.co.jp/ja/topics/brand-and-technology/corporate_sales/corporate_sales.html
+https://www.bmw.co.jp/ja/topics/brand-and-technology/corporate_sales/for_doctor.html
+https://www.bmw.co.jp/ja/topics/brand-and-technology/corporate_sales/introduction.html
+# Trigger ID: 1776323280483
