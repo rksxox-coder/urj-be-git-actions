@@ -13,4 +13,4 @@ https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan/7-series-sedan-2025-
 https://www.bmw.es/es/coches-bmw/serie-7/7er-limousine.html
 https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan.html
 
-# Trigger ID: 1777226891702
+# Trigger ID: 1777228402004
