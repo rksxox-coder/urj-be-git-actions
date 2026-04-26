@@ -1,18 +1,16 @@
-https://www.bmw.no/no/alle-modeller/m-serie/bmw-ix-m60/2021/oversikt.html
+https://www.bmw.es/es/coches-bmw/m/i7-m70/bmw-7-series-m-automobiles-presentacion.html
+https://www.bmw.es/es_ES/all-models/m-series/i7-m70/i7-m70-2025-g70bev-mp.html
+https://www.bmw.es/es/coches-bmw/m/i7-m70/bmw-7-series-m-automobiles-datos-tecnicos.html
+https://www.bmw.es/es_ES/all-models/m-series/i7-m70/i7-m70-2025-g70bev-mp-technical-data.html
+https://www.bmw.es/es/coches-bmw/bmw-i/i7/bmw-i7-sedan.html
+https://www.bmw.es/es_ES/all-models/i-series/i7/i7-2025-g70bev.html
+https://www.bmw.es/es/coches-bmw/bmw-i/i7/datos-tecnicos.html
+https://www.bmw.es/es_ES/all-models/i-series/i7/i7-2025-g70bev-technical-data.html
+https://www.bmw.es/es/coches-bmw/serie-7/7er-limousine/bmw-7er-limousine.html
+https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70.html
+https://www.bmw.es/es/coches-bmw/serie-7/7er-limousine/datos-tecnicos-bmw-7er-limousine.html
+https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70-technical-data.html
+https://www.bmw.es/es/coches-bmw/serie-7/7er-limousine.html
+https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan.html
 
-https://www.bmw.no/no/alle-modeller/5seriesoverview/sedan/configure.bmw.no/no_NO/configure/G60/71FJ
-
-https://www.bmw.no/no/topics/oppdag/academy/viktigste-bilnyheten-pa-mange-tiar.html
-
-https://www.bmw.no/no/all-models/xoverview/X6/2023/oversikt.html
-
-https://www.bmw.no/no/all-models/xoverview/x7/2022/oversikt.html
-
-https://www.bmw.no/no/alle-modeller/m-serie/x2-m35i/configure.bmw.no/no_NO/configure/U10/81GM
-
-https://www.bmw.no/no/shop/ls/dp/Service_Inclusive_no
-
-https://www.bmw.no/no/all-models/2seriesoverview/activetourer/2021/bmw-2-serie-active-tourer-oversikt.html
-
-https://www.bmw.no/no/all-models/xoverview/x7/2022.html
-# Trigger ID: 1776572909616
+# Trigger ID: 1777226891702
