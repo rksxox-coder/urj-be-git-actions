@@ -1,16 +1,2 @@
-https://www.bmw.es/es/coches-bmw/m/i7-m70/bmw-7-series-m-automobiles-presentacion.html
-https://www.bmw.es/es_ES/all-models/m-series/i7-m70/i7-m70-2025-g70bev-mp.html
-https://www.bmw.es/es/coches-bmw/m/i7-m70/bmw-7-series-m-automobiles-datos-tecnicos.html
-https://www.bmw.es/es_ES/all-models/m-series/i7-m70/i7-m70-2025-g70bev-mp-technical-data.html
-https://www.bmw.es/es/coches-bmw/bmw-i/i7/bmw-i7-sedan.html
-https://www.bmw.es/es_ES/all-models/i-series/i7/i7-2025-g70bev.html
-https://www.bmw.es/es/coches-bmw/bmw-i/i7/datos-tecnicos.html
-https://www.bmw.es/es_ES/all-models/i-series/i7/i7-2025-g70bev-technical-data.html
-https://www.bmw.es/es/coches-bmw/serie-7/7er-limousine/bmw-7er-limousine.html
-https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70.html
-https://www.bmw.es/es/coches-bmw/serie-7/7er-limousine/datos-tecnicos-bmw-7er-limousine.html
-https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70-technical-data.html
-https://www.bmw.es/es/coches-bmw/serie-7/7er-limousine.html
-https://www.bmw.es/es_ES/all-models/7-series/7-series-sedan.html
-
-# Trigger ID: 1777228402004
+[{"ruleName":"SI22042026_001","matchURL":"https://www.bmw.si/sl/all-models/7-series/7-series-sedan/bmw-7-series-sedan.html","result.redirectURL":"https://www.bmw.si/sl/all-models/7-series/limuzina/bmw-7-series-limuzina.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"SI22042026_002","matchURL":"https://www.bmw.si/sl/all-models/7-series/7-series-sedan/bmw-7-series-sedan-technical-data.html","result.redirectURL":"https://www.bmw.si/sl/all-models/7-series/limuzina/bmw-7-serija-limuzina-tehnicni-podatki.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"SI22042026_003","matchURL":"https://www.bmw.si/sl_SI/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70.html","result.redirectURL":"https://www.bmw.si/sl/all-models/7-series/limuzina/bmw-7-series-limuzina.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"SI22042026_004","matchURL":"https://www.bmw.si/sl_SI/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70-technical-","result.redirectURL":"https://www.bmw.si/sl/all-models/7-series/limuzina/bmw-7-serija-limuzina-tehnicni-podatki.html","result.statusCode":301,"Check Status":"✅ OK"}]
+# Trigger ID: 1777361284198
