@@ -1,7 +1,4 @@
 https://www.bmw.com.br/pt/topics/fascination-bmw/Sustentabilidade.html
-https://www.bmw.com.br/pt_BR/topics/fascination-bmw/Sustentabilidade.html
-https://www.bmw.com.br/pt/topics/fascination-bmw/bmw-driver-training/drivertraining.html
-https://www.bmw.com.br/pt_BR/topics/fascination-bmw/bmw-driver-training/sobre.html
-https://www.bmw.com.br/drivertraining.html
 
-# Trigger ID: 1777388744028
+https://www.bmw.com.br/pt_BR/topics/fascination-bmw/Sustentabilidade.html
+# Trigger ID: 1777527470478
