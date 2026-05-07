@@ -1,8 +1,2 @@
-https://www.bmw.com.sg/en/topics/offers-and-services/bmw-special-sales/bmw-special-sales-overview.html
-https://www.bmw.com.sg/en/topics/offers-and-services/bmw-special-sales/bmw-protection-vehicles.html
-https://www.bmw.com.sg/en/topics/offers-and-services/bmw-special-sales/bmw-protection-vehicles/bmw-7-protection-overview.html
-https://www.bmw.com.sg/en/topics/offers-and-services/bmw-special-sales/bmw-authority-vehicles.html
-https://www.bmw.com.sg/en_SG/topics/offers-and-services/bmw-special-sales/bmw-authority-vehicles.html
-https://www.bmw.com.sg/en/topics/offers-and-services/bmw-special-sales/bmw-diplomatic-sales.html
-https://www.bmw.com.sg/en_SG/topics/offers-and-services/bmw-special-sales/bmw-diplomatic-sales.html
-# Trigger ID: 1778056851828
+[{"ruleName":"ZA_19032026_000","matchURL":"https://www.bmw.co.za/en/topics/fascination-bmw/bmw-concept-vehicle/bmw-i-vision-circular-highlights.html","result.redirectURL":"https://www.bmw.co.za/en/all-models/x-series/ix3/bmw-ix3.html","result.statusCode":301},{"ruleName":"ZA_19032026_001","matchURL":"https://www.bmw.co.za/en_ZA/topics/fascination-bmw/bmw-concept-vehicle/bmw-i-vision-circular-highlights.html","result.redirectURL":"https://www.bmw.co.za/en/all-models/x-series/ix3/bmw-ix3.html","result.statusCode":301}]
+# Trigger ID: 1778173111299
