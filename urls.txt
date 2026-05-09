@@ -1,5 +1,3 @@
-https://www.bmw.ch/de/bmw-neuwagen/m/i7-m70/bmw-7er-m-automobile.html
-https://www.bmw.ch/de/bmw-neuwagen/m/i7-m70/bmw-7er-m-automobile.html
-https://www.bmw.ch/de_CH/all-models/m-series/i7-m70/i7-m70-2025-g70bev-mp.html
-https://www.bmw.ch/de_CH/all-models/m-series/i7-m70/i7-m70-2025-g70bev-mp-technical-data.html
-# Trigger ID: 1778304325270
+https://www.bmw.cz/cs/all-models/7-series/7-series-sedan/bmw-7-series-sedan-technical-data.html
+https://www.bmw.cz/cs_CZ/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70-technical-data.html
+# Trigger ID: 1778304942689
