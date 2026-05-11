@@ -1,7 +1,5 @@
-https://www.bmw.se/sv/alla-modeller/m-serie/z4-m40i/bmw-z4-m40i-roadster.html
-https://www.bmw.se/sv/alla-modeller/m-serie/z4-m40i/bmw-z4-m40i-teknisk-data.html
-https://www.bmw.se/sv/alla-modeller/m-serie/z4-m40i/bmw-z4-m40i-teknisk-data.html
-https://www.bmw.se/sv_SE/all-models/m-series/z4-m40i/bmw-z4-m40i-2025-g29-technical-data.html
-https://www.bmw.se/sv/alla-modeller/m-serie/z4-m40i.html
-https://www.bmw.se/sv_SE/all-models/m-series/z4-m40i.html
-# Trigger ID: 1778477027867
+https://www.bmw.be/nl/topics/offers-and-services/personal-services/bmw-road-assist.html
+https://www.bmw.be/fr/topics/offers-and-services/personal-services/bmw-road-assist.html
+https://www.bmw.lu/fr/topics/offers-and-services/assistance/bmw-road-assist.html
+https://www.bmw.lu/de/topics/offers-and-services/assistance/bmw-road-assist.html
+# Trigger ID: 1778504630346
