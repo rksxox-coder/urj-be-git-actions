@@ -1,5 +1,2 @@
-https://www.bmw.be/nl/topics/offers-and-services/personal-services/bmw-road-assist.html
-https://www.bmw.be/fr/topics/offers-and-services/personal-services/bmw-road-assist.html
-https://www.bmw.lu/fr/topics/offers-and-services/assistance/bmw-road-assist.html
-https://www.bmw.lu/de/topics/offers-and-services/assistance/bmw-road-assist.html
-# Trigger ID: 1778504713666
+https://www.bmw.fi/fi/shop/ls/dp/physical-goods/901628
+# Trigger ID: 1778505369064
