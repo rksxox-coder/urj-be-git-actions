@@ -1,3 +1,10 @@
-https://www.bmw.cz/cs/all-models/7-series/7-series-sedan/bmw-7-series-sedan-technical-data.html
-https://www.bmw.cz/cs_CZ/all-models/7-series/7-series-sedan/7-series-sedan-2025-g70-technical-data.html
-# Trigger ID: 1778304942689
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023/oversikt.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/2023/tekniske-data.html
+https://www.bmw.no/no/alle-modeller/m-serie/x6-m/tekniske-data.html
+https://www.bmw.fi/fi/mallisto/m-mallit/x6-m/2023/tekniset-tiedot.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/2023.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/2023/oversikt.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/2023/tekniske-data.html
+https://www.bmw.no/no/all-models/m-serie/x6-m/tekniske-data.html
+# Trigger ID: 1778475182014
