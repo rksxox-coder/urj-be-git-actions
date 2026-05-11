@@ -2,4 +2,4 @@ https://www.bmw.be/nl/topics/offers-and-services/personal-services/bmw-road-assi
 https://www.bmw.be/fr/topics/offers-and-services/personal-services/bmw-road-assist.html
 https://www.bmw.lu/fr/topics/offers-and-services/assistance/bmw-road-assist.html
 https://www.bmw.lu/de/topics/offers-and-services/assistance/bmw-road-assist.html
-# Trigger ID: 1778504630346
+# Trigger ID: 1778504713666
