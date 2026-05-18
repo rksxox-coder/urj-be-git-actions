@@ -1,11 +1,30 @@
-https://www.bmw.ca/en/bmw-alpina
-https://www.bmw.ca/fr/bmw-alpina
-https://www.bmw.ch/de/bmw-alpina
-https://www.bmw.ch/fr/bmw-alpina
-https://www.bmw.ch/it/bmw-alpina
-https://www.bmw.be/nl/bmw-alpina
-https://www.bmw.be/fr/bmw-alpina
-https://www.bmw.lu/fr/bmw-alpina
-https://www.bmw.lu/de/bmw-alpina
+https://www.bmw.ca/en/all-models/m-series/i4-m50/bmw-i4/bmw-i4-m50-highlights.html
+https://www.bmw.ca/en_CA/all-models/m-series/i4-m50/2021/bmw-i4-m50-highlights.html
+https://www.bmw.ca/en/all-models/m-series/i4-m50/bmw-i4.html
+https://www.bmw.ca/en_CA/all-models/m-series/i4-m50/2021.html
+https://www.bmw.ca/fr/all-models/m-supplementaire.html
+https://www.bmw.ca/en/publicPools/teaser-pool/small-teasers/z-series-overview.html
+https://www.bmw.ca/fr/publicPools/teaser-pool/small-teasers/z-series-overview.html
+https://www.bmw.ca/fr_CA/all-models/m-series/i4-m50/2021/bmw-i4-m50-technical-data.html
+https://www.bmw.ca/en/all-models/m-series/m8-convertible/2022-m850i-cabriolet.html
+https://www.bmw.ca/en_CA/all-models/m-series/m8-convertible/2022-m850i-cabriolet.html
+https://www.bmw.ca/en/all-models/m-series/m8-gran-coupe/2019/bmw-8-series-gran-coupe-m-automobiles-highlights.html
+https://www.bmw.ca/en/all-models/m-series/m8-gran-coupe/2019/bmw-8-series-gran-coupe-m-automobiles-highlights-lp.html
+https://www.bmw.ca/en/all-models/m-series/m8-gran-coupe/2019/bmw-8-series-gran-coupe-m-automobiles-models-equipment.html
+https://www.bmw.ca/en/all-models/m-series/m8-gran-coupe/2019.html
+https://www.bmw.ca/en_CA/all-models/m-series/m8-gran-coupe/2019/inspire.html
+https://www.bmw.ca/en_CA/all-models/m-series/m8-gran-coupe/2019/landingpagehtml
+https://www.bmw.ca/en_CA/all-models/m-series/m8-gran-coupe/2019/inform.html
+https://www.bmw.ca/en_CA/all-models/m-series/m8-gran-coupe/2019.html
+https://www.bmw.ca/en/all-models/8-series/convertible.html
+https://www.bmw.ca/en_CA/all-models/x-series/X4/2021/bmw-x4-technical-data.html
+https://www.bmw.ca/fr/all-models/8-series/convertible.html
+https://www.bmw.ca/fr/all-models/8-series/coupe.html
+https://www.bmw.ca/fr/all-models/8-series/coupe/2022.html
+https://www.bmw.ca/fr/all-models/8-series/coupe/2022/la-nouvelle-bmw-serie-8-coupe-apercu.html
+https://www.bmw.ca/fr_CA/all-models/m-series/m8-gran-coupe.html
+https://www.bmw.ca/fr_CA/all-models/m-series/m8-gran-coupe/2022.html
+https://www.bmw.ca/fr_CA/all-models/m-series/m8-gran-coupe/2022/bmw-8-series-gran-coupe-m-automobiles-overview.html
+https://www.bmw.ca/fr_CA/all-models/m-series/m8-gran-coupe/2022-m850i-gran-coupe.html
 
-# Trigger ID: 1778882049789
+# Trigger ID: 1779078646035
