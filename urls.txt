@@ -1,2 +1,2 @@
-[{"ruleName":"MU26032026_001","matchURL":"https://www.bmw.mu/en_MU/more-bmw/neue-klasse-family.html","result.redirectURL":"https://www.bmw.mu/en/all-models/3-series/sedan/bmw-i3-sedan.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"MU26032026_002","matchURL":"https://www.bmw.mu/en/more-bmw/neue-klasse.html","result.redirectURL":"https://www.bmw.mu/en/all-models/3-series/sedan/bmw-i3-sedan.html","result.statusCode":301,"Check Status":"✅ OK"}]
-# Trigger ID: 1780572855171
+[{"ruleName":"IS19032026_001","matchURL":"https://www.bmw.is/is/more-bmw/neue-klasse.html","result.redirectURL":"https://www.bmw.is/is/all-models/x-series/ix3/bmw-ix3.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"IS19032026_002","matchURL":"https://www.bmw.is/is_IS/more-bmw/neue-klasse-family.html","result.redirectURL":"https://www.bmw.is/is/all-models/x-series/ix3/bmw-ix3.html","result.statusCode":301,"Check Status":"✅ OK"}]
+# Trigger ID: 1780573337613
