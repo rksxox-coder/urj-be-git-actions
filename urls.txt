@@ -1,7 +1,16 @@
-https://www.bmw.com.sg/en/all-models/x-series/x5/bmw-x5.html
-https://www.bmw.com.sg/en_SG/all-models/x-series/x5/x5-2025-g05.html
-https://www.bmw.com.sg/en/all-models/x-series/x5/bmw-x5-technical-data.html
-https://www.bmw.com.sg/en_SG/all-models/x-series/x5/x5-2025-g05-technical-data.html
-https://www.bmw.com.sg/en_SG/all-models/x-series/x5.html
+https://www.bmw.es/es/coches-bmw/x/bmw-x5/bmw-x5.html
+https://www.bmw.es/es/coches-bmw/x/bmw-x5/datos-tecnicos-bmw-x5.html
+https://www.bmw.es/es_ES/all-models/x-series/x5/x5-2025-g05.html
+https://www.bmw.es/es_ES/all-models/x-series/x5/x5-2025-g05-technical-data.html
+https://www.bmw.es/es_ES/all-models/x-series/x5.html
+https://www.bmw.es/es/coches-bmw/x/bmw-x5.html
+https://www.bmw.es/X5
+https://www.bmw.es/es/coches-bmw/m/x5-m/bmw-x5-m-modelle.html
+https://www.bmw.es/es/coches-bmw/m/x5-m/datos-tecnicos-bmw-x5m.html
+https://www.bmw.es/es_ES/all-models/m-series/x5-m/bmw-x5-m-2025-models.html
+https://www.bmw.es/es_ES/all-models/m-series/x5-m/bmw-x5m-2025-technical-data.html
+https://www.bmw.es/es/coches-bmw/m/x5-m.html
+https://www.bmw.es/es_ES/all-models/m-series/x5-m.html
+https://www.bmw.es/x5m
 
-# Trigger ID: 1783316458448
+# Trigger ID: 1783317061523
