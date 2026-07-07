@@ -1,2 +1,2 @@
-[{"ruleName":"TR_02072026_000","matchURL":"https://www.bmw.com.tr/tr/more-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.com.tr/tr/index.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"TR_02072026_001","matchURL":"https://www.bmw.com.tr/tr_TR/more-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.com.tr/tr/index.html","result.statusCode":301,"Check Status":"✅ OK"}]
-# Trigger ID: 1783406819618
+[{"ruleName":"RO05072026_000","matchURL":"https://www.bmw.ro/ro_RO/all-models/x-series/x5/x5-2025-g05-technical-data.html","result.redirectURL":"https://www.bmw.ro/ro/all-models/seria-x/suv/bmw-x5-date-tehnice.html","result.statusCode":301,"Check Status":"✅ OK"}]
+# Trigger ID: 1783421756336
