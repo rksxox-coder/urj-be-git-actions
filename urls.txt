@@ -1,16 +1,2 @@
-https://www.bmw.es/es/coches-bmw/x/bmw-x5/bmw-x5.html
-https://www.bmw.es/es/coches-bmw/x/bmw-x5/datos-tecnicos-bmw-x5.html
-https://www.bmw.es/es_ES/all-models/x-series/x5/x5-2025-g05.html
-https://www.bmw.es/es_ES/all-models/x-series/x5/x5-2025-g05-technical-data.html
-https://www.bmw.es/es_ES/all-models/x-series/x5.html
-https://www.bmw.es/es/coches-bmw/x/bmw-x5.html
-https://www.bmw.es/X5
-https://www.bmw.es/es/coches-bmw/m/x5-m/bmw-x5-m-modelle.html
-https://www.bmw.es/es/coches-bmw/m/x5-m/datos-tecnicos-bmw-x5m.html
-https://www.bmw.es/es_ES/all-models/m-series/x5-m/bmw-x5-m-2025-models.html
-https://www.bmw.es/es_ES/all-models/m-series/x5-m/bmw-x5m-2025-technical-data.html
-https://www.bmw.es/es/coches-bmw/m/x5-m.html
-https://www.bmw.es/es_ES/all-models/m-series/x5-m.html
-https://www.bmw.es/x5m
-
-# Trigger ID: 1783317061523
+[{"ruleName":"CH_02072026_000","matchURL":"https://www.bmw.ch/de/mehr-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.ch/de/home.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"CH_02072026_001","matchURL":"https://www.bmw.ch/de_CH/more-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.ch/de/home.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"CH_02072026_002","matchURL":"https://www.bmw.ch/fr/plus-de-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.ch/fr/home.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"CH_02072026_003","matchURL":"https://www.bmw.ch/fr_CH/more-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.ch/fr/home.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"CH_02072026_004","matchURL":"https://www.bmw.ch/it/piu-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.ch/it/home.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"CH_02072026_005","matchURL":"https://www.bmw.ch/it_CH/more-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.ch/it/home.html","result.statusCode":301,"Check Status":"✅ OK"}]
+# Trigger ID: 1783403175187
