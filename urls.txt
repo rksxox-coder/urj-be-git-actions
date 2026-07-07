@@ -1,2 +1,2 @@
 [{"ruleName":"TR_02072026_000","matchURL":"https://www.bmw.com.tr/tr/more-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.com.tr/tr/index.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"TR_02072026_001","matchURL":"https://www.bmw.com.tr/tr_TR/more-bmw/concept-cars/bmw-ix5-hydrogen.html","result.redirectURL":"https://www.bmw.com.tr/tr/index.html","result.statusCode":301,"Check Status":"✅ OK"}]
-# Trigger ID: 1783403826565
+# Trigger ID: 1783406819618
