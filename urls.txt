@@ -1,2 +1,2 @@
-[{"ruleName":"UA_02072026_000","matchURL":"https://www.bmw.ua/uk_UA/topics/fascination-bmw/bmw-concept-vehicle/bmw-ix5-hydrogen-overview.html","result.redirectURL":"https://www.bmw.ua/uk/index.html","result.statusCode":301}]
-# Trigger ID: 1786343688124
+[{"ruleName":"MU18062026_001","matchURL":"https://www.bmw.mu/en_MU/all-models/m-series/m2-coupe/2022/bmw-2-series-coupe-m-automobiles-highlights.html","result.redirectURL":"https://www.bmw.mu/en/all-models/m-series/bmw-2-series-m-models/bmw-m2-coupe.html","result.statusCode":301}]
+# Trigger ID: 1786344059273
