@@ -1,2 +1,2 @@
 [{"ruleName":"UA_02072026_000","matchURL":"https://www.bmw.ua/uk_UA/topics/fascination-bmw/bmw-concept-vehicle/bmw-ix5-hydrogen-overview.html","result.redirectURL":"https://www.bmw.ua/uk/index.html","result.statusCode":301}]
-# Trigger ID: 1786603879269
+# Trigger ID: 1786603941661
