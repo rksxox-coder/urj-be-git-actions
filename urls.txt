@@ -1,3 +1,2 @@
-https://www.bmwhk.com/zh/all-models/1-series/bmw-1-series/bmw-1-series.html
-
-# Trigger ID: 1788248063269
+[{"ruleName":"IN01092026_01","matchURL":"https://www.bmw.in/en/more-bmw/bmw-company-car.html","result.redirectURL":"https://www.bmw.in/en/more-bmw/bmw-company-car/sustainability.html","result.statusCode":301},{"ruleName":"IN01092026_02","matchURL":"https://www.bmw.in/en_IN/more-bmw/corporate-sales-overview.html","result.redirectURL":"https://www.bmw.in/en/more-bmw/bmw-company-car/sustainability.html","result.statusCode":301}]
+# Trigger ID: 1788269673112
