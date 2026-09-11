@@ -1,3 +1,21 @@
-https://www.bmw.es/es_ES/topics/offers-and-services/bmw-connected-drive/bmw-connected-drive-overview.html
+https://www.bmw.es/es/topics/ofertas-servicios/bmw-connected-drive/resumen-bmw-connected-drive.html
 https://www.bmw.es/es/topics/ofertas-servicios/bmw-connected-drive/overview.html
-# Trigger ID: 1789105178823
+https://www.bmw.es/es/topics/offers-and-services/bmw-connected-drive/resumen-bmw-connected-drive.html
+https://www.bmw.es/es/topics/offers-and-services/bmw-connected-drive/overview.html
+https://www.bmw.es/es/topics/ofertas-servicios/bmw-connected-drive/my-bmw-app.html
+https://www.bmw.es/es/topics/ofertas-servicios/bmw-connected-drive/my-bmw-app-new.html
+https://www.bmw.es/es/topics/offers-and-services/bmw-connected-drive/my-bmw-app.html
+https://www.bmw.es/es/topics/offers-and-services/bmw-connected-drive/my-bmw-app-new.html
+https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/amazon-alexa.html
+https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/amazon-alexa-new.html
+https://www.bmw.es/es/topics/offers-and-services/digital-services-and-connectivity/amazon-alexa-new.html
+https://www.bmw.es/es/topics/offers-and-services/digital-services-and-connectivity/amazon-alexa.html
+https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/apple-carplay.html
+https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/apple-carplay-new.html
+https://www.bmw.es/es/topics/offers-and-services/digital-services-and-connectivity/apple-carplay-new.html
+https://www.bmw.es/es/topics/offers-and-services/digital-services-and-connectivity/apple-carplay.html
+https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/android-auto.html
+https://www.bmw.es/es/topics/ofertas-servicios/servicios-digitales-y-conectividad-bmw/android-auto-new.html
+https://www.bmw.es/es/topics/offers-and-services/digital-services-and-connectivity/android-auto-new.html
+https://www.bmw.es/es/topics/offers-and-services/digital-services-and-connectivity/android-auto.html
+# Trigger ID: 1789110338365
