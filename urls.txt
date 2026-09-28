@@ -1,2 +1,8 @@
-[{"ruleName":"MU_1122026_05","matchURL":"https://www.bmw.com.tr/tr/all-models/m-serisi/bmw-i7-m70-xdrive.html","result.redirectURL":"https://www.bmw.com.tr/tr/all-models/m-serisi/i7-m70/bmw-7-series-m-automobiles.html","result.statusCode":301},{"ruleName":"TR_1122026_06","matchURL":"https://www.bmw.com.tr/tr_TR/all-models/m-series/bmw-m760e-xdrive.html","result.redirectURL":"https://www.bmw.com.tr/tr/all-models/m-serisi/i7-m70/bmw-7-series-m-automobiles.html","result.statusCode":301}]
-# Trigger ID: 1790580694843
+https://www.bmw.mu/en/topics/fascination-bmw/electromobility/bmw-charging-support-flexible-fast-charger.html
+
+https://www.bmw.mu/en/topics/fascination-bmw/electromobility/bmw-charging-support-wallbox-gen-2.html
+
+https://www.bmw.mu/en_MU/topics/fascination-bmw/electromobility/bmw-charging-support-wallbox-gen-2.html
+
+https://www.bmw.mu/en_MU/topics/fascination-bmw/electromobility/bmw-charging-support-flexible-fast-charger.html
+# Trigger ID: 1790581105222
