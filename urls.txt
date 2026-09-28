@@ -1,8 +1,2 @@
-https://www.bmw.mu/en/topics/fascination-bmw/electromobility/bmw-charging-support-flexible-fast-charger.html
-
-https://www.bmw.mu/en/topics/fascination-bmw/electromobility/bmw-charging-support-wallbox-gen-2.html
-
-https://www.bmw.mu/en_MU/topics/fascination-bmw/electromobility/bmw-charging-support-wallbox-gen-2.html
-
-https://www.bmw.mu/en_MU/topics/fascination-bmw/electromobility/bmw-charging-support-flexible-fast-charger.html
-# Trigger ID: 1790581105222
+[{"ruleName":"MU_1122026_01","matchURL":"https://www.bmw.mu/en/topics/fascination-bmw/electromobility/bmw-charging-support-flexible-fast-charger.html","result.redirectURL":"https://www.bmw.mu/en/electric-cars/electric-car-charging.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"MU_1122026_02","matchURL":"https://www.bmw.mu/en/topics/fascination-bmw/electromobility/bmw-charging-support-wallbox-gen-2.html","result.redirectURL":"https://www.bmw.mu/en/electric-cars/electric-car-charging.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"MU_1122026_03","matchURL":"https://www.bmw.mu/en_MU/topics/fascination-bmw/electromobility/bmw-charging-support-wallbox-gen-2.html","result.redirectURL":"https://www.bmw.mu/en/electric-cars/electric-car-charging.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"MU_1122026_04","matchURL":"https://www.bmw.mu/en_MU/topics/fascination-bmw/electromobility/bmw-charging-support-flexible-fast-charger.html","result.redirectURL":"https://www.bmw.mu/en/electric-cars/electric-car-charging.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"MU_1122026_05","matchURL":"https://www.bmw.com.tr/tr/all-models/m-serisi/bmw-i7-m70-xdrive.html","result.redirectURL":"https://www.bmw.com.tr/tr/all-models/m-serisi/i7-m70/bmw-7-series-m-automobiles.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"TR_1122026_06","matchURL":"https://www.bmw.com.tr/tr_TR/all-models/m-series/bmw-m760e-xdrive.html","result.redirectURL":"https://www.bmw.com.tr/tr/all-models/m-serisi/i7-m70/bmw-7-series-m-automobiles.html","result.statusCode":301,"Check Status":"✅ OK"}]
+# Trigger ID: 1790581151376
