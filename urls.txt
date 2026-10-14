@@ -1,2 +1,20 @@
-[{"ruleName":"FR30092026_001","matchURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/bmw-serie-3-berline/bmw-serie-3-berline.html","result.redirectURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/berline/bmw-serie-3-berline.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"FR30092026_002","matchURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/bmw-serie-3-berline/bmw-serie-3-berline-caracteristiques-techniques.html","result.redirectURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/berline/bmw-serie-3-berline-caracteristiques-techniques.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"FR30092026_003","matchURL":"https://www.bmw.fr/fr_FR/all-models/3-series/3-series-sedan/3-series-sedan-2024-g20-lci-ice.html","result.redirectURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/berline/bmw-serie-3-berline.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"FR30092026_004","matchURL":"https://www.bmw.fr/fr_FR/all-models/3-series/3-series-sedan/3-series-sedan-2024-g20-lci-ice-technical-data.html","result.redirectURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/berline/bmw-serie-3-berline-caracteristiques-techniques.html","result.statusCode":301,"Check Status":"✅ OK"},{"ruleName":"FR30092026_005","matchURL":"https://www.bmw.fr/THE3","result.redirectURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/berline/bmw-serie-3-berline.html","result.statusCode":301,"Check Status":"1 issue(s) found: • Uppercase letters found in URL path"},{"ruleName":"FR30092026_006","matchURL":"https://www.bmw.fr/the3","result.redirectURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/berline/bmw-serie-3-berline.html","result.statusCode":301,"Check Status":"1 issue(s) found: • Case-sensitive duplicate source link found (see row 6)"},{"ruleName":"FR30092026_007","matchURL":"https://www.bmw.fr/the-3","result.redirectURL":"https://www.bmw.fr/fr/tous-les-modeles/3-series/berline/bmw-serie-3-berline.html","result.statusCode":301,"Check Status":"✅ OK"}]
-# Trigger ID: 1791199260345
+https://www.bmw.re/fr/all-models/bmw-serie-i/i4/bmw-i4-gran-coupe.html
+https://www.bmw.re/fr/all-models/m-series/bmw-i4-m60/bmw-i4-m60-xdrive-gran-coupe-technical-data.html
+https://www.bmw.re/fr/all-models/m-series/bmw-i4-m60/bmw-i4-m60-xdrive-gran-coupe.html
+https://www.bmw-me.com/en/digital-services/bmw-connecteddrive.html
+https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/x1/bmw-x1.html
+https://www.bmw.re/fr/all-models/m-series/bmw-i4-m60/bmw-i4-m60-xdrive-gran-coupe.html
+https://www.bmw-me.com/en/all-models/m-series/bmw-4-series-m-models/bmw-m4-convertible.html
+https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/x7/bmw-x7.html
+https://www.bmw-me.com/en/all-models/x-series/suv/bmw-ix5.html
+https://www.bmw.re/fr/all-models/bmw-serie-i/i7/bmw-i7-berline.html
+https://www.bmw.re/fr/all-models/bmw-serie-i/i7/bmw-i7-berline-caracteristiques-techniques.html
+https://www.bmw-me.com/en/all-models/2-series/2-series-coupe/bmw-2-series-coupe.html
+https://www.bmw-me.com/en/all-models/2-series/2-series-coupe/bmw-2-series-coupe.html
+https://www.bmw-me.com/en/all-models/x-series/suv/bmw-ix5.html
+https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/x1/bmw-x1-technical-data.html
+https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/bmw-x5/bmw-x5.html
+https://www.bmw-me.com/en/index.html
+https://www.bmw-me.com/en/all-models.html
+
+# Trigger ID: 1791961295919
