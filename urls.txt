@@ -1,20 +1,2 @@
-https://www.bmw.re/fr/all-models/bmw-serie-i/i4/bmw-i4-gran-coupe.html
-https://www.bmw.re/fr/all-models/m-series/bmw-i4-m60/bmw-i4-m60-xdrive-gran-coupe-technical-data.html
-https://www.bmw.re/fr/all-models/m-series/bmw-i4-m60/bmw-i4-m60-xdrive-gran-coupe.html
-https://www.bmw-me.com/en/digital-services/bmw-connecteddrive.html
-https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/x1/bmw-x1.html
-https://www.bmw.re/fr/all-models/m-series/bmw-i4-m60/bmw-i4-m60-xdrive-gran-coupe.html
-https://www.bmw-me.com/en/all-models/m-series/bmw-4-series-m-models/bmw-m4-convertible.html
-https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/x7/bmw-x7.html
-https://www.bmw-me.com/en/all-models/x-series/suv/bmw-ix5.html
-https://www.bmw.re/fr/all-models/bmw-serie-i/i7/bmw-i7-berline.html
-https://www.bmw.re/fr/all-models/bmw-serie-i/i7/bmw-i7-berline-caracteristiques-techniques.html
-https://www.bmw-me.com/en/all-models/2-series/2-series-coupe/bmw-2-series-coupe.html
-https://www.bmw-me.com/en/all-models/2-series/2-series-coupe/bmw-2-series-coupe.html
-https://www.bmw-me.com/en/all-models/x-series/suv/bmw-ix5.html
-https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/x1/bmw-x1-technical-data.html
-https://www.bmw.re/fr/all-models/bmw-x-serie-apercu/bmw-x5/bmw-x5.html
-https://www.bmw-me.com/en/index.html
-https://www.bmw-me.com/en/all-models.html
-
-# Trigger ID: 1791961295919
+https://www.bmw.lu/fr/campaigns/conditions-autofestival/the-m/m8-gran-coupe.html
+# Trigger ID: 1792732638385
